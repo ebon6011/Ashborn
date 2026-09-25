@@ -85,6 +85,11 @@ export function NutritionScreen() {
         <p className="text-sm text-muted">
           Carbs about {targets.carbsG} g · Fat about {targets.fatG} g
         </p>
+        {targets.minorHeldAtMaintenance && (
+          <p className="mt-3 rounded border border-gold/60 p-3 text-sm text-gold">
+            Under 18: no calorie deficit. Your target is kept at maintenance.
+          </p>
+        )}
         {targets.floorApplied && (
           <p className="mt-3 rounded border border-gold/60 p-3 text-sm text-gold">
             Your calorie target is held at {targets.floor} kcal, the safe minimum for you: never below your resting energy use or{' '}

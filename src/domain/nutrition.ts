@@ -43,6 +43,7 @@ export interface NutritionTargets {
   fatG: number;
   carbsG: number;
   waterMl: number;
+  minorHeldAtMaintenance: boolean;
 }
 
 export const GOAL_POLICY = { loseFatDeficit: 0.2, maxDeficitKcal: 500, buildMuscleSurplus: 0.1 } as const;
@@ -68,8 +69,10 @@ export function calculateTargets(p: NutritionProfile): NutritionTargets {
   const multiplier = activityMultiplier(p.daysPerWeek);
   const tdeeRaw = bmrRaw * multiplier;
 
+  const minorHeldAtMaintenance = p.age < 18 && p.goal === 'lose_fat';
+
   let goalKcal = tdeeRaw;
-  if (p.goal === 'lose_fat') goalKcal = tdeeRaw - Math.min(tdeeRaw * GOAL_POLICY.loseFatDeficit, GOAL_POLICY.maxDeficitKcal);
+  if (p.goal === 'lose_fat' && !minorHeldAtMaintenance) goalKcal = tdeeRaw - Math.min(tdeeRaw * GOAL_POLICY.loseFatDeficit, GOAL_POLICY.maxDeficitKcal);
   if (p.goal === 'build_muscle') goalKcal = tdeeRaw * (1 + GOAL_POLICY.buildMuscleSurplus);
 
   const floor = Math.round(Math.max(bmrRaw, MIN_CALORIES[p.sex]));
@@ -91,6 +94,7 @@ export function calculateTargets(p: NutritionProfile): NutritionTargets {
     fatG,
     carbsG,
     waterMl: WATER_ML[p.sex],
+    minorHeldAtMaintenance,
   };
 }
 

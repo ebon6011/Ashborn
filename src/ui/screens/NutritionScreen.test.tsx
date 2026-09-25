@@ -21,6 +21,12 @@ describe('NutritionScreen', () => {
     expect(await screen.findByText(/safe minimum for you/)).toBeTruthy();
   });
 
+  it('explains that an under-18 fat-loss goal is held at maintenance', async () => {
+    await db.profile.update(1, { age: 15, goal: 'lose_fat' });
+    render(<NutritionScreen />);
+    expect(await screen.findByText('Under 18: no calorie deficit. Your target is kept at maintenance.')).toBeTruthy();
+  });
+
   it('quick-adds water', async () => {
     render(<NutritionScreen />);
     fireEvent.click(await screen.findByRole('button', { name: '+250 ml water' }));

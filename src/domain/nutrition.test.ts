@@ -20,7 +20,7 @@ describe('calculateTargets', () => {
   it('applies a 20 % deficit for fat loss', () => {
     expect(calculateTargets(man)).toEqual({
       bmr: 1780, tdee: 2448, multiplier: 1.375, calories: 1958, floor: 1780, floorApplied: false,
-      proteinG: 128, fatG: 54, carbsG: 240, waterMl: 2500,
+      proteinG: 128, fatG: 54, carbsG: 240, waterMl: 2500, minorHeldAtMaintenance: false,
     });
   });
 
@@ -53,6 +53,19 @@ describe('calculateTargets', () => {
   it('never returns negative carbs', () => {
     const t = calculateTargets({ sex: 'female', weightKg: 150, heightCm: 150, age: 90, goal: 'lose_fat', daysPerWeek: 0 });
     expect(t.carbsG).toBeGreaterThanOrEqual(0);
+  });
+
+  it('holds an under-18 fat-loss goal at maintenance, not a deficit', () => {
+    const teen: NutritionProfile = { sex: 'male', weightKg: 60, heightCm: 170, age: 15, goal: 'lose_fat', daysPerWeek: 3 };
+    const t = calculateTargets(teen);
+    const maintenance = calculateTargets({ ...teen, goal: 'get_fit' });
+    expect(t.calories).toBe(maintenance.calories);
+    expect(t.minorHeldAtMaintenance).toBe(true);
+  });
+
+  it('does not flag an adult fat-loss goal', () => {
+    const t = calculateTargets(man);
+    expect(t.minorHeldAtMaintenance).toBe(false);
   });
 });
 
