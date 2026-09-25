@@ -5780,7 +5780,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
   - `Rest today`, `Finish for today`, `Add quest`
   - fields `Quest name` and `Reward (XP)`
 
-- [ ] **Step 1: Write failing tests `src/ui/screens/QuestsScreen.test.tsx`**
+- [x] **Step 1: Write failing tests `src/ui/screens/QuestsScreen.test.tsx`**
 
 ```tsx
 // @vitest-environment jsdom
@@ -5830,12 +5830,12 @@ describe('QuestsScreen', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check it fails**
+- [x] **Step 2: Run to check it fails**
 
 Run: `npx vitest run src/ui/screens/QuestsScreen.test.tsx`
 Expected: FAIL, module not found.
 
-- [ ] **Step 3: Implement `src/ui/screens/QuestsScreen.tsx`**
+- [x] **Step 3: Implement `src/ui/screens/QuestsScreen.tsx`**
 
 ```tsx
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -6130,12 +6130,12 @@ function SideQuests({ date }: { date: string }) {
 }
 ```
 
-- [ ] **Step 4: Run to check it passes**
+- [x] **Step 4: Run to check it passes**
 
 Run: `npx vitest run src/ui/screens/QuestsScreen.test.tsx`
 Expected: PASS.
 
-- [ ] **Step 5: Gate and commit**
+- [x] **Step 5: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
