@@ -55,7 +55,7 @@ After that, every `git push` to `main` publishes a new version automatically.
 5. Open **Ashborn** from your home screen. It opens full screen like a normal app.
 6. Create your player there, in the installed app. On iPhone, Safari and the installed app keep separate data.
 
-After the first open, the app works without internet. Updates download by themselves the next time you open it online.
+After the first open, the app works without internet. The app updates itself shortly after you open it while online.
 
 ## 4. Back up and restore
 
