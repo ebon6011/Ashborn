@@ -40,9 +40,10 @@ interface Props {
   initial?: ProfileInput;
   submitLabel: string;
   onSubmit: (value: ProfileInput) => void;
+  onCancel?: () => void;
 }
 
-export function ProfileForm({ initial, submitLabel, onSubmit }: Props) {
+export function ProfileForm({ initial, submitLabel, onSubmit, onCancel }: Props) {
   const [name, setName] = useState(initial?.name ?? '');
   const [age, setAge] = useState<number | null>(initial?.age ?? null);
   const [sex, setSex] = useState<Sex | null>(initial?.sex ?? null);
@@ -113,9 +114,16 @@ export function ProfileForm({ initial, submitLabel, onSubmit }: Props) {
           </ul>
         </div>
       )}
-      <Button type="submit" className="w-full">
-        {submitLabel}
-      </Button>
+      <div className={onCancel ? 'grid grid-cols-2 gap-2' : ''}>
+        {onCancel && (
+          <Button type="button" variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
+        <Button type="submit" className={onCancel ? '' : 'w-full'}>
+          {submitLabel}
+        </Button>
+      </div>
     </form>
   );
 }

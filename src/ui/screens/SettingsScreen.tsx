@@ -50,7 +50,11 @@ export function SettingsScreen({ onShowInstallGuide }: { onShowInstallGuide: () 
       const outcome = await saveBackupFile(json, backupFileName(now));
       if (outcome !== 'cancelled') {
         await setMeta(db, 'lastBackupAt', now.toISOString());
-        setMessage('Backup saved. Keep the file somewhere safe, such as iCloud Drive.');
+        setMessage(
+          outcome === 'downloaded'
+            ? 'Backup file created. Check your Downloads or Files app.'
+            : 'Backup saved. Keep the file somewhere safe, such as iCloud Drive.',
+        );
       }
     } catch {
       setMessage('Could not create the backup. Please try again.');
@@ -173,7 +177,12 @@ export function SettingsScreen({ onShowInstallGuide }: { onShowInstallGuide: () 
 
       <SystemWindow title="Your answers">
         {editing && profile ? (
-          <ProfileForm initial={toInput(profile)} submitLabel="Save answers" onSubmit={(v) => void saveProfile(v)} />
+          <ProfileForm
+            initial={toInput(profile)}
+            submitLabel="Save answers"
+            onSubmit={(v) => void saveProfile(v)}
+            onCancel={() => setEditing(false)}
+          />
         ) : (
           <Button variant="ghost" className="w-full" onClick={() => setEditing(true)}>
             Edit my answers

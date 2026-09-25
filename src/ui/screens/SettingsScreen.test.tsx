@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getMeta } from '../../db/meta';
 import { db } from '../../db/schema';
 import { buildBackup } from '../../domain/backup';
+import * as download from '../../platform/download';
 import { sampleBackupData } from '../../test/fixtures';
 import { seedApp } from '../../test/uiFixtures';
 import { SettingsScreen } from './SettingsScreen';
@@ -31,6 +32,23 @@ describe('SettingsScreen', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Replace my data' }));
     await waitFor(async () => expect((await db.profile.get(1))?.name).toBe('Rin'));
     expect(await screen.findByText('Backup restored.')).toBeTruthy();
+  });
+
+  it('tells the player where to find a downloaded backup file', async () => {
+    const spy = vi.spyOn(download, 'saveBackupFile').mockResolvedValue('downloaded');
+    render(<SettingsScreen onShowInstallGuide={() => {}} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Export backup' }));
+    expect(await screen.findByText('Backup file created. Check your Downloads or Files app.')).toBeTruthy();
+    await waitFor(async () => expect(await getMeta(db, 'lastBackupAt')).toBeTruthy());
+    spy.mockRestore();
+  });
+
+  it('gives the "Edit my answers" form a Cancel button', async () => {
+    render(<SettingsScreen onShowInstallGuide={() => {}} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Edit my answers' }));
+    expect(await screen.findByLabelText('Player name')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(await screen.findByRole('button', { name: 'Edit my answers' })).toBeTruthy();
   });
 
   it('toggles sound', async () => {
