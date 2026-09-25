@@ -1272,7 +1272,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 **Interfaces:**
 - Produces: `generatePenalty(experience: Experience): PenaltyQuest`; `rollUrgent(rng: () => number, today: string, lastUrgentDate: string | null): UrgentQuest | null`. `rng` is called once for the chance and, on success, once more for which task.
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 `src/domain/quests/penalty.test.ts`:
 ```ts
@@ -1319,12 +1319,12 @@ describe('rollUrgent', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check they fail**
+- [x] **Step 2: Run to check they fail**
 
 Run: `npx vitest run src/domain/quests`
 Expected: FAIL for penalty and urgent (modules not found). Daily tests still pass.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `src/domain/quests/penalty.ts`:
 ```ts
@@ -1360,12 +1360,12 @@ export function rollUrgent(rng: () => number, today: string, lastUrgentDate: str
 }
 ```
 
-- [ ] **Step 4: Run to check they pass**
+- [x] **Step 4: Run to check they pass**
 
 Run: `npx vitest run src/domain/quests`
 Expected: PASS.
 
-- [ ] **Step 5: Gate and commit**
+- [x] **Step 5: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
