@@ -66,4 +66,26 @@ describe('audio', () => {
     expect(FakeContext.instances[0]!.resume).toHaveBeenCalledTimes(1);
     cleanup();
   });
+
+  it('resumes again after the app is backgrounded and a new tap arrives', () => {
+    vi.stubGlobal('AudioContext', FakeContext);
+    const cleanup = installAudioUnlock(document);
+    document.dispatchEvent(new Event('click'));
+    const ctx = FakeContext.instances[0]!;
+    expect(ctx.resume).toHaveBeenCalledTimes(1);
+    ctx.state = 'suspended';
+    document.dispatchEvent(new Event('click'));
+    expect(FakeContext.instances).toHaveLength(1);
+    expect(ctx.resume).toHaveBeenCalledTimes(2);
+    cleanup();
+  });
+
+  it('resumes a suspended context before scheduling a sound', () => {
+    vi.stubGlobal('AudioContext', FakeContext);
+    unlockAudio();
+    const ctx = FakeContext.instances[0]!;
+    ctx.state = 'suspended';
+    playSound('tap');
+    expect(ctx.resume).toHaveBeenCalledTimes(2);
+  });
 });

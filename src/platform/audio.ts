@@ -42,20 +42,25 @@ export function unlockAudio(): void {
 
 export function installAudioUnlock(target: Document = document): () => void {
   const handler = () => {
-    unlockAudio();
-    cleanup();
-  };
-  const cleanup = () => {
-    target.removeEventListener('touchend', handler, true);
-    target.removeEventListener('click', handler, true);
+    if (context && context.state !== 'running') {
+      void context.resume().catch(() => {});
+    } else if (!context) {
+      unlockAudio();
+    }
   };
   target.addEventListener('touchend', handler, true);
   target.addEventListener('click', handler, true);
-  return cleanup;
+  return () => {
+    target.removeEventListener('touchend', handler, true);
+    target.removeEventListener('click', handler, true);
+  };
 }
 
 export function playSound(name: SoundName): void {
-  if (!enabled || !context || context.state !== 'running') return;
+  if (!enabled || !context) return;
+  if (context.state === 'suspended' || context.state === 'interrupted') {
+    void context.resume().catch(() => {});
+  }
   try {
     const t0 = context.currentTime;
     for (const [frequency, start, duration] of NOTES[name]) {
