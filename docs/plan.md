@@ -90,7 +90,7 @@ Unit tests sit next to their source as `*.test.ts(x)`.
 **Interfaces:**
 - Produces: npm scripts `dev`, `build`, `preview`, `typecheck`, `lint`, `test`, `e2e`, `icons`, `check`; Tailwind theme colours `void`, `panel`, `glow`, `glow-soft`, `ink`, `muted`, `danger`, `gold`; CSS classes `system-window`, `level-burst`, `safe-top`, `safe-bottom`, `safe-x`.
 
-- [ ] **Step 1: Create `package.json`**
+- [x] **Step 1: Create `package.json`**
 
 ```json
 {
@@ -114,7 +114,7 @@ Unit tests sit next to their source as `*.test.ts(x)`.
 
 (`&&` inside npm scripts is fine: npm runs scripts with `cmd.exe` on Windows, not PowerShell.)
 
-- [ ] **Step 2: Install approved packages (exact versions)**
+- [x] **Step 2: Install approved packages (exact versions)**
 
 ```powershell
 npm install react@19.3.0 react-dom@19.3.0 dexie@4.4.6 dexie-react-hooks@4.4.0
@@ -123,7 +123,7 @@ npm install -D vite@8.3.1 @vitejs/plugin-react@6.1.1 typescript@6.0.3 tailwindcs
 
 Expected: installs with no `ERESOLVE` error. If npm reports a peer conflict, stop and report it. Do not use `--force` or `--legacy-peer-deps`.
 
-- [ ] **Step 3: Create `tsconfig.json` (app code)**
+- [x] **Step 3: Create `tsconfig.json` (app code)**
 
 ```json
 {
@@ -147,7 +147,7 @@ Expected: installs with no `ERESOLVE` error. If npm reports a peer conflict, sto
 }
 ```
 
-- [ ] **Step 4: Create `tsconfig.node.json` (config files + e2e)**
+- [x] **Step 4: Create `tsconfig.node.json` (config files + e2e)**
 
 ```json
 {
@@ -167,7 +167,7 @@ Expected: installs with no `ERESOLVE` error. If npm reports a peer conflict, sto
 }
 ```
 
-- [ ] **Step 5: Create `vite.config.ts`, `vitest.config.ts`, `src/test/setup.ts`**
+- [x] **Step 5: Create `vite.config.ts`, `vitest.config.ts`, `src/test/setup.ts`**
 
 `vite.config.ts`:
 ```ts
@@ -207,7 +207,7 @@ afterEach(() => {
 });
 ```
 
-- [ ] **Step 6: Create `eslint.config.js`**
+- [x] **Step 6: Create `eslint.config.js`**
 
 ```js
 import js from '@eslint/js';
@@ -233,7 +233,7 @@ export default defineConfig([
 
 If `reactHooks.configs.flat.recommended` is undefined in the installed version, check `node_modules/eslint-plugin-react-hooks/README.md` for the flat-config export name and use that. Do not add other plugins.
 
-- [ ] **Step 7: Create `index.html`**
+- [x] **Step 7: Create `index.html`**
 
 ```html
 <!doctype html>
@@ -259,7 +259,7 @@ If `reactHooks.configs.flat.recommended` is undefined in the installed version, 
 </html>
 ```
 
-- [ ] **Step 8: Create `src/index.css`**
+- [x] **Step 8: Create `src/index.css`**
 
 ```css
 @import "tailwindcss";
@@ -355,7 +355,7 @@ textarea {
 }
 ```
 
-- [ ] **Step 9: Write the failing smoke test `src/App.test.tsx`**
+- [x] **Step 9: Write the failing smoke test `src/App.test.tsx`**
 
 ```tsx
 // @vitest-environment jsdom
@@ -371,12 +371,12 @@ describe('App scaffold', () => {
 });
 ```
 
-- [ ] **Step 10: Run it to check it fails**
+- [x] **Step 10: Run it to check it fails**
 
 Run: `npx vitest run src/App.test.tsx`
 Expected: FAIL, cannot resolve `./App`.
 
-- [ ] **Step 11: Create `src/App.tsx` and `src/main.tsx`**
+- [x] **Step 11: Create `src/App.tsx` and `src/main.tsx`**
 
 `src/App.tsx`:
 ```tsx
@@ -403,12 +403,12 @@ createRoot(document.getElementById('root')!).render(
 );
 ```
 
-- [ ] **Step 12: Run the full gate**
+- [x] **Step 12: Run the full gate**
 
 Run: `npm run check`
 Expected: typecheck passes, lint passes with 0 problems, 1 test passes, `vite build` writes `dist/`. Fix anything that fails before continuing.
 
-- [ ] **Step 13: Commit**
+- [x] **Step 13: Commit**
 
 ```powershell
 git add -A
