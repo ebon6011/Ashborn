@@ -6670,7 +6670,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 - Consumes: `exportData`, `importData`, `buildBackup`, `backupFileName`, `parseBackup`, `saveBackupFile`, `requestPersist`, `updateProfile`, `startDay`, `isStandalone`, `ProfileForm`, `MedicalNotice`.
 - Produces: `<SettingsScreen onShowInstallGuide: () => void />`. Accessible names used in tests: file input `Import backup file`, buttons `Export backup`, `Replace my data`, `Cancel`, switch `Sound`.
 
-- [ ] **Step 1: Write failing tests `src/ui/screens/SettingsScreen.test.tsx`**
+- [x] **Step 1: Write failing tests `src/ui/screens/SettingsScreen.test.tsx`**
 
 ```tsx
 // @vitest-environment jsdom
@@ -6726,12 +6726,12 @@ describe('SettingsScreen', () => {
 
 If jsdom's `File` has no `text()` method, change the screen to read the file with `await new Response(file).text()` instead. Do not mock it in the test.
 
-- [ ] **Step 2: Run to check it fails**
+- [x] **Step 2: Run to check it fails**
 
 Run: `npx vitest run src/ui/screens/SettingsScreen.test.tsx`
 Expected: FAIL, module not found.
 
-- [ ] **Step 3: Implement `src/ui/screens/SettingsScreen.tsx`**
+- [x] **Step 3: Implement `src/ui/screens/SettingsScreen.tsx`**
 
 ```tsx
 import { useState, type ChangeEvent } from 'react';
@@ -6942,12 +6942,12 @@ export function SettingsScreen({ onShowInstallGuide }: { onShowInstallGuide: () 
 }
 ```
 
-- [ ] **Step 4: Run to check it passes**
+- [x] **Step 4: Run to check it passes**
 
 Run: `npx vitest run src/ui/screens/SettingsScreen.test.tsx`
 Expected: PASS.
 
-- [ ] **Step 5: Gate and commit**
+- [x] **Step 5: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
