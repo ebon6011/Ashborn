@@ -94,12 +94,14 @@ function DailyQuestCard({ day, level }: { day: DayRecord; level: number }) {
 
 function QuestItemRow({ date, item, disabled }: { date: string; item: QuestItem; disabled: boolean }) {
   const [text, setText] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const done = item.progress >= item.target;
 
   async function save(value: number) {
     await setItemProgress(db, date, item.id, value, new Date());
     playSound(value >= item.target ? 'complete' : 'tap');
     setText('');
+    setError(null);
   }
 
   return (
@@ -128,6 +130,7 @@ function QuestItemRow({ date, item, disabled }: { date: string; item: QuestItem;
             onClick={() => {
               const value = parseNumberInput(text, { min: 0, max: 100_000, integer: true });
               if (value !== null) void save(value);
+              else setError('Enter a whole number.');
             }}
           >
             Save
@@ -136,6 +139,11 @@ function QuestItemRow({ date, item, disabled }: { date: string; item: QuestItem;
             Complete
           </Button>
         </div>
+      )}
+      {error && (
+        <p role="alert" className="mt-2 text-sm text-danger">
+          {error}
+        </p>
       )}
     </li>
   );

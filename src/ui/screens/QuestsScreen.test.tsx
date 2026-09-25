@@ -28,6 +28,14 @@ describe('QuestsScreen', () => {
     await waitFor(async () => expect((await db.days.get('2026-09-21'))?.items[1]?.progress).toBe(7));
   });
 
+  it('shows an inline error for invalid "done so far" input instead of doing nothing', async () => {
+    render(<QuestsScreen />);
+    fireEvent.change(await screen.findByLabelText('Sit-ups done so far'), { target: { value: 'abc' } });
+    fireEvent.click(screen.getAllByRole('button', { name: 'Save' })[1]!);
+    expect((await screen.findByRole('alert')).textContent).toBe('Enter a whole number.');
+    expect((await db.days.get('2026-09-21'))?.items[1]?.progress).toBe(0);
+  });
+
   it('takes a rest day without penalty', async () => {
     render(<QuestsScreen />);
     fireEvent.click(await screen.findByRole('button', { name: 'Rest today' }));
