@@ -26,7 +26,7 @@ export async function updateProfile(database: AshbornDB, input: ProfileInput, no
     if (!existing) throw new Error('Player not registered.');
     await database.profile.put({ ...input, id: 1, createdAt: existing.createdAt });
     const previous =
-      (await database.workoutPlans.get(weekStart)) ?? (await database.workoutPlans.get(addDays(weekStart, -7))) ?? null;
+      (await database.workoutPlans.get(addDays(weekStart, -7))) ?? (await database.workoutPlans.get(weekStart)) ?? null;
     await database.workoutPlans.put(generateWeekPlan(input, weekStart, previous));
   });
 }

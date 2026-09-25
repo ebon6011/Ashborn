@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { planVolume } from '../../domain/workout/plan';
-import { setupPlayer } from '../../test/dbFixtures';
+import { startDay } from './days';
+import { setupPlayer, neverUrgent } from '../../test/dbFixtures';
 import { at, sampleProfileInput } from '../../test/fixtures';
 import { getMeta } from '../meta';
 import { updateProfile } from './onboarding';
@@ -26,5 +27,20 @@ describe('updateProfile', () => {
     expect((await db.profile.get(1))?.daysPerWeek).toBe(6);
     expect((await db.player.get(1))?.level).toBe(4);
     expect(planVolume((await db.workoutPlans.get('2026-09-21'))!)).toBeLessThanOrEqual(Math.floor(before * 1.1));
+  });
+
+  it('caps repeated edits in one week against the previous week, so they cannot compound past +10%', async () => {
+    const db = await setupPlayer('2026-09-21'); // week of 2026-09-21, daysPerWeek: 3
+    const baseline = planVolume((await db.workoutPlans.get('2026-09-21'))!);
+
+    // Roll over into the next week: ensureWeekPlan caps the new week's plan against this baseline.
+    await startDay(db, at('2026-09-28'), neverUrgent);
+
+    // Two consecutive edits within that new week.
+    await updateProfile(db, { ...sampleProfileInput, daysPerWeek: 6 }, at('2026-09-29'));
+    await updateProfile(db, { ...sampleProfileInput, daysPerWeek: 7 }, at('2026-09-30'));
+
+    const after = planVolume((await db.workoutPlans.get('2026-09-28'))!);
+    expect(after).toBeLessThanOrEqual(Math.floor(baseline * 1.1));
   });
 });
