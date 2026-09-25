@@ -3867,7 +3867,7 @@ export function addFood(database: AshbornDB, input: FoodInput, now: Date): Promi
 export function deleteFood(database: AshbornDB, id: number): Promise<void>;
 ```
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 `src/db/repo/sideQuests.test.ts`:
 ```ts
@@ -3989,12 +3989,12 @@ describe('food log', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check they fail**
+- [x] **Step 2: Run to check they fail**
 
 Run: `npx vitest run src/db/repo`
 Expected: FAIL for the three new files (missing exports/modules). Task 13 tests still pass.
 
-- [ ] **Step 3: Implement `src/db/repo/sideQuests.ts`**
+- [x] **Step 3: Implement `src/db/repo/sideQuests.ts`**
 
 ```ts
 import { progression } from '../../config/progression';
@@ -4050,7 +4050,7 @@ export async function completeSideQuest(database: AshbornDB, id: number, now: Da
 }
 ```
 
-- [ ] **Step 4: Add `logSet` and `deleteSet` to `src/db/repo/training.ts`**
+- [x] **Step 4: Add `logSet` and `deleteSet` to `src/db/repo/training.ts`**
 
 Add these imports next to the existing ones:
 ```ts
@@ -4097,7 +4097,7 @@ export async function deleteSet(database: AshbornDB, id: number): Promise<void> 
 }
 ```
 
-- [ ] **Step 5: Implement `src/db/repo/food.ts`**
+- [x] **Step 5: Implement `src/db/repo/food.ts`**
 
 ```ts
 import { todayKey } from '../../domain/day';
@@ -4133,12 +4133,12 @@ export async function deleteFood(database: AshbornDB, id: number): Promise<void>
 }
 ```
 
-- [ ] **Step 6: Run to check they pass**
+- [x] **Step 6: Run to check they pass**
 
 Run: `npx vitest run src/db`
 Expected: PASS.
 
-- [ ] **Step 7: Gate and commit**
+- [x] **Step 7: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 

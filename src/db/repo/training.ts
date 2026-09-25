@@ -1,6 +1,9 @@
-import { addDays, weekStartOf } from '../../domain/day';
+import { getExercise } from '../../config/exercises';
+import { addDays, todayKey, weekStartOf } from '../../domain/day';
+import { isPersonalRecord } from '../../domain/workout/records';
 import { generateWeekPlan, type PlanProfile } from '../../domain/workout/plan';
-import type { AshbornDB } from '../schema';
+import { writeTx, type AshbornDB } from '../schema';
+import { unlockAchievements } from './player';
 
 export async function ensureWeekPlan(database: AshbornDB, profile: PlanProfile, date: string): Promise<void> {
   const weekStart = weekStartOf(date);
@@ -10,4 +13,36 @@ export async function ensureWeekPlan(database: AshbornDB, profile: PlanProfile, 
     (await database.workoutPlans.where('weekStart').below(weekStart).last()) ??
     null;
   await database.workoutPlans.put(generateWeekPlan(profile, weekStart, previous));
+}
+
+export interface SetInput {
+  exerciseId: string;
+  reps: number;
+  weightKg: number;
+}
+
+export async function logSet(database: AshbornDB, input: SetInput, now: Date): Promise<{ isPR: boolean }> {
+  const exercise = getExercise(input.exerciseId);
+  if (!exercise) throw new Error('Unknown exercise.');
+  if (!Number.isInteger(input.reps) || input.reps < 1 || input.reps > 1000) throw new Error('Reps must be a whole number from 1 to 1000.');
+  if (!Number.isFinite(input.weightKg) || input.weightKg < 0 || input.weightKg > 1000) throw new Error('Weight must be between 0 and 1000 kg.');
+  if (exercise.weighted && input.weightKg <= 0) throw new Error('Enter the weight you lifted.');
+
+  return writeTx(database, async () => {
+    const previous = await database.workoutSets.where('exerciseId').equals(exercise.id).toArray();
+    const set = {
+      exerciseId: exercise.id,
+      date: todayKey(now),
+      reps: input.reps,
+      weightKg: exercise.weighted ? input.weightKg : 0,
+      at: now.toISOString(),
+    };
+    await database.workoutSets.add(set);
+    await unlockAchievements(database, now);
+    return { isPR: isPersonalRecord(previous, set, exercise.weighted) };
+  });
+}
+
+export async function deleteSet(database: AshbornDB, id: number): Promise<void> {
+  await database.workoutSets.delete(id);
 }
