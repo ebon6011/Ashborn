@@ -86,7 +86,7 @@ export function StatusScreen({ onNavigate }: { onNavigate: (tab: Tab) => void })
         </div>
         <ProgressBar value={player.xp} max={need} label="Experience" />
         <p className="mt-3 text-sm text-muted">
-          Streak: <span className="text-ink">{player.streak} days</span> · Best {player.bestStreak}
+          Streak: <span className="text-ink">{player.streak} {player.streak === 1 ? 'day' : 'days'}</span> · Best {player.bestStreak}
         </p>
       </SystemWindow>
 

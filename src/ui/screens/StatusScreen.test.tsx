@@ -28,6 +28,20 @@ describe('StatusScreen', () => {
     await waitFor(async () => expect((await db.player.get(1))?.stats.strength).toBe(11));
   });
 
+  it('uses singular "day" for a streak of exactly one', async () => {
+    await seedApp();
+    await db.player.update(1, { streak: 1 });
+    render(<StatusScreen onNavigate={() => {}} />);
+    expect(await screen.findByText('1 day')).toBeTruthy();
+  });
+
+  it('uses plural "days" for a streak other than one', async () => {
+    await seedApp();
+    await db.player.update(1, { streak: 2 });
+    render(<StatusScreen onNavigate={() => {}} />);
+    expect(await screen.findByText('2 days')).toBeTruthy();
+  });
+
   it('shows the backup reminder after 7 days without a backup', async () => {
     await seedApp();
     await setMeta(db, 'installedAt', '2026-01-01T00:00:00.000Z');
