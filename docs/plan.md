@@ -7470,7 +7470,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 - Consumes: accessible names from Tasks 16–23.
 - Produces: `npm run e2e` runs 4 spec files on the `iphone-webkit` project against `vite preview`.
 
-- [ ] **Step 1: Create `playwright.config.ts`**
+- [x] **Step 1: Create `playwright.config.ts`**
 
 ```ts
 import { defineConfig, devices } from '@playwright/test';
@@ -7502,7 +7502,7 @@ export default defineConfig({
 
 If `devices['iPhone 15']` is undefined in the installed Playwright, use the newest `iPhone` entry listed in `node_modules/playwright-core/lib/server/deviceDescriptorsSource.json`.
 
-- [ ] **Step 2: Create `e2e/helpers.ts`**
+- [x] **Step 2: Create `e2e/helpers.ts`**
 
 ```ts
 import { expect, type Page } from '@playwright/test';
@@ -7536,7 +7536,7 @@ export async function completeDailyQuest(page: Page): Promise<void> {
 }
 ```
 
-- [ ] **Step 3: Create the specs**
+- [x] **Step 3: Create the specs**
 
 `e2e/onboarding.spec.ts`:
 ```ts
@@ -7652,14 +7652,14 @@ test('reloads offline after the first visit', async ({ page, context }) => {
 });
 ```
 
-- [ ] **Step 4: Run the e2e suite**
+- [x] **Step 4: Run the e2e suite**
 
 Run: `npm run e2e`
 Expected: 7 tests pass on `iphone-webkit`.
 
 If a test fails, use superpowers:systematic-debugging and look at the trace (`npx playwright show-trace test-results/…/trace.zip`). Only the offline test has an allowed fallback. If it fails **only** because Playwright's WebKit on Windows never gets a controlling service worker (confirm this: `navigator.serviceWorker.controller` stays `null` after the first reload), change it to `test.fixme(...)` with a comment explaining why. Offline mode is then covered by the precache test plus the manual check on the phone in Task 26. Report this to the owner.
 
-- [ ] **Step 5: Gate and commit**
+- [x] **Step 5: Gate and commit**
 
 Run: `npm run check`
 
