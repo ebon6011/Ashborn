@@ -2887,7 +2887,7 @@ export function importData(database: AshbornDB, data: BackupData): Promise<void>
 export function sampleBackupData(): BackupData;
 ```
 
-- [ ] **Step 1: Append `sampleBackupData` to `src/test/fixtures.ts`**
+- [x] **Step 1: Append `sampleBackupData` to `src/test/fixtures.ts`**
 
 Add these imports at the top and the function at the bottom:
 ```ts
@@ -2916,7 +2916,7 @@ export function sampleBackupData(): BackupData {
 }
 ```
 
-- [ ] **Step 2: Write failing tests `src/domain/backup.test.ts`**
+- [x] **Step 2: Write failing tests `src/domain/backup.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -3001,7 +3001,7 @@ describe('needsBackupReminder', () => {
 });
 ```
 
-- [ ] **Step 3: Write failing tests `src/db/backup.test.ts`**
+- [x] **Step 3: Write failing tests `src/db/backup.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -3038,12 +3038,12 @@ describe('database backup', () => {
 });
 ```
 
-- [ ] **Step 4: Run to check they fail**
+- [x] **Step 4: Run to check they fail**
 
 Run: `npx vitest run src/domain/backup.test.ts src/db/backup.test.ts`
 Expected: FAIL, modules not found.
 
-- [ ] **Step 5: Implement `src/domain/validate.ts`**
+- [x] **Step 5: Implement `src/domain/validate.ts`**
 
 ```ts
 import { isDateKey } from './day';
@@ -3102,7 +3102,7 @@ export const rowValidators: Record<BackupTable, Check> = {
 };
 ```
 
-- [ ] **Step 6: Implement `src/domain/backup.ts`**
+- [x] **Step 6: Implement `src/domain/backup.ts`**
 
 ```ts
 import { todayKey } from './day';
@@ -3217,7 +3217,7 @@ export function needsBackupReminder(now: Date, lastBackupAt: string | undefined,
 }
 ```
 
-- [ ] **Step 7: Implement `src/db/backup.ts`**
+- [x] **Step 7: Implement `src/db/backup.ts`**
 
 ```ts
 import type { BackupData } from '../domain/backup';
@@ -3262,12 +3262,12 @@ export async function importData(database: AshbornDB, data: BackupData): Promise
 }
 ```
 
-- [ ] **Step 8: Run to check they pass**
+- [x] **Step 8: Run to check they pass**
 
 Run: `npx vitest run src/domain/backup.test.ts src/db/backup.test.ts`
 Expected: PASS.
 
-- [ ] **Step 9: Gate and commit**
+- [x] **Step 9: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
