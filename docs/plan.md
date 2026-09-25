@@ -6978,7 +6978,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 useDayCycle(active: boolean): void                // startDay on launch, on visibility, every 60 s after midnight
 ```
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 `src/ui/overlays/EventHost.test.tsx`:
 ```tsx
@@ -7041,12 +7041,12 @@ describe('App', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check they fail**
+- [x] **Step 2: Run to check they fail**
 
 Run: `npx vitest run src/App.test.tsx src/ui/overlays/EventHost.test.tsx`
 Expected: FAIL, modules not found and the old App has no Awakening.
 
-- [ ] **Step 3: Implement overlays**
+- [x] **Step 3: Implement overlays**
 
 `src/ui/overlays/LevelUpOverlay.tsx`:
 ```tsx
@@ -7156,7 +7156,7 @@ export function EventHost() {
 }
 ```
 
-- [ ] **Step 4: Implement `src/ui/hooks/useDayCycle.ts`**
+- [x] **Step 4: Implement `src/ui/hooks/useDayCycle.ts`**
 
 ```ts
 import { useEffect } from 'react';
@@ -7189,7 +7189,7 @@ export function useDayCycle(active: boolean): void {
 }
 ```
 
-- [ ] **Step 5: Replace `src/App.tsx`**
+- [x] **Step 5: Replace `src/App.tsx`**
 
 ```tsx
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -7252,7 +7252,7 @@ export default function App() {
 }
 ```
 
-- [ ] **Step 6: Run the whole unit suite**
+- [x] **Step 6: Run the whole unit suite**
 
 Run: `npm test`
 Expected: PASS, every test file.
@@ -7269,7 +7269,7 @@ Create `.claude/launch.json` with a configuration named `ashborn-dev` (`runtimeE
 
 Take a screenshot of the Status window. Check that nothing sits under the notch area or the tab bar, and that text is readable. Reset the viewport to `desktop` afterwards.
 
-- [ ] **Step 8: Gate and commit**
+- [x] **Step 8: Gate and commit**
 
 Run: `npm run check`
 Expected: all green.
