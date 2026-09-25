@@ -4,18 +4,23 @@ import { writeTx, type AshbornDB } from './schema';
 const TRANSIENT_META = new Set(['pendingEvents']);
 
 export async function exportData(database: AshbornDB): Promise<BackupData> {
-  const [profile, player, days, sideQuests, questLog, workoutPlans, workoutSets, foodLog, achievements, meta] = await Promise.all([
-    database.profile.toArray(),
-    database.player.toArray(),
-    database.days.toArray(),
-    database.sideQuests.toArray(),
-    database.questLog.toArray(),
-    database.workoutPlans.toArray(),
-    database.workoutSets.toArray(),
-    database.foodLog.toArray(),
-    database.achievements.toArray(),
-    database.meta.toArray(),
-  ]);
+  const [profile, player, days, sideQuests, questLog, workoutPlans, workoutSets, foodLog, achievements, meta] = await database.transaction(
+    'r',
+    database.tables,
+    () =>
+      Promise.all([
+        database.profile.toArray(),
+        database.player.toArray(),
+        database.days.toArray(),
+        database.sideQuests.toArray(),
+        database.questLog.toArray(),
+        database.workoutPlans.toArray(),
+        database.workoutSets.toArray(),
+        database.foodLog.toArray(),
+        database.achievements.toArray(),
+        database.meta.toArray(),
+      ]),
+  );
   return {
     profile, player, days, sideQuests, questLog, workoutPlans, workoutSets, foodLog, achievements,
     meta: meta.filter((row) => !TRANSIENT_META.has(row.key)),
