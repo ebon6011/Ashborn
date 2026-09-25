@@ -2107,7 +2107,7 @@ export function exerciseRank(sets: readonly Pick<WorkoutSet,'date'|'reps'|'weigh
 export function summarizeProgress(sets: readonly WorkoutSet[], isWeighted: (exerciseId: string) => boolean): { hasPR: boolean; hasSRank: boolean };
 ```
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 `src/domain/workout/records.test.ts`:
 ```ts
@@ -2190,12 +2190,12 @@ describe('summarizeProgress', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check they fail**
+- [x] **Step 2: Run to check they fail**
 
 Run: `npx vitest run src/domain/workout`
 Expected: FAIL for records and exerciseRank (modules not found).
 
-- [ ] **Step 3: Implement `src/domain/workout/records.ts`**
+- [x] **Step 3: Implement `src/domain/workout/records.ts`**
 
 ```ts
 import type { WorkoutSet } from '../types';
@@ -2237,7 +2237,7 @@ export function isPersonalRecord(previous: readonly SetResult[], next: SetResult
 }
 ```
 
-- [ ] **Step 4: Implement `src/domain/workout/exerciseRank.ts`**
+- [x] **Step 4: Implement `src/domain/workout/exerciseRank.ts`**
 
 ```ts
 import { progression } from '../../config/progression';
@@ -2275,12 +2275,12 @@ export function summarizeProgress(
 }
 ```
 
-- [ ] **Step 5: Run to check they pass**
+- [x] **Step 5: Run to check they pass**
 
 Run: `npx vitest run src/domain/workout`
 Expected: PASS.
 
-- [ ] **Step 6: Gate and commit**
+- [x] **Step 6: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
