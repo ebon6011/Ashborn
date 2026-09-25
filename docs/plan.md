@@ -4186,7 +4186,7 @@ iPhone facts behind these helpers. Check each on MDN before relying on it and do
 - `navigator.storage.persist()` is supported in Safari 17+.
 - `navigator.share({ files })` (iOS 15+) opens the share sheet, which has "Save to Files".
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 `src/platform/standalone.test.ts`:
 ```ts
@@ -4343,12 +4343,12 @@ describe('saveBackupFile', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check they fail**
+- [x] **Step 2: Run to check they fail**
 
 Run: `npx vitest run src/platform`
 Expected: FAIL, modules not found.
 
-- [ ] **Step 3: Implement `src/platform/standalone.ts`**
+- [x] **Step 3: Implement `src/platform/standalone.ts`**
 
 ```ts
 type MatchMedia = (query: string) => { matches: boolean };
@@ -4369,7 +4369,7 @@ export function isStandalone(): boolean {
 }
 ```
 
-- [ ] **Step 4: Implement `src/platform/storage.ts`**
+- [x] **Step 4: Implement `src/platform/storage.ts`**
 
 ```ts
 import type { PersistResult } from '../domain/types';
@@ -4387,7 +4387,7 @@ export async function requestPersist(storage: PersistApi | undefined = globalThi
 }
 ```
 
-- [ ] **Step 5: Implement `src/platform/audio.ts`**
+- [x] **Step 5: Implement `src/platform/audio.ts`**
 
 ```ts
 export type SoundName = 'chime' | 'complete' | 'levelUp' | 'tap';
@@ -4468,7 +4468,7 @@ export function playSound(name: SoundName): void {
 }
 ```
 
-- [ ] **Step 6: Implement `src/platform/download.ts`**
+- [x] **Step 6: Implement `src/platform/download.ts`**
 
 ```ts
 export type SaveOutcome = 'shared' | 'downloaded' | 'cancelled';
@@ -4501,12 +4501,12 @@ export async function saveBackupFile(json: string, fileName: string): Promise<Sa
 }
 ```
 
-- [ ] **Step 7: Run to check they pass**
+- [x] **Step 7: Run to check they pass**
 
 Run: `npx vitest run src/platform`
 Expected: PASS.
 
-- [ ] **Step 8: Gate and commit**
+- [x] **Step 8: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
