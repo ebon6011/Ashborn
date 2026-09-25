@@ -5513,7 +5513,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 - Consumes: `usePlayer`, `useProfile`, `assignStats`, `setTitle`, `xpToNext`, `rankForLevel`, `titleFor`, `ACHIEVEMENTS`, `needsBackupReminder`.
 - Produces: `<StatusScreen onNavigate: (tab: Tab) => void />`, `<BackupReminder onOpenSettings: () => void />`. Test ids: `level`, `stat-<key>`.
 
-- [ ] **Step 1: Write failing tests `src/ui/screens/StatusScreen.test.tsx`**
+- [x] **Step 1: Write failing tests `src/ui/screens/StatusScreen.test.tsx`**
 
 ```tsx
 // @vitest-environment jsdom
@@ -5557,12 +5557,12 @@ describe('StatusScreen', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check it fails**
+- [x] **Step 2: Run to check it fails**
 
 Run: `npx vitest run src/ui/screens/StatusScreen.test.tsx`
 Expected: FAIL, module not found.
 
-- [ ] **Step 3: Implement `src/ui/overlays/BackupReminder.tsx`**
+- [x] **Step 3: Implement `src/ui/overlays/BackupReminder.tsx`**
 
 ```tsx
 import { Button } from '../components/Button';
@@ -5581,7 +5581,7 @@ export function BackupReminder({ onOpenSettings }: { onOpenSettings: () => void 
 }
 ```
 
-- [ ] **Step 4: Implement `src/ui/screens/StatusScreen.tsx`**
+- [x] **Step 4: Implement `src/ui/screens/StatusScreen.tsx`**
 
 ```tsx
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -5746,12 +5746,12 @@ export function StatusScreen({ onNavigate }: { onNavigate: (tab: Tab) => void })
 }
 ```
 
-- [ ] **Step 5: Run to check it passes**
+- [x] **Step 5: Run to check it passes**
 
 Run: `npx vitest run src/ui/screens/StatusScreen.test.tsx`
 Expected: PASS.
 
-- [ ] **Step 6: Gate and commit**
+- [x] **Step 6: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
