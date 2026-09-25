@@ -1834,7 +1834,7 @@ export function generateWeekPlan(profile: PlanProfile, weekStart: string, previo
 
 Every weighted exercise has an `alternativeId` that points to a no-equipment exercise in the same category.
 
-- [ ] **Step 1: Create `src/config/exercises.ts`**
+- [x] **Step 1: Create `src/config/exercises.ts`**
 
 ```ts
 import type { Equipment, ExerciseCategory } from '../domain/types';
@@ -1892,7 +1892,7 @@ export function exercisesFor(equipment: Equipment): ExerciseDef[] {
 }
 ```
 
-- [ ] **Step 2: Write failing tests `src/domain/workout/plan.test.ts`**
+- [x] **Step 2: Write failing tests `src/domain/workout/plan.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1970,12 +1970,12 @@ describe('generateWeekPlan', () => {
 });
 ```
 
-- [ ] **Step 3: Run to check it fails**
+- [x] **Step 3: Run to check it fails**
 
 Run: `npx vitest run src/domain/workout/plan.test.ts`
 Expected: FAIL, module `./plan` not found.
 
-- [ ] **Step 4: Implement `src/domain/workout/plan.ts`**
+- [x] **Step 4: Implement `src/domain/workout/plan.ts`**
 
 ```ts
 import { progression } from '../../config/progression';
@@ -2066,12 +2066,12 @@ export function generateWeekPlan(profile: PlanProfile, weekStart: string, previo
 }
 ```
 
-- [ ] **Step 5: Run to check it passes**
+- [x] **Step 5: Run to check it passes**
 
 Run: `npx vitest run src/domain/workout/plan.test.ts`
 Expected: PASS.
 
-- [ ] **Step 6: Gate and commit**
+- [x] **Step 6: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
