@@ -6436,7 +6436,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 - Consumes: `calculateTargets`, `sumFood`, `MIN_CALORIES`, `addFood`, `deleteFood`.
 - Produces: `<NutritionScreen />`.
 
-- [ ] **Step 1: Write failing tests `src/ui/screens/NutritionScreen.test.tsx`**
+- [x] **Step 1: Write failing tests `src/ui/screens/NutritionScreen.test.tsx`**
 
 ```tsx
 // @vitest-environment jsdom
@@ -6479,12 +6479,12 @@ describe('NutritionScreen', () => {
 
 The floor case: male, 80 kg, 180 cm, 30 years old, fat loss, 1 day a week. BMR is 1780 and TDEE is 2136. A 20 % deficit gives 1709, which is below BMR, so the floor applies.
 
-- [ ] **Step 2: Run to check it fails**
+- [x] **Step 2: Run to check it fails**
 
 Run: `npx vitest run src/ui/screens/NutritionScreen.test.tsx`
 Expected: FAIL, module not found.
 
-- [ ] **Step 3: Implement `src/ui/screens/NutritionScreen.tsx`**
+- [x] **Step 3: Implement `src/ui/screens/NutritionScreen.tsx`**
 
 ```tsx
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -6640,12 +6640,12 @@ export function NutritionScreen() {
 }
 ```
 
-- [ ] **Step 4: Run to check it passes**
+- [x] **Step 4: Run to check it passes**
 
 Run: `npx vitest run src/ui/screens/NutritionScreen.test.tsx`
 Expected: PASS.
 
-- [ ] **Step 5: Gate and commit**
+- [x] **Step 5: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
