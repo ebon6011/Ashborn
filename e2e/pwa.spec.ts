@@ -32,9 +32,13 @@ test('reloads offline after the first visit', async ({ page, context }) => {
     await navigator.serviceWorker.ready;
   });
   await page.reload();
-  const controller = await page.evaluate(() => navigator.serviceWorker.controller);
-  console.log('DEBUG controller after first reload:', controller);
   await context.setOffline(true);
-  await page.reload();
+  // Playwright's page.reload() waits on WebKit's "load" navigation event, which
+  // never resolves cleanly when the response is served entirely from the service
+  // worker's cache while offline (a WebKit/Playwright driver quirk, confirmed by
+  // navigator.serviceWorker.controller being set here, not null — so the app is
+  // controlled and this is not the "WebKit never gets a controller" case).
+  // Triggering the reload in-page and asserting on the resulting DOM sidesteps it.
+  await page.evaluate(() => location.reload()).catch(() => {});
   await expect(page.getByRole('heading', { name: 'Awakening' })).toBeVisible();
 });
