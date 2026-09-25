@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { addDays } from './day';
 import { MAX_BACKFILL_DAYS, processDays } from './dayCycle';
-import { createDayRecord } from './quests/daily';
+import { createDayRecord, partialXp } from './quests/daily';
 import type { DayRecord } from './types';
 
 const open = (date: string): DayRecord => createDayRecord(date, 'beginner', 1, null);
@@ -51,12 +51,24 @@ describe('processDays', () => {
     expect(r.closed[0]).toMatchObject({ status: 'missed', xpAwarded: 16 });
   });
 
-  it('does not re-award XP for a day already finished as partial', () => {
+  it('does not re-award XP for a day already finished as partial with no further progress', () => {
     const day = { ...open('2026-09-24'), status: 'partial' as const, xpAwarded: 16 };
     const r = processDays({ ...base, lastOpenDate: '2026-09-24', today: '2026-09-25', days: { '2026-09-24': day } });
     expect(r.xpToAward).toBe(0);
     expect(r.closed[0]).toMatchObject({ status: 'missed', xpAwarded: 16 });
     expect(r.needsPenalty).toBe(true);
+  });
+
+  it('awards the missing XP for a partial day whose items progressed further before midnight', () => {
+    const day = { ...open('2026-09-24'), status: 'partial' as const, xpAwarded: 16 };
+    for (let i = 1; i < day.items.length; i++) {
+      day.items[i] = { ...day.items[i]!, progress: day.items[i]!.target };
+    }
+    const expectedXp = partialXp(day.items, base.level) - 16;
+    const r = processDays({ ...base, lastOpenDate: '2026-09-24', today: '2026-09-25', days: { '2026-09-24': day } });
+    expect(expectedXp).toBeGreaterThan(0);
+    expect(r.xpToAward).toBe(expectedXp);
+    expect(r.closed[0]).toMatchObject({ status: 'missed', xpAwarded: 16 + expectedXp });
   });
 
   it('fills a multi-day gap with missed days but only one penalty', () => {

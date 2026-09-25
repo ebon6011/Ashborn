@@ -53,7 +53,7 @@ export function processDays(input: ProcessDaysInput): ProcessDaysResult {
     }
 
     let xpAwarded = record.xpAwarded;
-    if (record.status === 'open') {
+    if (record.status === 'open' || record.status === 'partial') {
       const earned = partialXp(record.items, level) - record.xpAwarded;
       if (earned > 0) {
         xpToAward += earned;
