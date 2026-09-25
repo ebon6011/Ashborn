@@ -4548,7 +4548,7 @@ emptyApp(): Promise<void>                 // resets the app db singleton to empt
 mockReducedMotion(matches: boolean): void
 ```
 
-- [ ] **Step 1: Create `src/test/uiFixtures.ts`**
+- [x] **Step 1: Create `src/test/uiFixtures.ts`**
 
 ```ts
 import { vi } from 'vitest';
@@ -4581,7 +4581,7 @@ export function mockReducedMotion(matches: boolean): void {
 }
 ```
 
-- [ ] **Step 2: Write failing tests**
+- [x] **Step 2: Write failing tests**
 
 `src/ui/components/Typewriter.test.tsx`:
 ```tsx
@@ -4683,12 +4683,12 @@ describe('TabBar', () => {
 });
 ```
 
-- [ ] **Step 3: Run to check they fail**
+- [x] **Step 3: Run to check they fail**
 
 Run: `npx vitest run src/ui`
 Expected: FAIL, modules not found.
 
-- [ ] **Step 4: Implement hooks**
+- [x] **Step 4: Implement hooks**
 
 `src/ui/hooks/useReducedMotion.ts`:
 ```ts
@@ -4732,7 +4732,7 @@ export function useMeta<K extends keyof MetaMap>(key: K): MetaMap[K] | undefined
 }
 ```
 
-- [ ] **Step 5: Implement components**
+- [x] **Step 5: Implement components**
 
 `src/ui/components/SystemWindow.tsx`:
 ```tsx
@@ -5047,12 +5047,12 @@ export function RankBadge({ rank, size = 'md' }: { rank: Rank; size?: 'sm' | 'md
 }
 ```
 
-- [ ] **Step 6: Run to check they pass**
+- [x] **Step 6: Run to check they pass**
 
 Run: `npx vitest run src/ui`
 Expected: PASS.
 
-- [ ] **Step 7: Gate and commit**
+- [x] **Step 7: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`. If `eslint-plugin-react-hooks` flags a pattern, fix the code the way the rule message suggests. Do not disable the rule.
 
