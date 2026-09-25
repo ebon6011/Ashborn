@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useState, type FormEvent } from 'react';
 import { completeUrgent, finishDay, setItemProgress, setPenaltyProgress, setRest } from '../../db/repo/days';
-import { archiveSideQuest, completeSideQuest, createSideQuest } from '../../db/repo/sideQuests';
+import { archiveSideQuest, completeSideQuest, createSideQuest, updateSideQuest } from '../../db/repo/sideQuests';
 import { db } from '../../db/schema';
 import { parseNumberInput } from '../../domain/input';
 import { dailyQuestXp, partialXp } from '../../domain/quests/daily';
@@ -208,20 +208,37 @@ function SideQuests({ date }: { date: string }) {
     [date],
     [] as string[],
   );
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [title, setTitle] = useState('');
   const [xp, setXp] = useState<number | null>(20);
   const [stat, setStat] = useState<StatKey>('discipline');
   const [formKey, setFormKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  async function add(event: FormEvent) {
+  function resetForm() {
+    setEditingId(null);
+    setTitle('');
+    setXp(20);
+    setStat('discipline');
+    setFormKey((k) => k + 1);
+    setError(null);
+  }
+
+  function startEdit(id: number, current: { title: string; xp: number; stat: StatKey }) {
+    setEditingId(id);
+    setTitle(current.title);
+    setXp(current.xp);
+    setStat(current.stat);
+    setFormKey((k) => k + 1);
+    setError(null);
+  }
+
+  async function submit(event: FormEvent) {
     event.preventDefault();
     try {
-      await createSideQuest(db, { title, xp: xp ?? 20, stat });
-      setTitle('');
-      setXp(20);
-      setFormKey((k) => k + 1);
-      setError(null);
+      if (editingId !== null) await updateSideQuest(db, editingId, { title, xp: xp ?? 20, stat });
+      else await createSideQuest(db, { title, xp: xp ?? 20, stat });
+      resetForm();
     } catch (err) {
       setError((err as Error).message);
     }
@@ -254,6 +271,9 @@ function SideQuests({ date }: { date: string }) {
                   Done
                 </Button>
               )}
+              <Button variant="ghost" aria-label={`Edit ${q.title}`} onClick={() => startEdit(q.id, q)}>
+                Edit
+              </Button>
               <Button
                 variant="ghost"
                 aria-label={`Remove ${q.title}`}
@@ -267,7 +287,7 @@ function SideQuests({ date }: { date: string }) {
           );
         })}
       </ul>
-      <form key={formKey} onSubmit={(e) => void add(e)} className="mt-4 space-y-3">
+      <form key={formKey} onSubmit={(e) => void submit(e)} className="mt-4 space-y-3">
         <TextField label="Quest name" value={title} onChange={setTitle} />
         <NumberField label="Reward" unit="XP" value={xp} onChange={setXp} rule={{ min: 10, max: 50, integer: true }} />
         <label className="block">
@@ -289,9 +309,16 @@ function SideQuests({ date }: { date: string }) {
             {error}
           </p>
         )}
-        <Button type="submit" className="w-full">
-          Add quest
-        </Button>
+        <div className={editingId !== null ? 'grid grid-cols-2 gap-2' : ''}>
+          {editingId !== null && (
+            <Button type="button" variant="ghost" onClick={resetForm}>
+              Cancel
+            </Button>
+          )}
+          <Button type="submit" className={editingId === null ? 'w-full' : ''}>
+            {editingId !== null ? 'Save changes' : 'Add quest'}
+          </Button>
+        </div>
       </form>
     </SystemWindow>
   );
