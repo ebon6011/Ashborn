@@ -5083,7 +5083,7 @@ export const PROFILE_RULES: { age; heightCm; weightKg; daysPerWeek; minutesPerSe
 <Awakening />                            // form → notice → "Player Registered" → Begin (registers, requests persist)
 ```
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 `src/ui/screens/ProfileForm.test.tsx`:
 ```tsx
@@ -5193,12 +5193,12 @@ describe('Awakening', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check they fail**
+- [x] **Step 2: Run to check they fail**
 
 Run: `npx vitest run src/ui/screens src/ui/overlays`
 Expected: FAIL, modules not found.
 
-- [ ] **Step 3: Implement `src/ui/screens/ProfileForm.tsx`**
+- [x] **Step 3: Implement `src/ui/screens/ProfileForm.tsx`**
 
 ```tsx
 import { useState, type FormEvent } from 'react';
@@ -5324,7 +5324,7 @@ export function ProfileForm({ initial, submitLabel, onSubmit }: Props) {
 }
 ```
 
-- [ ] **Step 4: Implement `src/ui/overlays/MedicalNotice.tsx`**
+- [x] **Step 4: Implement `src/ui/overlays/MedicalNotice.tsx`**
 
 ```tsx
 import { Button } from '../components/Button';
@@ -5351,7 +5351,7 @@ export function MedicalNotice({ onAccept, acceptLabel = 'I understand' }: { onAc
 }
 ```
 
-- [ ] **Step 5: Implement `src/ui/overlays/InstallGuide.tsx`**
+- [x] **Step 5: Implement `src/ui/overlays/InstallGuide.tsx`**
 
 ```tsx
 import { Button } from '../components/Button';
@@ -5390,7 +5390,7 @@ export function InstallGuide({ onClose }: { onClose: () => void }) {
 
 Before committing, confirm the "separate data" statement against WebKit or Apple documentation (search "home screen web app storage separate from Safari"). If the documentation does not support it, change the sentence to: "Install first, then create your player, so your progress lives in the app."
 
-- [ ] **Step 6: Implement `src/ui/screens/Awakening.tsx`**
+- [x] **Step 6: Implement `src/ui/screens/Awakening.tsx`**
 
 ```tsx
 import { useState } from 'react';
@@ -5483,12 +5483,12 @@ export function Awakening() {
 }
 ```
 
-- [ ] **Step 7: Run to check they pass**
+- [x] **Step 7: Run to check they pass**
 
 Run: `npx vitest run src/ui`
 Expected: PASS.
 
-- [ ] **Step 8: Gate and commit**
+- [x] **Step 8: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
