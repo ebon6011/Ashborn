@@ -14,6 +14,11 @@ describe('TrainingScreen', () => {
     expect(screen.getByText('Wednesday · Full body')).toBeTruthy();
   });
 
+  it('points to the Quests tab for rest days instead of naming unlisted days', async () => {
+    render(<TrainingScreen />);
+    expect(await screen.findByText('Not a training day? Tap Rest today on the Quests tab to keep your streak.')).toBeTruthy();
+  });
+
   it('logs a set and shows it in records', async () => {
     render(<TrainingScreen />);
     fireEvent.click((await screen.findAllByRole('button', { name: /^Push-up/ }))[0]!);

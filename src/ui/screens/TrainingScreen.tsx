@@ -71,7 +71,7 @@ export function TrainingScreen() {
             ))}
           </ul>
         )}
-        <p className="mt-3 text-sm text-muted">Days not listed are rest days. Rest is always allowed.</p>
+        <p className="mt-3 text-sm text-muted">Not a training day? Tap Rest today on the Quests tab to keep your streak.</p>
       </SystemWindow>
 
       <SystemWindow title="Log any exercise">
