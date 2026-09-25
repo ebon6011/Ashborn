@@ -2321,7 +2321,7 @@ export interface NumberRule { min: number; max: number; integer?: boolean }
 export function parseNumberInput(raw: string, rule: NumberRule): number | null;
 ```
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 `src/domain/stats.test.ts`:
 ```ts
@@ -2441,12 +2441,12 @@ describe('parseNumberInput', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check they fail**
+- [x] **Step 2: Run to check they fail**
 
 Run: `npx vitest run src/domain/stats.test.ts src/domain/achievements.test.ts src/domain/input.test.ts`
 Expected: FAIL, modules not found.
 
-- [ ] **Step 3: Implement `src/domain/stats.ts`**
+- [x] **Step 3: Implement `src/domain/stats.ts`**
 
 ```ts
 import { progression } from '../config/progression';
@@ -2504,7 +2504,7 @@ export function addSideQuestProgress(player: Player, stat: StatKey): Player {
 }
 ```
 
-- [ ] **Step 4: Implement `src/domain/achievements.ts`**
+- [x] **Step 4: Implement `src/domain/achievements.ts`**
 
 ```ts
 import { progression } from '../config/progression';
@@ -2544,7 +2544,7 @@ export function titleFor(titleId: string | null): string {
 }
 ```
 
-- [ ] **Step 5: Implement `src/domain/input.ts`**
+- [x] **Step 5: Implement `src/domain/input.ts`**
 
 ```ts
 export interface NumberRule {
@@ -2564,12 +2564,12 @@ export function parseNumberInput(raw: string, rule: NumberRule): number | null {
 }
 ```
 
-- [ ] **Step 6: Run to check they pass**
+- [x] **Step 6: Run to check they pass**
 
 Run: `npx vitest run src/domain`
 Expected: PASS, all domain tests.
 
-- [ ] **Step 7: Gate and commit**
+- [x] **Step 7: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
