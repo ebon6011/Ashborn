@@ -11,8 +11,12 @@ export function useDayCycle(active: boolean): void {
     const run = () => {
       const now = new Date();
       if (!shouldRollOver(current, now)) return;
-      current = todayKey(now);
-      startDay(db, now).catch((error: unknown) => console.error('Daily reset failed', error));
+      const key = todayKey(now);
+      startDay(db, now)
+        .then(() => {
+          current = key;
+        })
+        .catch((error: unknown) => console.error('Daily reset failed', error));
     };
     const onVisible = () => {
       if (document.visibilityState === 'visible') run();
