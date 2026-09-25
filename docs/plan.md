@@ -1405,7 +1405,7 @@ Rules (spec §5):
 - Any missed day resets the streak to 0 and sets `needsPenalty`: one penalty, never stacked.
 - If the clock moved backwards (`today < lastOpenDate`), nothing is closed and `currentDate` stays `lastOpenDate`.
 
-- [ ] **Step 1: Write failing tests `src/domain/dayCycle.test.ts`**
+- [x] **Step 1: Write failing tests `src/domain/dayCycle.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1499,12 +1499,12 @@ describe('processDays', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check it fails**
+- [x] **Step 2: Run to check it fails**
 
 Run: `npx vitest run src/domain/dayCycle.test.ts`
 Expected: FAIL, module not found.
 
-- [ ] **Step 3: Implement `src/domain/dayCycle.ts`**
+- [x] **Step 3: Implement `src/domain/dayCycle.ts`**
 
 ```ts
 import { dateRange } from './day';
@@ -1576,12 +1576,12 @@ export function processDays(input: ProcessDaysInput): ProcessDaysResult {
 }
 ```
 
-- [ ] **Step 4: Run to check it passes**
+- [x] **Step 4: Run to check it passes**
 
 Run: `npx vitest run src/domain/dayCycle.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Gate and commit**
+- [x] **Step 5: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
