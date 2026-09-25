@@ -3318,7 +3318,7 @@ export function setupPlayer(date?: string): Promise<AshbornDB>;           // fre
 export function completeDaily(database: AshbornDB, date: string): Promise<void>;
 ```
 
-- [ ] **Step 1: Create `src/test/dbFixtures.ts`**
+- [x] **Step 1: Create `src/test/dbFixtures.ts`**
 
 ```ts
 import type { AshbornDB } from '../db/schema';
@@ -3341,7 +3341,7 @@ export async function completeDaily(database: AshbornDB, date: string): Promise<
 }
 ```
 
-- [ ] **Step 2: Write failing tests `src/db/repo/onboarding.test.ts`**
+- [x] **Step 2: Write failing tests `src/db/repo/onboarding.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -3376,7 +3376,7 @@ describe('updateProfile', () => {
 });
 ```
 
-- [ ] **Step 3: Write failing tests `src/db/repo/days.test.ts`**
+- [x] **Step 3: Write failing tests `src/db/repo/days.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -3514,7 +3514,7 @@ describe('startDay', () => {
 });
 ```
 
-- [ ] **Step 4: Write failing tests `src/db/repo/player.test.ts`**
+- [x] **Step 4: Write failing tests `src/db/repo/player.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -3542,12 +3542,12 @@ describe('player actions', () => {
 });
 ```
 
-- [ ] **Step 5: Run to check they fail**
+- [x] **Step 5: Run to check they fail**
 
 Run: `npx vitest run src/db/repo`
 Expected: FAIL, modules not found.
 
-- [ ] **Step 6: Implement `src/db/repo/player.ts`**
+- [x] **Step 6: Implement `src/db/repo/player.ts`**
 
 ```ts
 import { getExercise } from '../../config/exercises';
@@ -3631,7 +3631,7 @@ export async function setTitle(database: AshbornDB, titleId: string | null): Pro
 }
 ```
 
-- [ ] **Step 7: Implement `src/db/repo/training.ts` (ensureWeekPlan only; Task 14 adds more)**
+- [x] **Step 7: Implement `src/db/repo/training.ts` (ensureWeekPlan only; Task 14 adds more)**
 
 ```ts
 import { addDays, weekStartOf } from '../../domain/day';
@@ -3649,7 +3649,7 @@ export async function ensureWeekPlan(database: AshbornDB, profile: PlanProfile, 
 }
 ```
 
-- [ ] **Step 8: Implement `src/db/repo/onboarding.ts`**
+- [x] **Step 8: Implement `src/db/repo/onboarding.ts`**
 
 ```ts
 import { addDays, todayKey, weekStartOf } from '../../domain/day';
@@ -3686,7 +3686,7 @@ export async function updateProfile(database: AshbornDB, input: ProfileInput, no
 }
 ```
 
-- [ ] **Step 9: Implement `src/db/repo/days.ts`**
+- [x] **Step 9: Implement `src/db/repo/days.ts`**
 
 ```ts
 import { addDays, dateRange, todayKey } from '../../domain/day';
@@ -3821,12 +3821,12 @@ export async function completeUrgent(database: AshbornDB, date: string, now: Dat
 }
 ```
 
-- [ ] **Step 10: Run to check they pass**
+- [x] **Step 10: Run to check they pass**
 
 Run: `npx vitest run src/db`
 Expected: PASS. If a test fails, use superpowers:systematic-debugging. Do not weaken the test.
 
-- [ ] **Step 11: Gate and commit**
+- [x] **Step 11: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
