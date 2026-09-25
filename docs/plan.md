@@ -7683,11 +7683,11 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 **Interfaces:**
 - Produces: every push to `main` builds and deploys to `https://ebon6011.github.io/ashborn/`.
 
-- [ ] **Step 1: Check the current major versions of the GitHub Actions used**
+- [x] **Step 1: Check the current major versions of the GitHub Actions used**
 
 Open https://github.com/actions/checkout, https://github.com/actions/setup-node, https://github.com/actions/configure-pages, https://github.com/actions/upload-pages-artifact and https://github.com/actions/deploy-pages in the Browser pane. Note each latest major version (`vN`) and use it below if it is newer than the version written here.
 
-- [ ] **Step 2: Create `.github/workflows/deploy.yml`**
+- [x] **Step 2: Create `.github/workflows/deploy.yml`**
 
 ```yaml
 name: Deploy to GitHub Pages
@@ -7736,7 +7736,7 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-- [ ] **Step 3: Create `README.md`**
+- [x] **Step 3: Create `README.md`**
 
 ````markdown
 # Ashborn
@@ -7841,13 +7841,13 @@ Backups from older versions of Ashborn still import. They are upgraded automatic
 Every game number (XP curve, rank levels, stat points, quest sizes, penalty and urgent quests, exercise-rank thresholds) is in [`src/config/progression.ts`](src/config/progression.ts). The nutrition formulas and their sources are in [`src/domain/nutrition.ts`](src/domain/nutrition.ts).
 ````
 
-- [ ] **Step 4: Final verification**
+- [x] **Step 4: Final verification**
 
 Run: `npm run check`
 Then: `npm run e2e`
 Both must pass. Paste the pass counts into the task report.
 
-- [ ] **Step 5: Mark the plan complete and commit**
+- [x] **Step 5: Mark the plan complete and commit**
 
 Tick every checkbox in `docs/plan.md` for Tasks 1–26 that was actually completed, then commit:
 
