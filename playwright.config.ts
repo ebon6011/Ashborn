@@ -7,7 +7,7 @@ export default defineConfig({
   retries: 0,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:4173/ashborn/',
+    baseURL: 'http://localhost:4317/ashborn/',
     trace: 'retain-on-failure',
   },
   projects: [
@@ -18,8 +18,8 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run build && npm run preview',
-    url: 'http://localhost:4173/ashborn/',
-    reuseExistingServer: !process.env.CI,
+    url: 'http://localhost:4317/ashborn/',
+    reuseExistingServer: false,
     timeout: 180_000,
   },
 });

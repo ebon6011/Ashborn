@@ -101,7 +101,7 @@ Unit tests sit next to their source as `*.test.ts(x)`.
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 4173 --strictPort",
+    "preview": "vite preview --port 4317 --strictPort",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit",
     "lint": "eslint . --max-warnings 0",
     "test": "vitest run",
@@ -7482,7 +7482,7 @@ export default defineConfig({
   retries: 0,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:4173/ashborn/',
+    baseURL: 'http://localhost:4317/ashborn/',
     trace: 'retain-on-failure',
   },
   projects: [
@@ -7493,7 +7493,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run build && npm run preview',
-    url: 'http://localhost:4173/ashborn/',
+    url: 'http://localhost:4317/ashborn/',
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
   },
