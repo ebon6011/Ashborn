@@ -431,7 +431,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 - Produces (types, used by every later task): everything in `types.ts` below.
 - Produces: `progression` (config object); `rankForLevel(level: number): Rank`; `rankIndex(rank: Rank): number`; `xpToNext(level: number): number`; `applyXp<P extends Pick<Player,'level'|'xp'|'unspentStatPoints'>>(player: P, amount: number): { player: P; levelUp: LevelUpEvent | null }`; fixtures `sampleProfileInput`, `at(date, time?)`.
 
-- [ ] **Step 1: Create `src/domain/types.ts`**
+- [x] **Step 1: Create `src/domain/types.ts`**
 
 ```ts
 export type Sex = 'male' | 'female';
@@ -595,7 +595,7 @@ export type GameEvent =
   | { type: 'achievement'; id: string; title: string };
 ```
 
-- [ ] **Step 2: Create `src/config/progression.ts`**
+- [x] **Step 2: Create `src/config/progression.ts`**
 
 ```ts
 import type { Experience, QuestItemKind, QuestUnit, Rank } from '../domain/types';
@@ -738,7 +738,7 @@ export const progression: ProgressionConfig = {
 };
 ```
 
-- [ ] **Step 3: Write failing tests `src/domain/rank.test.ts`**
+- [x] **Step 3: Write failing tests `src/domain/rank.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -759,7 +759,7 @@ describe('rankForLevel', () => {
 });
 ```
 
-- [ ] **Step 4: Write failing tests `src/domain/xp.test.ts`**
+- [x] **Step 4: Write failing tests `src/domain/xp.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -816,12 +816,12 @@ describe('applyXp', () => {
 });
 ```
 
-- [ ] **Step 5: Run the tests to check they fail**
+- [x] **Step 5: Run the tests to check they fail**
 
 Run: `npx vitest run src/domain/rank.test.ts src/domain/xp.test.ts`
 Expected: FAIL, modules `./rank` and `./xp` not found.
 
-- [ ] **Step 6: Implement `src/domain/rank.ts`**
+- [x] **Step 6: Implement `src/domain/rank.ts`**
 
 ```ts
 import { progression } from '../config/progression';
@@ -839,7 +839,7 @@ export function rankIndex(rank: Rank): number {
 }
 ```
 
-- [ ] **Step 7: Implement `src/domain/xp.ts`**
+- [x] **Step 7: Implement `src/domain/xp.ts`**
 
 ```ts
 import { progression } from '../config/progression';
@@ -882,7 +882,7 @@ export function applyXp<P extends XpFields>(player: P, amount: number): { player
 }
 ```
 
-- [ ] **Step 8: Create `src/test/fixtures.ts`**
+- [x] **Step 8: Create `src/test/fixtures.ts`**
 
 ```ts
 import type { ProfileInput } from '../domain/types';
@@ -908,12 +908,12 @@ export function at(date: string, time = '09:00'): Date {
 }
 ```
 
-- [ ] **Step 9: Run the tests to check they pass**
+- [x] **Step 9: Run the tests to check they pass**
 
 Run: `npx vitest run src/domain`
 Expected: PASS, all rank and xp tests.
 
-- [ ] **Step 10: Gate and commit**
+- [x] **Step 10: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`. Both must be clean.
 
