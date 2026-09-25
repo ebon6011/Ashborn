@@ -1102,7 +1102,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 
 The Daily Quest is always bodyweight, so equipment does not affect it. Equipment only shapes the weekly training plan (Task 8). `reference` is the quest from ≥ 7 days earlier, and it enforces the 10 % weekly cap.
 
-- [ ] **Step 1: Write failing tests `src/domain/quests/daily.test.ts`**
+- [x] **Step 1: Write failing tests `src/domain/quests/daily.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1183,12 +1183,12 @@ describe('completion and XP', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check it fails**
+- [x] **Step 2: Run to check it fails**
 
 Run: `npx vitest run src/domain/quests/daily.test.ts`
 Expected: FAIL, module not found.
 
-- [ ] **Step 3: Implement `src/domain/quests/daily.ts`**
+- [x] **Step 3: Implement `src/domain/quests/daily.ts`**
 
 ```ts
 import { progression } from '../../config/progression';
@@ -1243,12 +1243,12 @@ export function partialXp(items: QuestItem[], level: number): number {
 }
 ```
 
-- [ ] **Step 4: Run to check it passes**
+- [x] **Step 4: Run to check it passes**
 
 Run: `npx vitest run src/domain/quests/daily.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Gate and commit**
+- [x] **Step 5: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
