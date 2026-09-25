@@ -1609,7 +1609,7 @@ export type NutritionProfile = Pick<Profile, 'sex' | 'weightKg' | 'heightCm' | '
 export interface NutritionTargets { bmr: number; tdee: number; multiplier: number; calories: number; floor: number; floorApplied: boolean; proteinG: number; fatG: number; carbsG: number; waterMl: number }
 ```
 
-- [ ] **Step 1: Write failing tests `src/domain/nutrition.test.ts`**
+- [x] **Step 1: Write failing tests `src/domain/nutrition.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1678,12 +1678,12 @@ describe('sumFood', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check it fails**
+- [x] **Step 2: Run to check it fails**
 
 Run: `npx vitest run src/domain/nutrition.test.ts`
 Expected: FAIL, module not found.
 
-- [ ] **Step 3: Implement `src/domain/nutrition.ts`**
+- [x] **Step 3: Implement `src/domain/nutrition.ts`**
 
 ```ts
 import type { FoodEntry, Profile, Sex } from './types';
@@ -1790,12 +1790,12 @@ export function sumFood(entries: ReadonlyArray<Pick<FoodEntry, 'kcal' | 'protein
 }
 ```
 
-- [ ] **Step 4: Run to check it passes**
+- [x] **Step 4: Run to check it passes**
 
 Run: `npx vitest run src/domain/nutrition.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Gate and commit**
+- [x] **Step 5: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
