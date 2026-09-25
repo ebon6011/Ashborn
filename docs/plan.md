@@ -937,7 +937,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 **Interfaces:**
 - Produces: `todayKey(now: Date): string`; `isDateKey(value: unknown): value is string`; `addDays(key: string, n: number): string`; `daysBetween(from: string, to: string): number`; `dateRange(fromInclusive: string, toExclusive: string): string[]`; `isoWeekday(key: string): number` (1 = Mon … 7 = Sun); `weekStartOf(key: string): string` (the Monday); `shouldRollOver(currentDate: string | null, now: Date): boolean`.
 
-- [ ] **Step 1: Write failing tests `src/domain/day.test.ts`**
+- [x] **Step 1: Write failing tests `src/domain/day.test.ts`**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1003,12 +1003,12 @@ describe('shouldRollOver', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check it fails**
+- [x] **Step 2: Run to check it fails**
 
 Run: `npx vitest run src/domain/day.test.ts`
 Expected: FAIL, module `./day` not found.
 
-- [ ] **Step 3: Implement `src/domain/day.ts`**
+- [x] **Step 3: Implement `src/domain/day.ts`**
 
 ```ts
 /**
@@ -1070,12 +1070,12 @@ export function shouldRollOver(currentDate: string | null, now: Date): boolean {
 }
 ```
 
-- [ ] **Step 4: Run to check it passes**
+- [x] **Step 4: Run to check it passes**
 
 Run: `npx vitest run src/domain/day.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Gate and commit**
+- [x] **Step 5: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
