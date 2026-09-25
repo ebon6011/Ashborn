@@ -6160,7 +6160,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 - Consumes: `logSet`, `deleteSet`, `getExercise`, `exercisesFor`, `computeRecords`, `exerciseRank`, `weekStartOf`, `isoWeekday`.
 - Produces: `<TrainingScreen />`.
 
-- [ ] **Step 1: Write failing tests `src/ui/screens/TrainingScreen.test.tsx`**
+- [x] **Step 1: Write failing tests `src/ui/screens/TrainingScreen.test.tsx`**
 
 ```tsx
 // @vitest-environment jsdom
@@ -6199,12 +6199,12 @@ describe('TrainingScreen', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check it fails**
+- [x] **Step 2: Run to check it fails**
 
 Run: `npx vitest run src/ui/screens/TrainingScreen.test.tsx`
 Expected: FAIL, module not found.
 
-- [ ] **Step 3: Implement `src/ui/screens/TrainingScreen.tsx`**
+- [x] **Step 3: Implement `src/ui/screens/TrainingScreen.tsx`**
 
 ```tsx
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -6406,12 +6406,12 @@ function ExerciseLogger({ exerciseId, onClose }: { exerciseId: string; onClose: 
 }
 ```
 
-- [ ] **Step 4: Run to check it passes**
+- [x] **Step 4: Run to check it passes**
 
 Run: `npx vitest run src/ui/screens/TrainingScreen.test.tsx`
 Expected: PASS.
 
-- [ ] **Step 5: Gate and commit**
+- [x] **Step 5: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
