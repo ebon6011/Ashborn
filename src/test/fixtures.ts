@@ -1,3 +1,4 @@
+import { AshbornDB } from '../db/schema';
 import type { ProfileInput } from '../domain/types';
 
 export const sampleProfileInput: ProfileInput = {
@@ -18,4 +19,9 @@ export function at(date: string, time = '09:00'): Date {
   const [y, m, d] = date.split('-').map(Number) as [number, number, number];
   const [h, min] = time.split(':').map(Number) as [number, number];
   return new Date(y, m - 1, d, h, min);
+}
+
+/** A brand-new, empty database with a unique name (fake-indexeddb in tests). */
+export function freshDb(): AshbornDB {
+  return new AshbornDB(`test-${crypto.randomUUID()}`);
 }

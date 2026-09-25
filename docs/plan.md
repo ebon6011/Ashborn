@@ -2615,7 +2615,7 @@ export function setMeta<K extends keyof MetaMap>(database: AshbornDB, key: K, va
 export function freshDb(): AshbornDB;             // unique name per call, on fake-indexeddb
 ```
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 `src/domain/migrations.test.ts`:
 ```ts
@@ -2703,12 +2703,12 @@ describe('meta store', () => {
 });
 ```
 
-- [ ] **Step 2: Run to check they fail**
+- [x] **Step 2: Run to check they fail**
 
 Run: `npx vitest run src/domain/migrations.test.ts src/db`
 Expected: FAIL, modules not found.
 
-- [ ] **Step 3: Implement `src/domain/migrations.ts`**
+- [x] **Step 3: Implement `src/domain/migrations.ts`**
 
 ```ts
 /** Bump when the Dexie schema changes, and add a matching entry to backupMigrations. */
@@ -2745,7 +2745,7 @@ export function migrateBackupData(
 }
 ```
 
-- [ ] **Step 4: Implement `src/db/schema.ts`**
+- [x] **Step 4: Implement `src/db/schema.ts`**
 
 ```ts
 import Dexie, { type EntityTable, type Table } from 'dexie';
@@ -2796,7 +2796,7 @@ export function writeTx<T>(database: AshbornDB, fn: () => Promise<T>): Promise<T
 }
 ```
 
-- [ ] **Step 5: Implement `src/db/meta.ts`**
+- [x] **Step 5: Implement `src/db/meta.ts`**
 
 ```ts
 import type { GameEvent, PersistResult } from '../domain/types';
@@ -2824,7 +2824,7 @@ export async function setMeta<K extends keyof MetaMap>(database: AshbornDB, key:
 }
 ```
 
-- [ ] **Step 6: Append `freshDb` to `src/test/fixtures.ts`**
+- [x] **Step 6: Append `freshDb` to `src/test/fixtures.ts`**
 
 Add these lines to the file (keep the existing content):
 ```ts
@@ -2837,12 +2837,12 @@ export function freshDb(): AshbornDB {
 ```
 (Put the import at the top of the file with the other import.)
 
-- [ ] **Step 7: Run to check they pass**
+- [x] **Step 7: Run to check they pass**
 
 Run: `npx vitest run src/domain/migrations.test.ts src/db`
 Expected: PASS.
 
-- [ ] **Step 8: Gate and commit**
+- [x] **Step 8: Gate and commit**
 
 Run: `npm run typecheck; npm run lint`
 
