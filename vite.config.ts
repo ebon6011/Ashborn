@@ -1,8 +1,38 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   base: '/ashborn/',
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: false,
+      includeAssets: ['icon.svg', 'apple-touch-icon.png'],
+      manifest: {
+        id: '/ashborn/',
+        name: 'Ashborn',
+        short_name: 'Ashborn',
+        description: 'Level up in real life: daily quests, ranks and stats for your workouts and habits.',
+        start_url: '/ashborn/',
+        scope: '/ashborn/',
+        display: 'standalone',
+        orientation: 'portrait',
+        background_color: '#05070d',
+        theme_color: '#05070d',
+        icons: [
+          { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'pwa-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest}'],
+        cleanupOutdatedCaches: true,
+      },
+    }),
+  ],
 });

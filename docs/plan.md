@@ -7257,7 +7257,7 @@ export default function App() {
 Run: `npm test`
 Expected: PASS, every test file.
 
-- [ ] **Step 7: Look at it in the in-app browser**
+- [x] **Step 7: Look at it in the in-app browser**
 
 Create `.claude/launch.json` with a configuration named `ashborn-dev` (`runtimeExecutable: "npm"`, `runtimeArgs: ["run", "dev"]`, `port: 5173`). Start it with the Browser pane's `preview_start`, navigate to `http://localhost:5173/ashborn/`, set the viewport to the `mobile` preset, and walk through the flow:
 1. install guide
@@ -7296,12 +7296,12 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 
 This task downloads the Playwright WebKit browser (about 100 MB, into the Playwright cache under your user folder). It is part of the approved Playwright stack. Task 25 needs it too.
 
-- [ ] **Step 1: Install the WebKit browser for Playwright**
+- [x] **Step 1: Install the WebKit browser for Playwright**
 
 Run: `npx playwright install webkit`
 Expected: "webkit … downloaded" or "already installed". Do not install any other browsers.
 
-- [ ] **Step 2: Create the original emblem `public/icon.svg`**
+- [x] **Step 2: Create the original emblem `public/icon.svg`**
 
 A rising blue flame inside a thin hexagon ring, drawn for this project:
 ```svg
@@ -7331,7 +7331,7 @@ A rising blue flame inside a thin hexagon ring, drawn for this project:
 </svg>
 ```
 
-- [ ] **Step 3: Create `scripts/generate-icons.mjs`**
+- [x] **Step 3: Create `scripts/generate-icons.mjs`**
 
 ```js
 // Renders public/icon.svg into the PNG icons iPhone and the web manifest need.
@@ -7365,7 +7365,7 @@ for (const { file, size, padding } of targets) {
 await browser.close();
 ```
 
-- [ ] **Step 4: Generate and verify the icons**
+- [x] **Step 4: Generate and verify the icons**
 
 Run: `npm run icons`
 Then:
@@ -7374,7 +7374,7 @@ node -e "const fs=require('fs');for(const f of ['public/apple-touch-icon.png','p
 ```
 Expected: `180x180`, `192x192`, `512x512`, `512x512`. Open `public/pwa-512.png` with the Read tool to check it visually: a glowing blue flame in a hexagon on near-black.
 
-- [ ] **Step 5: Add the PWA plugin to `vite.config.ts`**
+- [x] **Step 5: Add the PWA plugin to `vite.config.ts`**
 
 ```ts
 import { defineConfig } from 'vite';
@@ -7417,7 +7417,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 6: Register the service worker in `src/main.tsx`**
+- [x] **Step 6: Register the service worker in `src/main.tsx`**
 
 ```tsx
 import { StrictMode } from 'react';
@@ -7437,7 +7437,7 @@ createRoot(document.getElementById('root')!).render(
 
 In `tsconfig.json` change `"types": ["vite/client"]` to `"types": ["vite/client", "vite-plugin-pwa/client"]`.
 
-- [ ] **Step 7: Build and inspect the output**
+- [x] **Step 7: Build and inspect the output**
 
 Run: `npm run build`
 Then:
@@ -7446,7 +7446,7 @@ node -e "const m=JSON.parse(require('fs').readFileSync('dist/manifest.webmanifes
 ```
 Expected: `standalone /ashborn/ 3`, then `true true`. Also check that `dist/index.html` contains `href="/ashborn/apple-touch-icon.png"` and a `<link rel="manifest" href="/ashborn/manifest.webmanifest">`.
 
-- [ ] **Step 8: Gate and commit**
+- [x] **Step 8: Gate and commit**
 
 Run: `npm run check`
 
