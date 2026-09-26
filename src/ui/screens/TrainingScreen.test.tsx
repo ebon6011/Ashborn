@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { db } from '../../db/schema';
 import { seedApp } from '../../test/uiFixtures';
+import { isBusy } from '../busy';
 import { TrainingScreen } from './TrainingScreen';
 
 beforeEach(() => seedApp('2026-09-21'));
@@ -35,5 +36,14 @@ describe('TrainingScreen', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Log set' }));
     expect(await screen.findByText('Enter the reps you did.')).toBeTruthy();
     expect(await db.workoutSets.count()).toBe(0);
+  });
+
+  it('marks the app busy while the set logger is open', async () => {
+    render(<TrainingScreen />);
+    fireEvent.click((await screen.findAllByRole('button', { name: /^Push-up/ }))[0]!);
+    await screen.findByLabelText('Reps');
+    expect(isBusy()).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+    expect(isBusy()).toBe(false);
   });
 });

@@ -9,6 +9,7 @@ import { TabBar, type Tab } from './ui/components/TabBar';
 import { useDayCycle } from './ui/hooks/useDayCycle';
 import { EventHost } from './ui/overlays/EventHost';
 import { InstallGuide } from './ui/overlays/InstallGuide';
+import { UpdateBanner } from './ui/overlays/UpdateBanner';
 import { Awakening } from './ui/screens/Awakening';
 import { NutritionScreen } from './ui/screens/NutritionScreen';
 import { QuestsScreen } from './ui/screens/QuestsScreen';
@@ -49,6 +50,7 @@ export default function App() {
           {tab === 'nutrition' && <NutritionScreen />}
           {tab === 'settings' && <SettingsScreen onShowInstallGuide={() => setGuideRequested(true)} />}
           <TabBar tab={tab} onChange={setTab} />
+          <UpdateBanner />
           <EventHost />
         </>
       ) : (

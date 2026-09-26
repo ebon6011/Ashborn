@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { exercisesFor, getExercise } from '../../config/exercises';
 import { deleteSet, logSet } from '../../db/repo/training';
 import { db } from '../../db/schema';
@@ -13,6 +13,7 @@ import { NumberField } from '../components/NumberField';
 import { RankBadge } from '../components/RankBadge';
 import { Screen } from '../components/Screen';
 import { SystemWindow } from '../components/SystemWindow';
+import { setBusy } from '../busy';
 import { useMeta, useProfile } from '../hooks/data';
 
 const WEEKDAY_NAMES = ['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -132,6 +133,10 @@ function ExerciseLogger({ exerciseId, onClose }: { exerciseId: string; onClose: 
   const [weight, setWeight] = useState<number | null>(null);
   const [repsKey, setRepsKey] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
+  useEffect(() => {
+    setBusy('set-logger', true);
+    return () => setBusy('set-logger', false);
+  }, []);
   const exercise = getExercise(exerciseId);
   if (!exercise) return null;
 
