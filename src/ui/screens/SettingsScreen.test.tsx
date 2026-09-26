@@ -64,4 +64,11 @@ describe('SettingsScreen', () => {
     expect(await screen.findByText(/No Apple Health/)).toBeTruthy();
     expect(screen.getByText(/No reminders yet/)).toBeTruthy();
   });
+
+  it("shows what's new and the app version", async () => {
+    render(<SettingsScreen onShowInstallGuide={() => {}} />);
+    expect(await screen.findByRole('heading', { name: 'What’s new' })).toBeTruthy();
+    expect(screen.getByText(`Version ${__APP_VERSION__}`)).toBeTruthy();
+    expect(screen.getByText(new RegExp(`Ashborn v${__APP_VERSION__.replace(/\./g, '\\.')}`))).toBeTruthy();
+  });
 });

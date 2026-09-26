@@ -15,6 +15,7 @@ import { SystemWindow } from '../components/SystemWindow';
 import { useMeta, useProfile } from '../hooks/data';
 import { MedicalNotice } from '../overlays/MedicalNotice';
 import { ProfileForm } from './ProfileForm';
+import { WhatsNew } from './WhatsNew';
 
 const PERSIST_TEXT: Record<PersistResult, string> = {
   granted: "Protected. The browser will not clear Ashborn's data on its own.",
@@ -201,6 +202,8 @@ export function SettingsScreen({ onShowInstallGuide }: { onShowInstallGuide: () 
 
       <MedicalNotice />
 
+      <WhatsNew />
+
       <SystemWindow title="Known limits">
         <ul className="list-disc space-y-1 pl-5 text-sm text-muted">
           <li>No Apple Health or step counting. Enter steps and workouts yourself.</li>
@@ -210,7 +213,7 @@ export function SettingsScreen({ onShowInstallGuide }: { onShowInstallGuide: () 
         </ul>
       </SystemWindow>
 
-      <p className="pb-4 text-center text-xs text-muted">Ashborn v1 · No accounts, no tracking. Your data never leaves this device.</p>
+      <p className="pb-4 text-center text-xs text-muted">Ashborn v{__APP_VERSION__} · No accounts, no tracking. Your data never leaves this device.</p>
     </Screen>
   );
 }
