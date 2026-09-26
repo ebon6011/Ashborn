@@ -9,7 +9,7 @@ export default defineConfig({
   // Full user flows (onboarding → quests → level-up) are long in software-rendered WebKit.
   timeout: 60_000,
   use: {
-    baseURL: 'http://localhost:4317/ashborn/',
+    baseURL: 'http://localhost:4317/Ashborn/',
     trace: 'retain-on-failure',
   },
   projects: [
@@ -20,7 +20,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run build && npm run preview',
-    url: 'http://localhost:4317/ashborn/',
+    url: 'http://localhost:4317/Ashborn/',
     reuseExistingServer: false,
     timeout: 180_000,
   },

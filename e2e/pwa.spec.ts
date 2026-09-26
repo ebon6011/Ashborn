@@ -5,7 +5,7 @@ test('ships an installable manifest, iPhone icon and safe-area viewport', async 
   const href = await page.locator('link[rel="manifest"]').getAttribute('href');
   const manifest = await (await request.get(new URL(href!, page.url()).toString())).json();
   expect(manifest).toMatchObject({
-    name: 'Ashborn', short_name: 'Ashborn', display: 'standalone', start_url: '/ashborn/',
+    name: 'Ashborn', short_name: 'Ashborn', display: 'standalone', start_url: '/Ashborn/',
     theme_color: '#05070d', background_color: '#05070d',
   });
   expect(manifest.icons.some((i: { purpose?: string }) => i.purpose === 'maskable')).toBe(true);

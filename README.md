@@ -4,7 +4,7 @@ Ashborn turns your workouts and daily habits into a game. You get a glowing "Sys
 
 It's a free web app that you install on your iPhone from Safari. It works offline. It has no accounts, no ads and no tracking, and all your data stays on your phone.
 
-**Live app:** https://ebon6011.github.io/ashborn/
+**Live app:** https://ebon6011.github.io/Ashborn/
 
 ---
 
@@ -18,7 +18,7 @@ npx playwright install webkit
 npm run dev
 ```
 
-Open the address it prints (http://localhost:5173/ashborn/).
+Open the address it prints (http://localhost:5173/Ashborn/).
 
 Useful commands:
 
@@ -32,24 +32,24 @@ Useful commands:
 
 ## 2. Publish it to GitHub Pages (one-time setup)
 
-1. On github.com, create a new **public** repository named `ashborn` under the `ebon6011` account. Leave it empty: no README and no licence.
+1. On github.com, create a new **public** repository named `Ashborn` (capital A — the web address is case-sensitive) under the `ebon6011` account. Leave it empty: no README and no licence.
 2. In that repository, go to **Settings → Pages**. Under **Build and deployment**, set **Source** to **GitHub Actions**.
 3. On your PC, in this folder, run:
    ```bash
-   git remote add origin https://github.com/ebon6011/ashborn.git
+   git remote add origin https://github.com/ebon6011/Ashborn.git
    ```
    ```bash
    git push -u origin main
    ```
 4. Open the **Actions** tab on GitHub and wait for "Deploy to GitHub Pages" to show a green tick (about 2 minutes).
-5. Your app is live at https://ebon6011.github.io/ashborn/.
+5. Your app is live at https://ebon6011.github.io/Ashborn/.
 
 After that, every `git push` to `main` publishes a new version automatically.
 
 ## 3. Install it on your iPhone
 
 1. Open **Safari** on your iPhone. It must be Safari, not another browser.
-2. Go to https://ebon6011.github.io/ashborn/.
+2. Go to https://ebon6011.github.io/Ashborn/.
 3. Tap the **Share** button (the square with an arrow pointing up).
 4. Scroll down and tap **Add to Home Screen**, then **Add**.
 5. Open **Ashborn** from your home screen. It opens full screen like a normal app.

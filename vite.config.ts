@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  base: '/ashborn/',
+  base: '/Ashborn/',
   plugins: [
     react(),
     tailwindcss(),
@@ -13,12 +13,12 @@ export default defineConfig({
       injectRegister: false,
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
       manifest: {
-        id: '/ashborn/',
+        id: '/Ashborn/',
         name: 'Ashborn',
         short_name: 'Ashborn',
         description: 'Level up in real life: daily quests, ranks and stats for your workouts and habits.',
-        start_url: '/ashborn/',
-        scope: '/ashborn/',
+        start_url: '/Ashborn/',
+        scope: '/Ashborn/',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#05070d',
