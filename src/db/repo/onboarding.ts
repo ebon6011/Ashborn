@@ -15,6 +15,7 @@ export async function registerPlayer(database: AshbornDB, input: ProfileInput, n
     await database.workoutPlans.put(generateWeekPlan(input, weekStartOf(today), null));
     if (!(await getMeta(database, 'installedAt'))) await setMeta(database, 'installedAt', now.toISOString());
     await setMeta(database, 'lastOpenDate', today);
+    await setMeta(database, 'lastSeenVersion', __APP_VERSION__);
   });
 }
 

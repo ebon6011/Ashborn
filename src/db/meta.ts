@@ -11,6 +11,8 @@ export interface MetaMap {
   installedAt: string;
   installGuideDismissed: boolean;
   pendingEvents: GameEvent[];
+  /** Newest version whose What's New notes the player has seen */
+  lastSeenVersion: string;
 }
 
 export async function getMeta<K extends keyof MetaMap>(database: AshbornDB, key: K): Promise<MetaMap[K] | undefined> {

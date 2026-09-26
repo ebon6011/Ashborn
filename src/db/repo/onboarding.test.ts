@@ -7,6 +7,11 @@ import { getMeta } from '../meta';
 import { updateProfile } from './onboarding';
 
 describe('registerPlayer', () => {
+  it('marks the current version as seen so a new player gets no What’s New window', async () => {
+    const db = await setupPlayer('2026-09-21');
+    expect(await getMeta(db, 'lastSeenVersion')).toBe(__APP_VERSION__);
+  });
+
   it("creates the profile, a level 1 player, today's quest and this week's plan", async () => {
     const db = await setupPlayer('2026-09-21');
     expect(await db.profile.get(1)).toMatchObject({ name: 'Kai', experience: 'beginner' });

@@ -16,6 +16,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: readonly ChangelogEntry[] = [
   {
+    version: '1.2.0',
+    date: '2026-09-27',
+    notes: [
+      'Updates now wait for you: tap “Update now” when you’re ready, and see what changed right after.',
+      'New “Check for updates” button in Settings.',
+    ],
+  },
+  {
     version: '1.1.0',
     date: '2026-09-27',
     notes: ['New: a “What’s new” list here in Settings, so you can see what changed in each update.'],
@@ -32,6 +40,14 @@ export const CHANGELOG: readonly ChangelogEntry[] = [
     ],
   },
 ];
+
+/** Every install from before What's New tracking had seen up to this version. */
+export const PRE_TRACKING_VERSION = '1.1.0';
+
+/** Changelog entries newer than the version the player last saw, newest first. */
+export function unseenEntries(changelog: readonly ChangelogEntry[], lastSeen: string): ChangelogEntry[] {
+  return changelog.filter((entry) => compareVersions(entry.version, lastSeen) > 0);
+}
 
 /** Compares "1.10.0" and "1.9.0" by number. Positive if a is newer than b. */
 export function compareVersions(a: string, b: string): number {
