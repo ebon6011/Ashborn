@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { CHANGELOG, PRE_TRACKING_VERSION, unseenEntries } from '../../data/changelog';
+import { CHANGELOG, PRE_TRACKING_VERSION, unseenEntries, type ChangelogEntry } from '../../data/changelog';
 import { getMeta, setMeta } from '../../db/meta';
 import { db } from '../../db/schema';
 import type { GameEvent } from '../../domain/types';
@@ -7,12 +7,28 @@ import { Button } from '../components/Button';
 import { SystemWindow } from '../components/SystemWindow';
 import { Typewriter } from '../components/Typewriter';
 
+/**
+ * What to show, or nothing. `null` means "still loading": the window never renders until both the
+ * last seen version and the pending level-up/title events are known, so it can't blink on at launch.
+ */
+export function whatsNewToShow(lastSeen: string | null, events: readonly GameEvent[] | null): ChangelogEntry[] {
+  if (lastSeen === null || events === null || events.length > 0) return [];
+  return unseenEntries(CHANGELOG, lastSeen);
+}
+
 /** Shown once after an update: every changelog entry newer than the last version the player saw. */
 export function WhatsNewWindow() {
-  const lastSeen = useLiveQuery(async () => (await getMeta(db, 'lastSeenVersion')) ?? PRE_TRACKING_VERSION, [], null);
-  const events = useLiveQuery(async () => (await getMeta(db, 'pendingEvents')) ?? [], [], [] as GameEvent[]);
-  if (lastSeen === null || events.length > 0) return null;
-  const entries = unseenEntries(CHANGELOG, lastSeen);
+  const lastSeen = useLiveQuery(
+    async () => {
+      const stored: unknown = await getMeta(db, 'lastSeenVersion');
+      // A missing or damaged value (e.g. from an old or hand-edited backup) falls back to the baseline.
+      return typeof stored === 'string' && /^\d+(\.\d+)*$/.test(stored) ? stored : PRE_TRACKING_VERSION;
+    },
+    [],
+    null,
+  );
+  const events = useLiveQuery(async () => (await getMeta(db, 'pendingEvents')) ?? [], [], null);
+  const entries = whatsNewToShow(lastSeen, events);
   const newest = entries[0];
   if (!newest) return null;
 

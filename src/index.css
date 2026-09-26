@@ -18,6 +18,11 @@ body,
   min-height: 100%;
 }
 
+/* Room for the update banner above the tab bar, so the end of every screen stays reachable. */
+html[data-update-banner] main {
+  padding-bottom: calc(10rem + env(safe-area-inset-bottom));
+}
+
 /* Anything scrolled into view (focus, find, keyboard) stays clear of the fixed tab bar. */
 html {
   scroll-padding-top: calc(env(safe-area-inset-top) + 8px);

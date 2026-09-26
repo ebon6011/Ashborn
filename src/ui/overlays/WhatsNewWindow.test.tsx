@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { getMeta, setMeta } from '../../db/meta';
 import { db } from '../../db/schema';
 import { seedApp } from '../../test/uiFixtures';
-import { WhatsNewWindow } from './WhatsNewWindow';
+import { whatsNewToShow, WhatsNewWindow } from './WhatsNewWindow';
 
 const settle = () => new Promise((r) => setTimeout(r, 50));
 
@@ -44,5 +44,19 @@ describe('WhatsNewWindow', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
     await setMeta(db, 'pendingEvents', []);
     expect(await screen.findByRole('dialog')).toBeTruthy();
+  });
+
+
+  it('shows nothing until both the last seen version and pending events have loaded', () => {
+    expect(whatsNewToShow(null, [])).toEqual([]);
+    expect(whatsNewToShow('1.1.0', null)).toEqual([]);
+    expect(whatsNewToShow('1.1.0', [{ type: 'achievement', id: 'first-quest', title: 'The Awakened' }])).toEqual([]);
+    expect(whatsNewToShow('1.1.0', []).map((e) => e.version)).toContain('1.2.0');
+  });
+
+  it('survives a damaged last-seen value from a restored backup', async () => {
+    await db.meta.put({ key: 'lastSeenVersion', value: 42 });
+    render(<WhatsNewWindow />);
+    expect((await screen.findByRole('dialog')).textContent).toContain('Version 1.2.0');
   });
 });

@@ -36,4 +36,17 @@ describe('UpdateBanner', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Update now' }));
     expect(apply).toHaveBeenCalledOnce();
   });
+
+  it('makes room at the bottom of screens while it is showing', () => {
+    const html = document.documentElement;
+    markUpdateReady();
+    const { unmount } = render(<UpdateBanner />);
+    expect(html.hasAttribute('data-update-banner')).toBe(true);
+    act(() => setBusy('set-logger', true));
+    expect(html.hasAttribute('data-update-banner')).toBe(false);
+    act(() => setBusy('set-logger', false));
+    expect(html.hasAttribute('data-update-banner')).toBe(true);
+    unmount();
+    expect(html.hasAttribute('data-update-banner')).toBe(false);
+  });
 });
