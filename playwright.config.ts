@@ -6,6 +6,8 @@ export default defineConfig({
   workers: 1,
   retries: 0,
   reporter: 'list',
+  // Full user flows (onboarding → quests → level-up) are long in software-rendered WebKit.
+  timeout: 60_000,
   use: {
     baseURL: 'http://localhost:4317/ashborn/',
     trace: 'retain-on-failure',

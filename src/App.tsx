@@ -4,6 +4,7 @@ import { getMeta, setMeta } from './db/meta';
 import { db } from './db/schema';
 import { installAudioUnlock, setSoundEnabled } from './platform/audio';
 import { isStandalone } from './platform/standalone';
+import { Backdrop } from './ui/components/Backdrop';
 import { TabBar, type Tab } from './ui/components/TabBar';
 import { useDayCycle } from './ui/hooks/useDayCycle';
 import { EventHost } from './ui/overlays/EventHost';
@@ -39,6 +40,7 @@ export default function App() {
 
   return (
     <>
+      <Backdrop />
       {registered ? (
         <>
           {tab === 'status' && <StatusScreen onNavigate={setTab} />}

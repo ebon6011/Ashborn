@@ -18,6 +18,12 @@ body,
   min-height: 100%;
 }
 
+/* Anything scrolled into view (focus, find, keyboard) stays clear of the fixed tab bar. */
+html {
+  scroll-padding-top: calc(env(safe-area-inset-top) + 8px);
+  scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+}
+
 body {
   margin: 0;
   background: var(--color-void);
@@ -46,9 +52,10 @@ textarea {
   to { opacity: 1; transform: none; }
 }
 
+/* Transform-only, so the compositor slides it without repainting the window or the scene behind it */
 @keyframes shimmer {
-  from { background-position: -200% 0; }
-  to { background-position: 200% 0; }
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
 }
 
 @keyframes level-burst {
@@ -59,9 +66,10 @@ textarea {
 
 .system-window {
   position: relative;
+  overflow: hidden; /* clips the sliding shimmer to the window */
   border: 1px solid rgb(58 184 255 / 0.6);
   border-radius: 6px;
-  background: linear-gradient(180deg, rgb(10 16 32 / 0.94), rgb(5 7 13 / 0.94));
+  background: linear-gradient(180deg, rgb(10 16 32 / 0.78), rgb(5 7 13 / 0.82));
   box-shadow: 0 0 12px rgb(58 184 255 / 0.35), inset 0 0 18px rgb(58 184 255 / 0.08);
   animation: window-in 220ms ease-out;
 }
@@ -70,14 +78,36 @@ textarea {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: inherit;
   pointer-events: none;
   background: linear-gradient(110deg, transparent 30%, rgb(58 184 255 / 0.08) 50%, transparent 70%);
-  background-size: 200% 100%;
   animation: shimmer 6s linear infinite;
+  will-change: transform;
 }
 
 .level-burst { animation: level-burst 1.6s ease-out both; }
+
+/* Backdrop: rising mana particles */
+@keyframes mana-rise {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 0.8; }
+  80% { opacity: 0.5; }
+  100% { transform: translateY(-105vh); opacity: 0; }
+}
+
+/* Nothing needs to move behind a dialog such as the level-up screen */
+body:has([role="dialog"][aria-modal="true"]) .mana-particle { animation-play-state: paused; }
+
+.mana-particle {
+  position: absolute;
+  bottom: -8px;
+  border-radius: 9999px;
+  background: #3ab8ff;
+  box-shadow: 0 0 6px 1px rgb(58 184 255 / 0.8);
+  will-change: transform, opacity;
+  animation-name: mana-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -88,4 +118,5 @@ textarea {
     transition-duration: 0.01ms !important;
   }
   .system-window::before { display: none; }
+  .mana-particle { display: none; }
 }
