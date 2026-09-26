@@ -7,6 +7,7 @@ import { db } from '../../db/schema';
 import { backupFileName, buildBackup, parseBackup, type ParseResult } from '../../domain/backup';
 import type { PersistResult, Profile, ProfileInput } from '../../domain/types';
 import { saveBackupFile } from '../../platform/download';
+import { checkForUpdates, type UpdateCheck } from '../../platform/updates';
 import { isStandalone } from '../../platform/standalone';
 import { requestPersist } from '../../platform/storage';
 import { Button } from '../components/Button';
@@ -21,6 +22,13 @@ const PERSIST_TEXT: Record<PersistResult, string> = {
   granted: "Protected. The browser will not clear Ashborn's data on its own.",
   denied: 'Not protected. iPhone may clear website data after a long time unused, so keep regular backups.',
   unsupported: "This browser can't protect storage. Keep regular backups.",
+};
+
+const UPDATE_TEXT: Record<UpdateCheck, string> = {
+  available: 'An update is ready — tap Update now.',
+  none: 'You have the latest version.',
+  offline: 'You’re offline — try again later.',
+  unsupported: 'Updates aren’t available here.',
 };
 
 const MAX_BACKUP_BYTES = 20_000_000;
@@ -42,6 +50,14 @@ export function SettingsScreen({ onShowInstallGuide }: { onShowInstallGuide: () 
   const [pending, setPending] = useState<Extract<ParseResult, { ok: true }> | null>(null);
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [updateMessage, setUpdateMessage] = useState<string | null>(null);
+  const [checking, setChecking] = useState(false);
+
+  async function checkUpdates() {
+    setChecking(true);
+    setUpdateMessage(UPDATE_TEXT[await checkForUpdates()]);
+    setChecking(false);
+  }
 
   async function exportBackup() {
     setBusy(true);
@@ -201,6 +217,18 @@ export function SettingsScreen({ onShowInstallGuide }: { onShowInstallGuide: () 
       )}
 
       <MedicalNotice />
+
+      <SystemWindow title="Updates">
+        <p className="text-sm">You’re on version {__APP_VERSION__}.</p>
+        <Button variant="ghost" className="mt-3 w-full" disabled={checking} onClick={() => void checkUpdates()}>
+          {checking ? 'Checking…' : 'Check for updates'}
+        </Button>
+        {updateMessage && (
+          <p role="status" className="mt-2 text-sm text-glow">
+            {updateMessage}
+          </p>
+        )}
+      </SystemWindow>
 
       <WhatsNew />
 

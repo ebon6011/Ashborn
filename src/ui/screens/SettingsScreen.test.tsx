@@ -71,4 +71,10 @@ describe('SettingsScreen', () => {
     expect(screen.getByText(`Version ${__APP_VERSION__}`)).toBeTruthy();
     expect(screen.getByText(new RegExp(`Ashborn v${__APP_VERSION__.replace(/\./g, '\\.')}`))).toBeTruthy();
   });
+
+  it('checks for updates and says so plainly', async () => {
+    render(<SettingsScreen onShowInstallGuide={() => {}} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Check for updates' }));
+    expect(await screen.findByText('Updates aren’t available here.')).toBeTruthy();
+  });
 });
