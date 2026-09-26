@@ -1,0 +1,42 @@
+import { useLiveQuery } from 'dexie-react-hooks';
+import { CHANGELOG, PRE_TRACKING_VERSION, unseenEntries } from '../../data/changelog';
+import { getMeta, setMeta } from '../../db/meta';
+import { db } from '../../db/schema';
+import type { GameEvent } from '../../domain/types';
+import { Button } from '../components/Button';
+import { SystemWindow } from '../components/SystemWindow';
+import { Typewriter } from '../components/Typewriter';
+
+/** Shown once after an update: every changelog entry newer than the last version the player saw. */
+export function WhatsNewWindow() {
+  const lastSeen = useLiveQuery(async () => (await getMeta(db, 'lastSeenVersion')) ?? PRE_TRACKING_VERSION, [], null);
+  const events = useLiveQuery(async () => (await getMeta(db, 'pendingEvents')) ?? [], [], [] as GameEvent[]);
+  if (lastSeen === null || events.length > 0) return null;
+  const entries = unseenEntries(CHANGELOG, lastSeen);
+  const newest = entries[0];
+  if (!newest) return null;
+
+  return (
+    <div role="dialog" aria-modal="true" aria-label="What’s new" className="safe-x fixed inset-0 z-50 flex items-center justify-center bg-void/85">
+      <SystemWindow title="System" className="max-h-[80dvh] w-full max-w-md overflow-y-auto">
+        <Typewriter key={newest.version} text={`System update complete: Version ${newest.version}`} />
+        {entries.map((entry) => (
+          <div key={entry.version} className="mt-3">
+            <p className="text-sm text-glow">
+              Version {entry.version}
+              {entry.title ? ` · ${entry.title}` : ''}
+            </p>
+            <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-ink">
+              {entry.notes.map((note) => (
+                <li key={note}>{note}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        <Button className="mt-4 w-full" onClick={() => void setMeta(db, 'lastSeenVersion', __APP_VERSION__)}>
+          Close
+        </Button>
+      </SystemWindow>
+    </div>
+  );
+}

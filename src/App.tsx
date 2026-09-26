@@ -10,6 +10,7 @@ import { useDayCycle } from './ui/hooks/useDayCycle';
 import { EventHost } from './ui/overlays/EventHost';
 import { InstallGuide } from './ui/overlays/InstallGuide';
 import { UpdateBanner } from './ui/overlays/UpdateBanner';
+import { WhatsNewWindow } from './ui/overlays/WhatsNewWindow';
 import { Awakening } from './ui/screens/Awakening';
 import { NutritionScreen } from './ui/screens/NutritionScreen';
 import { QuestsScreen } from './ui/screens/QuestsScreen';
@@ -52,6 +53,7 @@ export default function App() {
           <TabBar tab={tab} onChange={setTab} />
           <UpdateBanner />
           <EventHost />
+          <WhatsNewWindow />
         </>
       ) : (
         <Awakening />
