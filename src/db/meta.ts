@@ -13,6 +13,10 @@ export interface MetaMap {
   pendingEvents: GameEvent[];
   /** Newest version whose What's New notes the player has seen */
   lastSeenVersion: string;
+  /** Master sound volume, 0–1 */
+  soundVolume: number;
+  /** Soft click on every button tap */
+  tapSounds: boolean;
 }
 
 export async function getMeta<K extends keyof MetaMap>(database: AshbornDB, key: K): Promise<MetaMap[K] | undefined> {

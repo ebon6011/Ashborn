@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect, useState } from 'react';
 import { getMeta, setMeta } from './db/meta';
 import { db } from './db/schema';
-import { installAudioUnlock, setSoundEnabled } from './platform/audio';
+import { DEFAULT_VOLUME, installAudioUnlock, installTapSounds, setSoundEnabled, setSoundVolume, setTapSoundsEnabled } from './platform/audio';
 import { isStandalone } from './platform/standalone';
 import { Backdrop } from './ui/components/Backdrop';
 import { TabBar, type Tab } from './ui/components/TabBar';
@@ -22,14 +22,23 @@ export default function App() {
   const profile = useLiveQuery(async () => (await db.profile.get(1)) ?? null, [], 'loading' as const);
   const guideDismissed = useLiveQuery(async () => (await getMeta(db, 'installGuideDismissed')) ?? false, [], true);
   const soundOn = useLiveQuery(async () => (await getMeta(db, 'soundOn')) ?? true, [], true);
+  const soundVolume = useLiveQuery(async () => (await getMeta(db, 'soundVolume')) ?? DEFAULT_VOLUME, [], DEFAULT_VOLUME);
+  const tapSounds = useLiveQuery(async () => (await getMeta(db, 'tapSounds')) ?? false, [], false);
   const [tab, setTab] = useState<Tab>('status');
   const [guideRequested, setGuideRequested] = useState(false);
   const registered = profile !== 'loading' && profile !== null;
 
   useEffect(() => installAudioUnlock(), []);
+  useEffect(() => installTapSounds(), []);
   useEffect(() => {
     setSoundEnabled(soundOn);
   }, [soundOn]);
+  useEffect(() => {
+    setSoundVolume(soundVolume);
+  }, [soundVolume]);
+  useEffect(() => {
+    setTapSoundsEnabled(tapSounds);
+  }, [tapSounds]);
   useDayCycle(registered);
 
   if (profile === 'loading') return <div className="min-h-dvh bg-void" />;

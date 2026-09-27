@@ -77,4 +77,16 @@ describe('SettingsScreen', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Check for updates' }));
     expect(await screen.findByText('Updates aren’t available here.')).toBeTruthy();
   });
+
+  it('saves volume and tap sounds', async () => {
+    render(<SettingsScreen onShowInstallGuide={() => {}} />);
+    const slider = await screen.findByRole('slider', { name: 'Volume' });
+    expect((slider as HTMLInputElement).value).toBe('80');
+    fireEvent.change(slider, { target: { value: '50' } });
+    await waitFor(async () => expect(await getMeta(db, 'soundVolume')).toBe(0.5));
+    const tap = screen.getByRole('switch', { name: 'Tap sounds' });
+    expect(tap.getAttribute('aria-checked')).toBe('false');
+    fireEvent.click(tap);
+    await waitFor(async () => expect(await getMeta(db, 'tapSounds')).toBe(true));
+  });
 });

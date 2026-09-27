@@ -6,6 +6,7 @@ import { updateProfile } from '../../db/repo/onboarding';
 import { db } from '../../db/schema';
 import { backupFileName, buildBackup, parseBackup, type ParseResult } from '../../domain/backup';
 import type { PersistResult, Profile, ProfileInput } from '../../domain/types';
+import { DEFAULT_VOLUME } from '../../platform/audio';
 import { saveBackupFile } from '../../platform/download';
 import { checkForUpdates, type UpdateCheck } from '../../platform/updates';
 import { isStandalone } from '../../platform/standalone';
@@ -45,6 +46,8 @@ export function SettingsScreen({ onShowInstallGuide }: { onShowInstallGuide: () 
   const lastBackupAt = useMeta('lastBackupAt');
   const persistResult = useMeta('persistResult');
   const soundOn = useMeta('soundOn') ?? true;
+  const volume = useMeta('soundVolume') ?? DEFAULT_VOLUME;
+  const tapSounds = useMeta('tapSounds') ?? false;
   const [message, setMessage] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
   const [pending, setPending] = useState<Extract<ParseResult, { ok: true }> | null>(null);
@@ -188,6 +191,35 @@ export function SettingsScreen({ onShowInstallGuide }: { onShowInstallGuide: () 
         >
           <span>Sound effects</span>
           <span className={soundOn ? 'text-glow' : 'text-muted'}>{soundOn ? 'On' : 'Off'}</span>
+        </button>
+        <label className="mt-3 block">
+          <span className="mb-1 flex justify-between text-sm text-muted">
+            <span>Volume</span>
+            <span>{Math.round(volume * 100)}%</span>
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={5}
+            aria-label="Volume"
+            value={Math.round(volume * 100)}
+            disabled={!soundOn}
+            onChange={(e) => void setMeta(db, 'soundVolume', Number(e.target.value) / 100)}
+            className="h-11 w-full accent-[#3ab8ff] disabled:opacity-40"
+          />
+        </label>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={tapSounds}
+          aria-label="Tap sounds"
+          disabled={!soundOn}
+          onClick={() => void setMeta(db, 'tapSounds', !tapSounds)}
+          className="mt-2 flex min-h-11 w-full items-center justify-between rounded border border-glow-soft px-3 text-base disabled:opacity-40"
+        >
+          <span>Tap sounds</span>
+          <span className={tapSounds ? 'text-glow' : 'text-muted'}>{tapSounds ? 'On' : 'Off'}</span>
         </button>
         <p className="mt-2 text-sm text-muted">iPhone's silent switch also mutes app sounds.</p>
       </SystemWindow>
