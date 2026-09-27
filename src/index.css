@@ -173,4 +173,7 @@ body:has([role="dialog"][aria-modal="true"]) .mana-particle { animation-play-sta
   .mana-particle { display: none; }
   .levelup-glow,
   .levelup-burst { display: none; }
+  /* Show the new rank at once: the global rule shortens durations but not delays. */
+  .rank-flip-in { animation: none; }
+  .rank-flip-out { animation: none; opacity: 0; }
 }

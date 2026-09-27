@@ -121,4 +121,18 @@ describe('QuestsScreen', () => {
     await screen.findByText('Penalty Quest');
     expect(vi.mocked(playSound).mock.calls.filter(([n]) => n === 'penalty')).toHaveLength(1);
   });
+
+  it('still stamps the next day when the app stays open overnight on a cleared day', async () => {
+    await completeDaily(db, '2026-09-21');
+    render(<QuestsScreen />);
+    await screen.findByText('QUEST CLEARED');
+    await startDay(db, at('2026-09-22'), neverUrgent);
+    await waitFor(() => expect(screen.queryByText('QUEST CLEARED')).toBeNull());
+    for (const label of ['Push-ups', 'Sit-ups', 'Squats', 'Walk']) {
+      fireEvent.click(await screen.findByRole('button', { name: `Complete ${label}` }));
+      await waitFor(async () => expect((await db.days.get('2026-09-22'))!.items.find((i) => i.label === label)!.progress).toBeGreaterThan(0));
+    }
+    expect((await screen.findByText('QUEST CLEARED')).className).toContain('quest-stamp-animate');
+    await waitFor(() => expect(vi.mocked(playSound).mock.calls.filter(([n]) => n === 'questComplete')).toHaveLength(1));
+  });
 });

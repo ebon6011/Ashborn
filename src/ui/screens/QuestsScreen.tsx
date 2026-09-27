@@ -34,7 +34,7 @@ export function QuestsScreen() {
     <Screen title="Quests">
       {day.urgent && <UrgentCard date={today} quest={day.urgent} />}
       {day.penalty && <PenaltyCard date={today} quest={day.penalty} />}
-      <DailyQuestCard day={day} level={player.level} />
+      <DailyQuestCard key={day.date} day={day} level={player.level} />
       <SideQuests date={today} />
     </Screen>
   );

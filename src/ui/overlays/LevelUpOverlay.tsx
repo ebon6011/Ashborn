@@ -60,12 +60,12 @@ export function LevelUpOverlay({ event, onClose, onAssign }: Props) {
               <p className="sr-only">
                 Rank up: {event.fromRank} → {event.toRank}
               </p>
-              <div aria-hidden="true" className="my-2 flex items-center justify-center gap-3 [perspective:400px]">
-                <div className="rank-flip-out">
+              {/* Both badges share one grid cell, so the new rank flips in exactly where the old one was. */}
+              <div aria-hidden="true" className="my-2 grid justify-items-center [perspective:400px]">
+                <div className="rank-flip-out [grid-area:1/1]">
                   <RankBadge rank={event.fromRank} />
                 </div>
-                <span className="text-gold">→</span>
-                <div className="rank-flip-in">
+                <div className="rank-flip-in [grid-area:1/1]">
                   <RankBadge rank={event.toRank} />
                 </div>
               </div>

@@ -11,5 +11,7 @@ export default defineConfig({
     include: ['src/**/*.test.{ts,tsx}'],
     environment: 'node',
     setupFiles: ['src/test/setup.ts'],
+    // Let tests read index.css (e.g. to guard the reduced-motion rules); other CSS stays stubbed.
+    css: { include: [/index\.css/] },
   },
 });

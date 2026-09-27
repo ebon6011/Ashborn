@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { playSound } from '../../platform/audio';
 import { mockReducedMotion } from '../../test/uiFixtures';
+import css from '../../index.css?raw';
 import { LevelUpOverlay } from './LevelUpOverlay';
 
 vi.mock('../../platform/audio', async (orig) => ({ ...(await orig<typeof import('../../platform/audio')>()), playSound: vi.fn() }));
@@ -46,5 +47,20 @@ describe('LevelUpOverlay', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
     fireEvent.click(screen.getByRole('dialog'));
     expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it('flips the rank badge in place, one badge on top of the other', () => {
+    const { container } = render(<LevelUpOverlay event={rankUp} onClose={() => {}} onAssign={() => {}} />);
+    const out = container.querySelector('.rank-flip-out')!;
+    const into = container.querySelector('.rank-flip-in')!;
+    expect(out.parentElement).toBe(into.parentElement);
+    expect(out.className).toContain('[grid-area:1/1]');
+    expect(into.className).toContain('[grid-area:1/1]');
+  });
+
+  it('shows the new rank instantly with reduced motion', () => {
+    const reduced = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'));
+    expect(reduced).toMatch(/\.rank-flip-in[^}]*animation:\s*none/);
+    expect(reduced).toMatch(/\.rank-flip-out[^}]*opacity:\s*0/);
   });
 });

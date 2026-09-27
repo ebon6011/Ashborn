@@ -133,8 +133,9 @@ export function installTapSounds(target: Document = document): () => void {
   const handler = (event: Event) => {
     if (tapSounds && (event.target as Element | null)?.closest?.('button')) playSound('tap');
   };
-  target.addEventListener('click', handler);
-  return () => target.removeEventListener('click', handler);
+  // Capturing, so buttons that stop the tap from bubbling (e.g. the level-up screen) still click.
+  target.addEventListener('click', handler, true);
+  return () => target.removeEventListener('click', handler, true);
 }
 
 function makeNoise(ctx: AudioContext): AudioBuffer {

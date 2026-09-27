@@ -146,4 +146,36 @@ describe('audio', () => {
     cleanup();
     button.remove();
   });
+
+  it('plays tap sounds even on buttons that stop the tap from bubbling', () => {
+    vi.stubGlobal('AudioContext', FakeContext);
+    unlockAudio();
+    const ctx = FakeContext.instances[0]!;
+    setTapSoundsEnabled(true);
+    const cleanup = installTapSounds(document);
+    const wrapper = document.createElement('div');
+    wrapper.addEventListener('click', (e) => e.stopPropagation());
+    const button = document.createElement('button');
+    wrapper.append(button);
+    document.body.append(wrapper);
+    const start = ctx.createOscillator.mock.calls.length;
+    button.click();
+    expect(ctx.createOscillator.mock.calls.length).toBe(start + SOUNDS.tap.length);
+    cleanup();
+    wrapper.remove();
+  });
+
+  it('creates no audio nodes at all when silent (volume 0 or sound off)', () => {
+    vi.stubGlobal('AudioContext', FakeContext);
+    unlockAudio();
+    const ctx = FakeContext.instances[0]!;
+    const nodes = () => ctx.createOscillator.mock.calls.length + ctx.createGain.mock.calls.length + ctx.createBufferSource.mock.calls.length;
+    const start = nodes();
+    setSoundVolume(0);
+    playSound('rankUp');
+    setSoundVolume(DEFAULT_VOLUME);
+    setSoundEnabled(false);
+    playSound('rankUp');
+    expect(nodes()).toBe(start);
+  });
 });
