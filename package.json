@@ -12,6 +12,7 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "icons": "node scripts/generate-icons.mjs",
+    "size": "node scripts/bundle-size.mjs",
     "check": "npm run typecheck && npm run lint && npm test && npm run build"
   },
   "dependencies": {
