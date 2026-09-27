@@ -1,23 +1,35 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { installAudioUnlock, playSound, resetAudioForTests, setSoundEnabled, unlockAudio } from './audio';
+import {
+  DEFAULT_VOLUME,
+  SOUNDS,
+  installAudioUnlock,
+  installTapSounds,
+  playSound,
+  resetAudioForTests,
+  setSoundEnabled,
+  setSoundVolume,
+  setTapSoundsEnabled,
+  unlockAudio,
+  type SoundName,
+} from './audio';
+
+const param = () => ({ value: 0, setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() });
 
 class FakeContext {
   static instances: FakeContext[] = [];
   state = 'suspended';
   currentTime = 0;
+  sampleRate = 22050;
   destination = {};
   resume = vi.fn(() => {
     this.state = 'running';
     return Promise.resolve();
   });
-  createBuffer = vi.fn(() => ({}));
-  createBufferSource = vi.fn(() => ({ buffer: null, connect: vi.fn(), start: vi.fn() }));
-  createOscillator = vi.fn(() => ({ type: '', frequency: { value: 0 }, connect: vi.fn((node: unknown) => node), start: vi.fn(), stop: vi.fn() }));
-  createGain = vi.fn(() => ({
-    gain: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
-    connect: vi.fn((node: unknown) => node),
-  }));
+  createBuffer = vi.fn(() => ({ getChannelData: () => new Float32Array(8) }));
+  createBufferSource = vi.fn(() => ({ buffer: null, connect: vi.fn((node: unknown) => node), start: vi.fn(), stop: vi.fn() }));
+  createOscillator = vi.fn(() => ({ type: '', frequency: param(), connect: vi.fn((node: unknown) => node), start: vi.fn(), stop: vi.fn() }));
+  createGain = vi.fn(() => ({ gain: param(), connect: vi.fn((node: unknown) => node) }));
   constructor() {
     FakeContext.instances.push(this);
   }
@@ -26,6 +38,8 @@ class FakeContext {
 afterEach(() => {
   resetAudioForTests();
   setSoundEnabled(true);
+  setSoundVolume(DEFAULT_VOLUME);
+  setTapSoundsEnabled(false);
   FakeContext.instances = [];
   vi.unstubAllGlobals();
 });
@@ -87,5 +101,49 @@ describe('audio', () => {
     ctx.state = 'suspended';
     playSound('tap');
     expect(ctx.resume).toHaveBeenCalledTimes(2);
+  });
+
+  it('builds every sound from its recipe', () => {
+    vi.stubGlobal('AudioContext', FakeContext);
+    unlockAudio();
+    const ctx = FakeContext.instances[0]!;
+    for (const name of Object.keys(SOUNDS) as SoundName[]) {
+      const before = ctx.createOscillator.mock.calls.length + ctx.createBufferSource.mock.calls.length;
+      playSound(name);
+      const after = ctx.createOscillator.mock.calls.length + ctx.createBufferSource.mock.calls.length;
+      expect(after - before).toBe(SOUNDS[name].length);
+    }
+  });
+
+  it('scales everything by the master volume, and volume 0 plays nothing', () => {
+    vi.stubGlobal('AudioContext', FakeContext);
+    unlockAudio();
+    const ctx = FakeContext.instances[0]!;
+    setSoundVolume(0.5);
+    expect(ctx.createGain.mock.results[0]!.value.gain.value).toBe(0.5);
+    setSoundVolume(0);
+    const before = ctx.createOscillator.mock.calls.length;
+    playSound('levelUp');
+    expect(ctx.createOscillator.mock.calls.length).toBe(before);
+  });
+
+  it('plays tap sounds on button taps only when enabled', () => {
+    vi.stubGlobal('AudioContext', FakeContext);
+    unlockAudio();
+    const ctx = FakeContext.instances[0]!;
+    const cleanup = installTapSounds(document);
+    const button = document.createElement('button');
+    document.body.append(button);
+    const count = () => ctx.createOscillator.mock.calls.length;
+    const start = count();
+    button.click();
+    expect(count()).toBe(start);
+    setTapSoundsEnabled(true);
+    button.click();
+    expect(count()).toBe(start + SOUNDS.tap.length);
+    document.body.click();
+    expect(count()).toBe(start + SOUNDS.tap.length);
+    cleanup();
+    button.remove();
   });
 });
