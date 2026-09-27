@@ -91,6 +91,44 @@ textarea {
 
 .level-burst { animation: level-burst 1.6s ease-out both; }
 
+/* Level-up / rank-up celebration (the one moment allowed past 400 ms) */
+@keyframes glow-pulse {
+  0% { opacity: 0; transform: scale(0.6); }
+  30% { opacity: 1; }
+  100% { opacity: 0.55; transform: scale(1.15); }
+}
+.levelup-glow {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgb(58 184 255 / 0.45), transparent 60%);
+  animation: glow-pulse 1.4s ease-out both;
+}
+.levelup-glow-gold { background: radial-gradient(circle at 50% 50%, rgb(255 209 102 / 0.45), transparent 60%); }
+@keyframes burst {
+  from { transform: translate(0, 0) scale(1); opacity: 1; }
+  to { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+}
+.levelup-burst { position: absolute; left: 50%; top: 50%; pointer-events: none; }
+.burst-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px;
+  border-radius: 9999px;
+  background: #3ab8ff;
+  box-shadow: 0 0 8px 2px rgb(58 184 255 / 0.8);
+  animation: burst 900ms ease-out both;
+}
+[data-variant="rank"] .burst-particle { background: #ffd166; box-shadow: 0 0 8px 2px rgb(255 209 102 / 0.8); }
+@keyframes rank-out { to { transform: rotateY(90deg); opacity: 0; } }
+@keyframes rank-in {
+  from { transform: rotateY(-90deg); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.rank-flip-out { animation: rank-out 300ms ease-in 300ms both; }
+.rank-flip-in { animation: rank-in 300ms ease-out 600ms both; }
+
 /* Backdrop: rising mana particles */
 @keyframes mana-rise {
   0% { transform: translateY(0); opacity: 0; }
@@ -124,4 +162,6 @@ body:has([role="dialog"][aria-modal="true"]) .mana-particle { animation-play-sta
   }
   .system-window::before { display: none; }
   .mana-particle { display: none; }
+  .levelup-glow,
+  .levelup-burst { display: none; }
 }

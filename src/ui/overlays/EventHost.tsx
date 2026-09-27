@@ -6,12 +6,22 @@ import type { GameEvent } from '../../domain/types';
 import { AchievementToast } from './AchievementToast';
 import { LevelUpOverlay } from './LevelUpOverlay';
 
-export function EventHost() {
+export function EventHost({ onAssignPoints }: { onAssignPoints?: () => void } = {}) {
   const events = useLiveQuery(async () => (await getMeta(db, 'pendingEvents')) ?? [], [], [] as GameEvent[]);
   const event = events[0];
   if (!event) return null;
   if (event.type === 'levelUp') {
-    return <LevelUpOverlay key={`level-${event.toLevel}`} event={event} onClose={() => void dismissEvent(db)} />;
+    return (
+      <LevelUpOverlay
+        key={`level-${event.toLevel}`}
+        event={event}
+        onClose={() => void dismissEvent(db)}
+        onAssign={() => {
+          void dismissEvent(db);
+          onAssignPoints?.();
+        }}
+      />
+    );
   }
   return <AchievementToast key={`title-${event.id}`} title={event.title} onDone={() => void dismissEvent(db)} />;
 }

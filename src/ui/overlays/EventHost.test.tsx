@@ -1,12 +1,17 @@
 // @vitest-environment jsdom
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getMeta, setMeta } from '../../db/meta';
 import { db } from '../../db/schema';
-import { seedApp } from '../../test/uiFixtures';
+import { mockReducedMotion, seedApp } from '../../test/uiFixtures';
 import { EventHost } from './EventHost';
 
-beforeEach(() => seedApp());
+// Counters roll up over time; with reduced motion they show the final numbers at once.
+beforeEach(async () => {
+  mockReducedMotion(true);
+  await seedApp();
+});
+afterEach(() => vi.unstubAllGlobals());
 
 describe('EventHost', () => {
   it('shows a level-up and removes it on Continue', async () => {
@@ -25,5 +30,14 @@ describe('EventHost', () => {
     const toast = await screen.findByRole('status');
     expect(toast.textContent).toContain('The Awakened');
     expect(toast.className).toContain('pointer-events-none');
+  });
+
+  it('Assign points dismisses the level-up and opens the stats', async () => {
+    await setMeta(db, 'pendingEvents', [{ type: 'levelUp', fromLevel: 1, toLevel: 2, fromRank: 'E', toRank: 'E', statPointsGained: 3 }]);
+    const onAssignPoints = vi.fn();
+    render(<EventHost onAssignPoints={onAssignPoints} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Assign points' }));
+    await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toEqual([]));
+    expect(onAssignPoints).toHaveBeenCalledOnce();
   });
 });

@@ -61,7 +61,7 @@ export default function App() {
           {tab === 'settings' && <SettingsScreen onShowInstallGuide={() => setGuideRequested(true)} />}
           <TabBar tab={tab} onChange={setTab} />
           <UpdateBanner />
-          <EventHost />
+          <EventHost onAssignPoints={() => setTab('status')} />
           <WhatsNewWindow />
         </>
       ) : (
