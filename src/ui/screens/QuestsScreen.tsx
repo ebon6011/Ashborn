@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { completeUrgent, finishDay, setItemProgress, setPenaltyProgress, setRest } from '../../db/repo/days';
 import { archiveSideQuest, completeSideQuest, createSideQuest, updateSideQuest } from '../../db/repo/sideQuests';
 import { db } from '../../db/schema';
@@ -42,6 +42,12 @@ export function QuestsScreen() {
 
 function DailyQuestCard({ day, level }: { day: DayRecord; level: number }) {
   const [message, setMessage] = useState<string | null>(null);
+  // The stamp animates (with its sound) only when the day turns done while this card is on screen.
+  const [statusAtMount] = useState(day.status);
+  const justCleared = day.status === 'done' && statusAtMount !== 'done';
+  useEffect(() => {
+    if (justCleared) playSound('questComplete');
+  }, [justCleared]);
   const open = day.status === 'open' || day.status === 'partial';
   const canFinish = partialXp(day.items, level) - day.xpAwarded > 0;
 
@@ -63,9 +69,23 @@ function DailyQuestCard({ day, level }: { day: DayRecord; level: number }) {
           Rest day. Your streak is safe.
         </p>
       )}
+      {day.status === 'done' && (
+        <div
+          aria-hidden="true"
+          className={`quest-stamp pointer-events-none absolute right-3 top-10 rounded border-4 border-gold px-3 py-1 text-xl font-black tracking-widest text-gold ${justCleared ? 'quest-stamp-animate' : ''}`}
+        >
+          QUEST CLEARED
+        </div>
+      )}
       <ul className="space-y-3">
         {day.items.map((item) => (
-          <QuestItemRow key={item.id} date={day.date} item={item} disabled={!open} />
+          <QuestItemRow
+            key={item.id}
+            date={day.date}
+            item={item}
+            disabled={!open}
+            completesQuest={day.items.every((other) => other.id === item.id || other.progress >= other.target)}
+          />
         ))}
       </ul>
       {open && (
@@ -92,14 +112,25 @@ function DailyQuestCard({ day, level }: { day: DayRecord; level: number }) {
   );
 }
 
-function QuestItemRow({ date, item, disabled }: { date: string; item: QuestItem; disabled: boolean }) {
+function QuestItemRow({
+  date,
+  item,
+  disabled,
+  completesQuest,
+}: {
+  date: string;
+  item: QuestItem;
+  disabled: boolean;
+  /** Finishing this item finishes the whole daily quest (the stamp plays its own sound instead). */
+  completesQuest: boolean;
+}) {
   const [text, setText] = useState('');
   const [error, setError] = useState<string | null>(null);
   const done = item.progress >= item.target;
 
   async function save(value: number) {
     await setItemProgress(db, date, item.id, value, new Date());
-    playSound(value >= item.target ? 'complete' : 'tap');
+    if (value >= item.target && !completesQuest) playSound('complete');
     setText('');
     setError(null);
   }
@@ -149,7 +180,21 @@ function QuestItemRow({ date, item, disabled }: { date: string; item: QuestItem;
   );
 }
 
+/** The penalty warning plays once per day while the app is open. */
+let penaltySoundDate: string | null = null;
+
+export function resetPenaltySoundForTests(): void {
+  penaltySoundDate = null;
+}
+
 function PenaltyCard({ date, quest }: { date: string; quest: PenaltyQuest }) {
+  useEffect(() => {
+    if (!quest.done && penaltySoundDate !== date) {
+      penaltySoundDate = date;
+      playSound('penalty');
+    }
+  }, [date, quest.done]);
+
   return (
     <SystemWindow title="Penalty Quest">
       <p className="text-sm text-muted">You missed a day. Here is one small extra task. No pressure.</p>

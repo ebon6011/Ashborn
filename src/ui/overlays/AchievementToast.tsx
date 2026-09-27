@@ -8,7 +8,7 @@ export function AchievementToast({ title, onDone }: { title: string; onDone: () 
     onDoneRef.current = onDone;
   });
   useEffect(() => {
-    playSound('chime');
+    playSound('achievement');
     const timer = setTimeout(() => onDoneRef.current(), 3500);
     return () => clearTimeout(timer);
   }, []);

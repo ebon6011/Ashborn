@@ -129,6 +129,15 @@ textarea {
 .rank-flip-out { animation: rank-out 300ms ease-in 300ms both; }
 .rank-flip-in { animation: rank-in 300ms ease-out 600ms both; }
 
+/* Quest Cleared stamp (≈350 ms) */
+@keyframes stamp-in {
+  0% { opacity: 0; transform: rotate(-12deg) scale(1.8); }
+  70% { opacity: 1; transform: rotate(-12deg) scale(0.95); }
+  100% { opacity: 1; transform: rotate(-12deg) scale(1); }
+}
+.quest-stamp { transform: rotate(-12deg); }
+.quest-stamp-animate { animation: stamp-in 350ms cubic-bezier(0.2, 0.8, 0.3, 1.2) both; }
+
 /* Backdrop: rising mana particles */
 @keyframes mana-rise {
   0% { transform: translateY(0); opacity: 0; }
