@@ -78,7 +78,7 @@ Backups from older versions of Ashborn still import. They are upgraded automatic
 - Weekly workout plan and logging of sets, reps and kg, with personal records and an E–S rank per exercise based on your own progress
 - Nutrition targets (Mifflin-St Jeor, with a safe minimum) and a manual food and water log
 - Achievements and titles
-- Level-up screen with sound; glowing system windows; typewriter messages
+- Original sound effects made in code (0 KB), with volume and optional tap sounds; a bigger level-up and rank-up moment; a Quest Cleared stamp; glowing system windows; typewriter messages (see docs/credits.md)
 - Offline support, iPhone install guide, backup and restore, and storage protection
 - Offline mode is covered by an automated service-worker cache test; a full offline relaunch is checked by hand on the iPhone
 - Unit tests and iPhone WebKit browser tests; automatic deployment

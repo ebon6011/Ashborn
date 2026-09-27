@@ -16,6 +16,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: readonly ChangelogEntry[] = [
   {
+    version: '1.3.0',
+    date: '2026-09-27',
+    notes: [
+      'Ashborn sounds and feels more alive: new sound effects, a volume control and optional tap sounds in Settings.',
+      'Levelling up is a bigger moment, and clearing your daily quest earns a Quest Cleared stamp.',
+    ],
+  },
+  {
     version: '1.2.0',
     date: '2026-09-27',
     notes: [
