@@ -74,15 +74,19 @@ export async function setItemProgress(database: AshbornDB, date: string, itemId:
     if (!record || !player || (record.status !== 'open' && record.status !== 'partial')) return;
 
     const items = record.items.map((item) => (item.id === itemId ? { ...item, progress: cleanProgress(progress) } : item));
-    // Each item hits the weekly Boss once, when it first reaches its target.
-    for (const [i, item] of items.entries()) {
-      const before = record.items[i]!;
-      if (before.progress < before.target && item.progress >= item.target) {
-        await dealBossDamage(database, { base: progression.boss.sessionDamage / items.length, category: questItemCategory(item.id), date }, now);
+    // Each item hits the weekly Boss once, when it first reaches its target. Hits land after the
+    // daily-quest XP, so a level-up from that XP is celebrated before any Boss victory.
+    const bossHits = async () => {
+      for (const [i, item] of items.entries()) {
+        const before = record.items[i]!;
+        if (before.progress < before.target && item.progress >= item.target) {
+          await dealBossDamage(database, { base: progression.boss.sessionDamage / items.length, category: questItemCategory(item.id), date }, now);
+        }
       }
-    }
+    };
     if (!isDailyComplete(items)) {
       await database.days.put({ ...record, items });
+      await bossHits();
       return;
     }
 
@@ -91,6 +95,7 @@ export async function setItemProgress(database: AshbornDB, date: string, itemId:
     const streak = player.streak + 1;
     await database.player.update(1, { streak, bestStreak: Math.max(player.bestStreak, streak) });
     await awardXp(database, { amount: xp, kind: 'daily', refId: date, date, countsAsQuest: true }, now);
+    await bossHits();
   });
 }
 

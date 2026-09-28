@@ -93,4 +93,20 @@ describe('needsBackupReminder', () => {
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.error).toContain('"bosses"');
   });
+
+  it('rejects damaged boss rows that could break the boss', () => {
+    const f = file();
+    const good = { weekStart: '2026-09-28', bossId: 'mawgrath', scale: 1.2, maxHp: 360, hp: 300, defeatedAt: null, trainingBase: { '2026-09-28': 50 } };
+    const withBoss = (row: object) => parseBackup(text({ ...f, data: { ...f.data, bosses: [row] } }));
+    expect(withBoss(good).ok).toBe(true);
+    for (const bad of [
+      { ...good, trainingBase: { '2026-09-28': 'x' } },
+      { ...good, trainingBase: { notADate: 10 } },
+      { ...good, scale: 0 },
+      { ...good, hp: 400 },
+    ]) {
+      const result = withBoss(bad);
+      expect(result.ok).toBe(false);
+    }
+  });
 });

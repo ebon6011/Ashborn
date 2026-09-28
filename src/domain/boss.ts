@@ -1,4 +1,4 @@
-import { BOSSES, type BossDef } from '../config/bosses';
+import { BOSSES, getBoss, type BossDef } from '../config/bosses';
 import { progression } from '../config/progression';
 import { daysBetween } from './day';
 import type { BossCategory, BossRecord, ExerciseCategory, Experience, WeekPlan } from './types';
@@ -46,7 +46,9 @@ export function penaltyCategory(label: string): BossCategory {
 /** One hit: base (in session-damage points) × the Boss's scale, doubled on its weakness, rounded UP. */
 export function hitDamage(boss: BossRecord, base: number, category: BossCategory | null): number {
   if (base <= 0) return 0;
-  const weak = category !== null && category === bossForWeek(boss.weekStart).weakness;
+  // The stored Boss decides the weakness, so a later roster change can't disagree with the saved record.
+  const weakness = (getBoss(boss.bossId) ?? bossForWeek(boss.weekStart)).weakness;
+  const weak = category !== null && category === weakness;
   return Math.ceil(base * boss.scale * (weak ? cfg.weaknessMultiplier : 1) - 1e-9);
 }
 

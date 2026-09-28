@@ -51,8 +51,12 @@ export const rowValidators: Record<BackupTable, Check> = {
   foodLog: shape({ id: count, date: isDateKey, kcal: nonNeg, proteinG: nonNeg, waterMl: nonNeg, note: str, at: str }),
   achievements: shape({ id: str, unlockedAt: str }),
   meta: (v) => isRecord(v) && typeof v.key === 'string' && v.value !== undefined,
-  bosses: shape({
-    weekStart: isDateKey, bossId: str, scale: nonNeg, maxHp: count, hp: count,
-    defeatedAt: nullable(str), trainingBase: isRecord,
-  }),
+  bosses: both(
+    shape({
+      weekStart: isDateKey, bossId: str, scale: (v) => nonNeg(v) && (v as number) > 0, maxHp: count, hp: count,
+      defeatedAt: nullable(str),
+      trainingBase: (v) => isRecord(v) && Object.entries(v).every(([date, dealt]) => isDateKey(date) && nonNeg(dealt)),
+    }),
+    (v) => isRecord(v) && (v.hp as number) <= (v.maxHp as number),
+  ),
 };

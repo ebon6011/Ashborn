@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { BOSSES } from '../../config/bosses';
 import { bossForWeek, hitDamage, penaltyCategory, questItemCategory } from '../../domain/boss';
 import { xpToNext } from '../../domain/xp';
 import { completeDaily, neverUrgent, setupPlayer } from '../../test/dbFixtures';
@@ -102,5 +103,32 @@ describe('weekly boss', () => {
     await setItemProgress(db, '2026-10-05', item.id, item.target, at('2026-10-05'));
     expect((await db.bosses.get(MONDAY))!.hp).toBe(360);
     expect((await db.bosses.get('2026-10-05'))!.hp).toBe(fresh.maxHp - hitDamage(fresh, 25, questItemCategory(item.id)));
+  });
+
+  it('when the last item finishes the daily and defeats the boss, the level-up comes before the boss window', async () => {
+    const db = await setupPlayer(MONDAY);
+    const items = (await db.days.get(MONDAY))!.items;
+    for (const item of items.slice(0, 3)) await setItemProgress(db, MONDAY, item.id, item.target, at(MONDAY));
+    await db.bosses.update(MONDAY, { hp: 1 });
+    // Level 10: the boss reward (200) alone does not level up, but together with the daily XP (110) it does.
+    await db.player.update(1, { level: 10, xp: xpToNext(10) - 250 });
+    await db.meta.put({ key: 'pendingEvents', value: [] });
+    const last = items[3]!;
+    await setItemProgress(db, MONDAY, last.id, last.target, at(MONDAY));
+    const types = ((await getMeta(db, 'pendingEvents')) ?? []).map((e) => e.type).filter((t) => t !== 'achievement');
+    expect(types[0]).toBe('levelUp');
+    expect(types.at(-1)).toBe('bossDefeated');
+    expect(types.filter((t) => t === 'bossDefeated')).toHaveLength(1);
+  });
+
+  it('doubles damage on the stored boss’s weakness even if the rotation changes', async () => {
+    const db = await setupPlayer(MONDAY);
+    const stored = (await db.bosses.get(MONDAY))!;
+    const other = BOSSES.find((b) => b.weakness !== bossForWeek(MONDAY).weakness)!;
+    await db.bosses.update(MONDAY, { bossId: other.id });
+    const items = (await db.days.get(MONDAY))!.items;
+    const hitItem = items.find((i) => questItemCategory(i.id) === other.weakness)!;
+    await setItemProgress(db, MONDAY, hitItem.id, hitItem.target, at(MONDAY));
+    expect((await db.bosses.get(MONDAY))!.hp).toBe(stored.maxHp - Math.ceil(25 * stored.scale * 2 - 1e-9));
   });
 });
