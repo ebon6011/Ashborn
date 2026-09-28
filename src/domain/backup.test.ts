@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { sampleBackupData } from '../test/fixtures';
 import { backupFileName, buildBackup, needsBackupReminder, parseBackup } from './backup';
+import { SCHEMA_VERSION } from './migrations';
 
 const NOW = new Date('2026-09-25T10:00:00.000Z');
 const text = (value: unknown) => JSON.stringify(value);
@@ -8,7 +9,7 @@ const file = () => buildBackup(sampleBackupData(), NOW);
 
 describe('buildBackup / backupFileName', () => {
   it('wraps data with app name, schema version and time', () => {
-    expect(file()).toMatchObject({ app: 'ashborn', schemaVersion: 1, exportedAt: NOW.toISOString() });
+    expect(file()).toMatchObject({ app: 'ashborn', schemaVersion: SCHEMA_VERSION, exportedAt: NOW.toISOString() });
     expect(backupFileName(new Date(2026, 8, 25, 23, 0))).toBe('ashborn-backup-2026-09-25.json');
   });
 });
@@ -32,7 +33,7 @@ describe('parseBackup', () => {
   });
 
   it('rejects a backup from a newer app version', () => {
-    const result = parseBackup(text({ ...file(), schemaVersion: 2 }));
+    const result = parseBackup(text({ ...file(), schemaVersion: SCHEMA_VERSION + 1 }));
     expect(result).toEqual({ ok: false, error: 'This backup was made by a newer version of Ashborn. Update the app, then try again.' });
   });
 
@@ -76,5 +77,20 @@ describe('needsBackupReminder', () => {
     expect(needsBackupReminder(NOW, undefined, new Date(NOW.getTime() - 8 * day).toISOString())).toBe(true);
     expect(needsBackupReminder(NOW, undefined, new Date(NOW.getTime() - 1 * day).toISOString())).toBe(false);
     expect(needsBackupReminder(NOW, undefined, undefined)).toBe(false);
+  });
+
+  it('imports a version 1 backup with an empty boss history', () => {
+    const { bosses: _none, ...v1data } = sampleBackupData() as unknown as Record<string, unknown[]>;
+    void _none;
+    const result = parseBackup(text({ app: 'ashborn', schemaVersion: 1, exportedAt: NOW.toISOString(), data: v1data }));
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.backup.data.bosses).toEqual([]);
+  });
+
+  it('rejects a malformed boss row', () => {
+    const f = file();
+    const result = parseBackup(text({ ...f, data: { ...f.data, bosses: [{ weekStart: 'x' }] } }));
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toContain('"bosses"');
   });
 });

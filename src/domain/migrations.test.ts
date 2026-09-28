@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { migrateBackupData } from './migrations';
+import { backupMigrations, migrateBackupData, SCHEMA_VERSION } from './migrations';
 
 describe('migrateBackupData', () => {
   const steps = {
@@ -17,5 +17,11 @@ describe('migrateBackupData', () => {
 
   it('throws when a step is missing', () => {
     expect(() => migrateBackupData({}, 1, 4, steps)).toThrow('No migration to schema version 4.');
+  });
+
+  it('step 2 adds an empty boss history to version 1 backups', () => {
+    expect(SCHEMA_VERSION).toBe(2);
+    expect(backupMigrations[2]!({ player: [] })).toEqual({ player: [], bosses: [] });
+    expect(backupMigrations[2]!({ bosses: [{ weekStart: '2026-09-28' }] })).toEqual({ bosses: [{ weekStart: '2026-09-28' }] });
   });
 });

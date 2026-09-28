@@ -39,7 +39,7 @@ export const rowValidators: Record<BackupTable, Check> = {
     penalty: nullable(penalty), urgent: nullable(urgent), xpAwarded: nonNeg,
   }),
   sideQuests: shape({ id: count, title: str, xp: nonNeg, stat: oneOf(...STAT_KEYS), archived: bool, completions: count }),
-  questLog: shape({ id: count, date: isDateKey, kind: oneOf('daily', 'penalty', 'urgent', 'side'), refId: str, xp: nonNeg, at: str }),
+  questLog: shape({ id: count, date: isDateKey, kind: oneOf('daily', 'penalty', 'urgent', 'side', 'boss'), refId: str, xp: nonNeg, at: str }),
   workoutPlans: shape({
     weekStart: isDateKey,
     days: arrayOf(shape({
@@ -51,4 +51,8 @@ export const rowValidators: Record<BackupTable, Check> = {
   foodLog: shape({ id: count, date: isDateKey, kcal: nonNeg, proteinG: nonNeg, waterMl: nonNeg, note: str, at: str }),
   achievements: shape({ id: str, unlockedAt: str }),
   meta: (v) => isRecord(v) && typeof v.key === 'string' && v.value !== undefined,
+  bosses: shape({
+    weekStart: isDateKey, bossId: str, scale: nonNeg, maxHp: count, hp: count,
+    defeatedAt: nullable(str), trainingBase: isRecord,
+  }),
 };

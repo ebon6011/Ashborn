@@ -1,10 +1,11 @@
 import Dexie, { type EntityTable, type Table } from 'dexie';
 import type { BackupTable } from '../domain/migrations';
 import type {
-  AchievementRow, DayRecord, FoodEntry, MetaRow, Player, Profile, QuestLogEntry, SideQuest, WeekPlan, WorkoutSet,
+  AchievementRow, BossRecord, DayRecord, FoodEntry, MetaRow, Player, Profile, QuestLogEntry, SideQuest, WeekPlan, WorkoutSet,
 } from '../domain/types';
 
-export const STORES_V1: Record<BackupTable, string> = {
+/** Version 1 tables (shipped in v1.0.0). Never change. */
+export const STORES_V1: Record<Exclude<BackupTable, 'bosses'>, string> = {
   profile: 'id',
   player: 'id',
   days: 'date',
@@ -17,6 +18,9 @@ export const STORES_V1: Record<BackupTable, string> = {
   meta: 'key',
 };
 
+/** Version 2 (v1.4.0): adds the weekly Boss history, keyed by the Monday of each week. */
+export const STORES_V2: Record<BackupTable, string> = { ...STORES_V1, bosses: 'weekStart' };
+
 export class AshbornDB extends Dexie {
   declare profile: Table<Profile, number>;
   declare player: Table<Player, number>;
@@ -28,6 +32,7 @@ export class AshbornDB extends Dexie {
   declare foodLog: EntityTable<FoodEntry, 'id'>;
   declare achievements: Table<AchievementRow, string>;
   declare meta: Table<MetaRow, string>;
+  declare bosses: Table<BossRecord, string>;
 
   constructor(name = 'ashborn') {
     super(name);
@@ -35,6 +40,8 @@ export class AshbornDB extends Dexie {
     //   this.version(N + 1).stores({...}).upgrade((tx) => ...)
     // plus backupMigrations[N + 1] in src/domain/migrations.ts, and bump SCHEMA_VERSION.
     this.version(1).stores(STORES_V1);
+    // v2: new empty `bosses` table; existing tables are untouched (matches backupMigrations[2]).
+    this.version(2).stores(STORES_V2);
   }
 }
 

@@ -4,7 +4,7 @@ import { writeTx, type AshbornDB } from './schema';
 const TRANSIENT_META = new Set(['pendingEvents']);
 
 export async function exportData(database: AshbornDB): Promise<BackupData> {
-  const [profile, player, days, sideQuests, questLog, workoutPlans, workoutSets, foodLog, achievements, meta] = await database.transaction(
+  const [profile, player, days, sideQuests, questLog, workoutPlans, workoutSets, foodLog, achievements, meta, bosses] = await database.transaction(
     'r',
     database.tables,
     () =>
@@ -19,11 +19,13 @@ export async function exportData(database: AshbornDB): Promise<BackupData> {
         database.foodLog.toArray(),
         database.achievements.toArray(),
         database.meta.toArray(),
+        database.bosses.toArray(),
       ]),
   );
   return {
     profile, player, days, sideQuests, questLog, workoutPlans, workoutSets, foodLog, achievements,
     meta: meta.filter((row) => !TRANSIENT_META.has(row.key)),
+    bosses,
   };
 }
 
@@ -41,5 +43,6 @@ export async function importData(database: AshbornDB, data: BackupData): Promise
     await database.foodLog.bulkPut(data.foodLog);
     await database.achievements.bulkPut(data.achievements);
     await database.meta.bulkPut(data.meta);
+    await database.bosses.bulkPut(data.bosses);
   });
 }

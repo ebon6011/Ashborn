@@ -46,5 +46,6 @@ export function sampleBackupData(): BackupData {
       { key: 'installedAt', value: '2026-09-01T08:00:00.000Z' },
       { key: 'lastOpenDate', value: '2026-09-24' },
     ],
+    bosses: [],
   };
 }

@@ -2,7 +2,7 @@ import { todayKey } from './day';
 import { BACKUP_TABLES, SCHEMA_VERSION, backupMigrations, migrateBackupData, type BackupMigration, type TableData } from './migrations';
 import { rankForLevel } from './rank';
 import type {
-  AchievementRow, DayRecord, FoodEntry, MetaRow, Player, Profile, QuestLogEntry, Rank, SideQuest, WeekPlan, WorkoutSet,
+  AchievementRow, BossRecord, DayRecord, FoodEntry, MetaRow, Player, Profile, QuestLogEntry, Rank, SideQuest, WeekPlan, WorkoutSet,
 } from './types';
 import { isRecord, rowValidators } from './validate';
 
@@ -17,6 +17,7 @@ export interface BackupData {
   foodLog: FoodEntry[];
   achievements: AchievementRow[];
   meta: MetaRow[];
+  bosses: BossRecord[];
 }
 
 export interface BackupFile {
