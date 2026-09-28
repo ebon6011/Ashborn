@@ -16,6 +16,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: readonly ChangelogEntry[] = [
   {
+    version: '1.4.0',
+    date: '2026-09-28',
+    notes: [
+      'A new Boss appears every Monday. Work out and finish quests to deal damage — hit its weakness for double.',
+      'Beat it by Sunday for bonus XP and a rare title. Miss it? No problem, a new one arrives next week.',
+    ],
+  },
+  {
     version: '1.3.0',
     date: '2026-09-27',
     notes: [
