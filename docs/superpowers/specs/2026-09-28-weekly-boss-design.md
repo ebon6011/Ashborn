@@ -35,10 +35,10 @@ Each has a one-line story. Rotation: roster index = (weeks since 2026-01-05, a M
 - `chip: { sideQuest: 0.1, penalty: 0.25 }` (fractions of a session)
 - `trainingDailyCapSessions: 1` (base training damage per day, before the weakness bonus)
 - `scale: { perLevel: 0.05, byTier: { never: 1, beginner: 1.2, intermediate: 1.5, advanced: 1.8 } }` → `scale = tierFactor × (1 + perLevel × (level − 1))`
-- `maxHp = round(sessionsToWin × sessionDamage × scale)`
+- `maxHp = floor(sessionsToWin × sessionDamage × scale)` (rounded down)
 - `xpReward: { base: 100, perLevel: 10 }` → `base + perLevel × level`
 
-## 4. Damage (all × scale, rounded; × weaknessMultiplier when the category matches)
+## 4. Damage (all × scale, rounded UP so 3 full sessions always win; × weaknessMultiplier when the category matches)
 - Daily quest item completed (crosses its target): `sessionDamage / itemCount`. Categories: push-ups → upper, sit-ups → core, squats → legs, walk/jog/run → cardio.
 - Training set logged: `sessionDamage / plannedSetsPerDay` where `plannedSetsPerDay` = this week's planned sets ÷ planned days (min 1). Base training damage per day is capped at `trainingDailyCapSessions × sessionDamage`. Categories: push/pull → upper, legs → legs, core → core.
 - Side quest completed: `chip.sideQuest × sessionDamage` (no category).
