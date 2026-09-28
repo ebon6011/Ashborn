@@ -152,7 +152,10 @@ export const progression: ProgressionConfig = {
     sessionDamage: 100,
     /** Hits that match the Boss's weakness deal this many times the damage. */
     weaknessMultiplier: 2,
-    /** Chip damage, as a fraction of a session: side quest, penalty quest. */
+    /**
+     * Chip damage, as a fraction of a session: side quest, penalty quest.
+     * No daily limit on side-quest chips — owner's decision (2026-09-28).
+     */
     chip: { sideQuest: 0.1, penalty: 0.25 },
     /** Most base training damage one day of logged sets can deal, in sessions. */
     trainingDailyCapSessions: 1,
