@@ -4,6 +4,7 @@ import { dismissEvent } from '../../db/repo/player';
 import { db } from '../../db/schema';
 import type { GameEvent } from '../../domain/types';
 import { AchievementToast } from './AchievementToast';
+import { BossDefeatedOverlay } from './BossDefeatedOverlay';
 import { LevelUpOverlay } from './LevelUpOverlay';
 
 export function EventHost({ onAssignPoints }: { onAssignPoints?: () => void } = {}) {
@@ -26,5 +27,7 @@ export function EventHost({ onAssignPoints }: { onAssignPoints?: () => void } = 
   if (event.type === 'achievement') {
     return <AchievementToast key={`title-${event.id}`} title={event.title} onDone={() => void dismissEvent(db)} />;
   }
-  return null; // bossDefeated: its window arrives in the Boss UI task
+  return (
+    <BossDefeatedOverlay key={`boss-${event.bossId}`} bossId={event.bossId} xp={event.xp} title={event.title} onClose={() => void dismissEvent(db)} />
+  );
 }

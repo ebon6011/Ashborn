@@ -40,4 +40,15 @@ describe('EventHost', () => {
     await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toEqual([]));
     expect(onAssignPoints).toHaveBeenCalledOnce();
   });
+
+  it('celebrates a defeated boss and removes it on Continue', async () => {
+    await setMeta(db, 'pendingEvents', [{ type: 'bossDefeated', bossId: 'mawgrath', xp: 110, title: 'Colossus Breaker' }]);
+    render(<EventHost />);
+    const dialog = await screen.findByRole('dialog', { name: 'Boss defeated' });
+    expect(dialog.textContent).toContain('Mawgrath');
+    expect(dialog.textContent).toContain('+110 XP');
+    expect(dialog.textContent).toContain('Colossus Breaker');
+    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
+    await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toEqual([]));
+  });
 });

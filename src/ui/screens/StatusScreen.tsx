@@ -4,7 +4,7 @@ import { progression } from '../../config/progression';
 import { getMeta } from '../../db/meta';
 import { assignStats, setTitle } from '../../db/repo/player';
 import { db } from '../../db/schema';
-import { ACHIEVEMENTS, titleFor } from '../../domain/achievements';
+import { ALL_TITLES, titleFor } from '../../domain/achievements';
 import { needsBackupReminder } from '../../domain/backup';
 import { rankForLevel } from '../../domain/rank';
 import { STAT_LABELS } from '../../domain/stats';
@@ -19,6 +19,7 @@ import { SystemWindow } from '../components/SystemWindow';
 import type { Tab } from '../components/TabBar';
 import { usePlayer, useProfile } from '../hooks/data';
 import { BackupReminder } from '../overlays/BackupReminder';
+import { BossCard } from './BossCard';
 
 export function StatusScreen({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
   const player = usePlayer();
@@ -90,6 +91,8 @@ export function StatusScreen({ onNavigate }: { onNavigate: (tab: Tab) => void })
         </p>
       </SystemWindow>
 
+      <BossCard />
+
       <SystemWindow title="Stats">
         {player.unspentStatPoints > 0 && <p className="mb-2 text-sm text-gold">{left} points to assign</p>}
         <ul className="space-y-2">
@@ -135,15 +138,16 @@ export function StatusScreen({ onNavigate }: { onNavigate: (tab: Tab) => void })
             className="min-h-11 w-full rounded border border-glow-soft bg-void px-3 text-base text-ink"
           >
             <option value="">{progression.defaultTitle}</option>
-            {ACHIEVEMENTS.filter((a) => unlockedIds.includes(a.id)).map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.title}
+            {ALL_TITLES.filter((t) => unlockedIds.includes(t.id)).map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.title}
               </option>
             ))}
           </select>
         </label>
         <ul className="mt-3 space-y-1 text-sm">
-          {ACHIEVEMENTS.map((a) => {
+          {/* Achievements always; Boss titles once earned. */}
+          {ALL_TITLES.filter((t) => !t.id.startsWith('boss-') || unlockedIds.includes(t.id)).map((a) => {
             const unlocked = unlockedIds.includes(a.id);
             return (
               <li key={a.id} className={unlocked ? 'text-ink' : 'text-muted'}>
