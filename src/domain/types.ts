@@ -83,7 +83,7 @@ export interface SideQuest {
   completions: number;
 }
 
-export type QuestKind = 'daily' | 'penalty' | 'urgent' | 'side';
+export type QuestKind = 'daily' | 'penalty' | 'urgent' | 'side' | 'boss';
 
 export interface QuestLogEntry {
   id: number;
@@ -156,4 +156,20 @@ export interface LevelUpEvent {
 
 export type GameEvent =
   | ({ type: 'levelUp' } & LevelUpEvent)
-  | { type: 'achievement'; id: string; title: string };
+  | { type: 'achievement'; id: string; title: string }
+  | { type: 'bossDefeated'; bossId: string; xp: number; title: string | null };
+
+export type BossCategory = 'legs' | 'core' | 'cardio' | 'upper';
+
+/** One week's Boss. HP scale is fixed when the Boss appears. */
+export interface BossRecord {
+  /** Monday of the Boss's week, YYYY-MM-DD (local) */
+  weekStart: string;
+  bossId: string;
+  scale: number;
+  maxHp: number;
+  hp: number;
+  defeatedAt: string | null;
+  /** Base training damage already dealt per day (for the daily cap) */
+  trainingBase: Record<string, number>;
+}

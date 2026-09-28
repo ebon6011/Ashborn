@@ -45,6 +45,16 @@ export interface ProgressionConfig {
     repsByTier: Record<Experience, number>;
     weeklyVolumeCap: number;
   };
+  boss: {
+    sessionsToWin: number;
+    sessionDamage: number;
+    weaknessMultiplier: number;
+    chip: { sideQuest: number; penalty: number };
+    trainingDailyCapSessions: number;
+    defaultSetsPerDay: number;
+    scale: { perLevel: number; byTier: Record<Experience, number> };
+    xpReward: { base: number; perLevel: number };
+  };
 }
 
 export const progression: ProgressionConfig = {
@@ -134,5 +144,23 @@ export const progression: ProgressionConfig = {
     repsByTier: { never: 8, beginner: 10, intermediate: 10, advanced: 10 },
     /** Planned weekly volume (sets × reps) may grow at most 10 % week over week */
     weeklyVolumeCap: 0.1,
+  },
+  boss: {
+    /** Full sessions (a whole daily quest, or a training day) needed to beat a Boss, for everyone. */
+    sessionsToWin: 3,
+    /** Damage one full session deals before scaling (a daily item deals sessionDamage ÷ item count). */
+    sessionDamage: 100,
+    /** Hits that match the Boss's weakness deal this many times the damage. */
+    weaknessMultiplier: 2,
+    /** Chip damage, as a fraction of a session: side quest, penalty quest. */
+    chip: { sideQuest: 0.1, penalty: 0.25 },
+    /** Most base training damage one day of logged sets can deal, in sessions. */
+    trainingDailyCapSessions: 1,
+    /** Sets per training day assumed when there is no plan for the week. */
+    defaultSetsPerDay: 8,
+    /** HP and damage both grow by this scale (so effort stays the same): tier × (1 + perLevel × (level − 1)). */
+    scale: { perLevel: 0.05, byTier: { never: 1, beginner: 1.2, intermediate: 1.5, advanced: 1.8 } },
+    /** Bonus XP for a victory: base + perLevel × level. */
+    xpReward: { base: 100, perLevel: 10 },
   },
 };

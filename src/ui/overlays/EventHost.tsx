@@ -23,5 +23,8 @@ export function EventHost({ onAssignPoints }: { onAssignPoints?: () => void } = 
       />
     );
   }
-  return <AchievementToast key={`title-${event.id}`} title={event.title} onDone={() => void dismissEvent(db)} />;
+  if (event.type === 'achievement') {
+    return <AchievementToast key={`title-${event.id}`} title={event.title} onDone={() => void dismissEvent(db)} />;
+  }
+  return null; // bossDefeated: its window arrives in the Boss UI task
 }
