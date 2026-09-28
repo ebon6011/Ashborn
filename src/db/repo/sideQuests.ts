@@ -4,6 +4,7 @@ import { addSideQuestProgress } from '../../domain/stats';
 import { STAT_KEYS, type StatKey } from '../../domain/types';
 import { writeTx, type AshbornDB } from '../schema';
 import { awardXp } from './player';
+import { CHIP, dealBossDamage } from './boss';
 
 export interface SideQuestInput {
   title: string;
@@ -46,6 +47,7 @@ export async function completeSideQuest(database: AshbornDB, id: number, now: Da
     await database.sideQuests.update(id, { completions: quest.completions + 1 });
     await database.player.put(addSideQuestProgress(player, quest.stat));
     await awardXp(database, { amount: quest.xp, kind: 'side', refId: String(id), date, countsAsQuest: true }, now);
+    await dealBossDamage(database, { base: CHIP.sideQuest, category: null, date }, now);
     return true;
   });
 }

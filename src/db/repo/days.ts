@@ -8,6 +8,9 @@ import { getMeta, setMeta } from '../meta';
 import { writeTx, type AshbornDB } from '../schema';
 import { awardXp } from './player';
 import { ensureWeekPlan } from './training';
+import { progression } from '../../config/progression';
+import { penaltyCategory, questItemCategory } from '../../domain/boss';
+import { CHIP, dealBossDamage, ensureWeekBoss } from './boss';
 
 const MAX_PROGRESS = 100_000;
 
@@ -56,6 +59,7 @@ export async function startDay(database: AshbornDB, now: Date, rng: () => number
     await database.days.put(record);
     await setMeta(database, 'lastOpenDate', current);
     await ensureWeekPlan(database, profile, current);
+    await ensureWeekBoss(database, current);
 
     if (result.xpToAward > 0) {
       await awardXp(database, { amount: result.xpToAward, kind: 'daily', refId: 'partial', date: current, countsAsQuest: false }, now);
@@ -70,6 +74,13 @@ export async function setItemProgress(database: AshbornDB, date: string, itemId:
     if (!record || !player || (record.status !== 'open' && record.status !== 'partial')) return;
 
     const items = record.items.map((item) => (item.id === itemId ? { ...item, progress: cleanProgress(progress) } : item));
+    // Each item hits the weekly Boss once, when it first reaches its target.
+    for (const [i, item] of items.entries()) {
+      const before = record.items[i]!;
+      if (before.progress < before.target && item.progress >= item.target) {
+        await dealBossDamage(database, { base: progression.boss.sessionDamage / items.length, category: questItemCategory(item.id), date }, now);
+      }
+    }
     if (!isDailyComplete(items)) {
       await database.days.put({ ...record, items });
       return;
@@ -116,7 +127,10 @@ export async function setPenaltyProgress(database: AshbornDB, date: string, prog
     const value = cleanProgress(progress);
     const done = value >= record.penalty.target;
     await database.days.put({ ...record, penalty: { ...record.penalty, progress: value, done } });
-    if (done) await awardXp(database, { amount: record.penalty.xp, kind: 'penalty', refId: date, date, countsAsQuest: true }, now);
+    if (done) {
+      await awardXp(database, { amount: record.penalty.xp, kind: 'penalty', refId: date, date, countsAsQuest: true }, now);
+      await dealBossDamage(database, { base: CHIP.penalty, category: penaltyCategory(record.penalty.label), date }, now);
+    }
   });
 }
 

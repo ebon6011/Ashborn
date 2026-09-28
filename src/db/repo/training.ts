@@ -4,6 +4,8 @@ import { isPersonalRecord } from '../../domain/workout/records';
 import { generateWeekPlan, type PlanProfile } from '../../domain/workout/plan';
 import { writeTx, type AshbornDB } from '../schema';
 import { unlockAchievements } from './player';
+import { exerciseBossCategory } from '../../domain/boss';
+import { dealTrainingDamage } from './boss';
 
 export async function ensureWeekPlan(database: AshbornDB, profile: PlanProfile, date: string): Promise<void> {
   const weekStart = weekStartOf(date);
@@ -38,6 +40,7 @@ export async function logSet(database: AshbornDB, input: SetInput, now: Date): P
       at: now.toISOString(),
     };
     await database.workoutSets.add(set);
+    await dealTrainingDamage(database, { category: exerciseBossCategory(exercise.category), date: set.date }, now);
     await unlockAchievements(database, now);
     return { isPR: isPersonalRecord(previous, set, exercise.weighted) };
   });

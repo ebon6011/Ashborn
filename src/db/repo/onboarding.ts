@@ -5,6 +5,7 @@ import type { ProfileInput } from '../../domain/types';
 import { generateWeekPlan } from '../../domain/workout/plan';
 import { getMeta, setMeta } from '../meta';
 import { writeTx, type AshbornDB } from '../schema';
+import { ensureWeekBoss } from './boss';
 
 export async function registerPlayer(database: AshbornDB, input: ProfileInput, now: Date): Promise<void> {
   const today = todayKey(now);
@@ -16,6 +17,7 @@ export async function registerPlayer(database: AshbornDB, input: ProfileInput, n
     if (!(await getMeta(database, 'installedAt'))) await setMeta(database, 'installedAt', now.toISOString());
     await setMeta(database, 'lastOpenDate', today);
     await setMeta(database, 'lastSeenVersion', __APP_VERSION__);
+    await ensureWeekBoss(database, today);
   });
 }
 

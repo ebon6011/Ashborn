@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { newlyUnlocked, titleFor, type AchievementContext } from './achievements';
+import { BOSSES } from '../config/bosses';
+import { ACHIEVEMENTS, ALL_TITLES, newlyUnlocked, titleFor, type AchievementContext } from './achievements';
 
 const zero: AchievementContext = { questsCompleted: 0, bestStreak: 0, level: 1, hasPR: false, hasSRank: false };
 const ids = (ctx: AchievementContext, already: string[] = []) => newlyUnlocked(ctx, already).map((a) => a.id);
@@ -29,5 +30,10 @@ describe('titleFor', () => {
     expect(titleFor(null)).toBe('Novice');
     expect(titleFor('streak-7')).toBe('Unbroken');
     expect(titleFor('nonsense')).toBe('Novice');
+  });
+
+  it('knows the Boss titles too', () => {
+    expect(titleFor('boss-mawgrath')).toBe('Colossus Breaker');
+    expect(ALL_TITLES.map((t) => t.id)).toEqual([...ACHIEVEMENTS.map((a) => a.id), ...BOSSES.map((b) => `boss-${b.id}`)]);
   });
 });
