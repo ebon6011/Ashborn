@@ -41,6 +41,26 @@ describe('EventHost', () => {
     expect(onAssignPoints).toHaveBeenCalledOnce();
   });
 
+  it('shows the boss alert for this week and removes it on Accept', async () => {
+    await setMeta(db, 'pendingEvents', [{ type: 'bossAppeared', weekStart: '2026-09-21', bossId: 'thessrak' }]);
+    render(<EventHost />);
+    const dialog = await screen.findByRole('dialog', { name: 'A Boss has appeared' });
+    expect(dialog.textContent).toContain('Thessrak');
+    fireEvent.click(screen.getByRole('button', { name: 'Accept' }));
+    await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toEqual([]));
+  });
+
+  it('silently drops a boss alert from a week that is already over', async () => {
+    await setMeta(db, 'pendingEvents', [
+      { type: 'bossAppeared', weekStart: '2026-09-14', bossId: 'thessrak' },
+      { type: 'achievement', id: 'first-quest', title: 'The Awakened' },
+    ]);
+    render(<EventHost />);
+    expect((await screen.findByRole('status')).textContent).toContain('The Awakened');
+    expect(screen.queryByRole('dialog', { name: 'A Boss has appeared' })).toBeNull();
+    expect(await getMeta(db, 'pendingEvents')).toEqual([{ type: 'achievement', id: 'first-quest', title: 'The Awakened' }]);
+  });
+
   it('celebrates a defeated boss and removes it on Continue', async () => {
     await setMeta(db, 'pendingEvents', [{ type: 'bossDefeated', bossId: 'mawgrath', xp: 110, title: 'Colossus Breaker' }]);
     render(<EventHost />);
