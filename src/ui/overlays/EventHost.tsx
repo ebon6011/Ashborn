@@ -27,6 +27,7 @@ export function EventHost({ onAssignPoints }: { onAssignPoints?: () => void } = 
   if (event.type === 'achievement') {
     return <AchievementToast key={`title-${event.id}`} title={event.title} onDone={() => void dismissEvent(db)} />;
   }
+  if (event.type === 'bossAppeared') return null;
   return (
     <BossDefeatedOverlay key={`boss-${event.bossId}`} bossId={event.bossId} xp={event.xp} title={event.title} onClose={() => void dismissEvent(db)} />
   );

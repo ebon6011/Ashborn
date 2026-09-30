@@ -59,11 +59,12 @@ export async function startDay(database: AshbornDB, now: Date, rng: () => number
     await database.days.put(record);
     await setMeta(database, 'lastOpenDate', current);
     await ensureWeekPlan(database, profile, current);
-    await ensureWeekBoss(database, current);
 
     if (result.xpToAward > 0) {
       await awardXp(database, { amount: result.xpToAward, kind: 'daily', refId: 'partial', date: current, countsAsQuest: false }, now);
     }
+    // After yesterday's partial XP, so a level-up it causes is shown before the new week's alert.
+    await ensureWeekBoss(database, current, { announce: true });
   });
 }
 

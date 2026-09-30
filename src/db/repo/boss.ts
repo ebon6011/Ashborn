@@ -15,15 +15,20 @@ export const CHIP = {
   penalty: progression.boss.chip.penalty * progression.boss.sessionDamage,
 };
 
-/** Creates the Boss for the week containing `date`, if it doesn't exist yet. */
-export async function ensureWeekBoss(database: AshbornDB, date: string): Promise<void> {
+/**
+ * Creates the Boss for the week containing `date`, if it doesn't exist yet.
+ * With `announce`, a newly created Boss also queues the "A Boss has appeared" alert.
+ */
+export async function ensureWeekBoss(database: AshbornDB, date: string, { announce }: { announce: boolean }): Promise<void> {
   await writeTx(database, async () => {
     const weekStart = weekStartOf(date);
     if (await database.bosses.get(weekStart)) return;
     const player = await database.player.get(1);
     const profile = await database.profile.get(1);
     if (!player || !profile) return;
-    await database.bosses.put(createBossRecord(weekStart, player.level, profile.experience));
+    const record = createBossRecord(weekStart, player.level, profile.experience);
+    await database.bosses.put(record);
+    if (announce) await pushEvents(database, [{ type: 'bossAppeared', weekStart, bossId: record.bossId }]);
   });
 }
 

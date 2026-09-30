@@ -17,7 +17,7 @@ export async function registerPlayer(database: AshbornDB, input: ProfileInput, n
     if (!(await getMeta(database, 'installedAt'))) await setMeta(database, 'installedAt', now.toISOString());
     await setMeta(database, 'lastOpenDate', today);
     await setMeta(database, 'lastSeenVersion', __APP_VERSION__);
-    await ensureWeekBoss(database, today);
+    await ensureWeekBoss(database, today, { announce: false });
   });
 }
 

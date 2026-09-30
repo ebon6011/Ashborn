@@ -157,4 +157,27 @@ describe('weekly boss', () => {
     expect(await db.questLog.count()).toBeGreaterThan(before.log);
     for (const a of before.achievements) expect(await db.achievements.get(a.id)).toEqual(a);
   });
+
+  it('announces a new week’s boss once, but not at registration', async () => {
+    const db = await setupPlayer(MONDAY);
+    const appeared = async () => ((await getMeta(db, 'pendingEvents')) ?? []).filter((e) => e.type === 'bossAppeared');
+    expect(await appeared()).toEqual([]);
+
+    await startDay(db, at('2026-10-05'), neverUrgent);
+    await startDay(db, at('2026-10-05', '13:00'), neverUrgent);
+    await startDay(db, at('2026-10-06'), neverUrgent);
+    expect(await appeared()).toEqual([{ type: 'bossAppeared', weekStart: '2026-10-05', bossId: bossForWeek('2026-10-05').id }]);
+  });
+
+  it('shows yesterday’s level-up before the new week’s boss alert', async () => {
+    const db = await setupPlayer('2026-10-04'); // a Sunday
+    await db.player.update(1, { xp: xpToNext(1) - 1 });
+    const item = (await db.days.get('2026-10-04'))!.items[0]!;
+    await setItemProgress(db, '2026-10-04', item.id, Math.ceil(item.target / 2), at('2026-10-04'));
+
+    await startDay(db, at('2026-10-05'), neverUrgent); // Monday: partial XP for Sunday, then the new boss
+    const types = ((await getMeta(db, 'pendingEvents')) ?? []).map((e) => e.type);
+    expect(types).toContain('levelUp');
+    expect(types.indexOf('levelUp')).toBeLessThan(types.indexOf('bossAppeared'));
+  });
 });
