@@ -131,4 +131,30 @@ describe('weekly boss', () => {
     await setItemProgress(db, MONDAY, hitItem.id, hitItem.target, at(MONDAY));
     expect((await db.bosses.get(MONDAY))!.hp).toBe(stored.maxHp - Math.ceil(25 * stored.scale * 2 - 1e-9));
   });
+
+  it('v1.4.0 data: a stored retired-boss week still takes damage, rewards its old title, and loses nothing', async () => {
+    const db = await setupPlayer(MONDAY);
+    await db.bosses.update(MONDAY, { bossId: 'mawgrath', hp: 200 });
+    await db.achievements.put({ id: 'boss-zereth', unlockedAt: '2026-09-20T10:00:00.000Z' });
+    const before = { days: await db.days.count(), log: await db.questLog.count(), achievements: await db.achievements.toArray() };
+
+    const boss = (await db.bosses.get(MONDAY))!;
+    const squats = (await db.days.get(MONDAY))!.items.find((i) => i.id === 'squats')!;
+    await setItemProgress(db, MONDAY, squats.id, squats.target, at(MONDAY)); // legs: Mawgrath's weakness
+    expect((await db.bosses.get(MONDAY))!.hp).toBe(200 - hitDamage(boss, 25, 'legs'));
+    expect(hitDamage(boss, 25, 'legs')).toBe(2 * hitDamage(boss, 25, null));
+
+    for (const day of [MONDAY, '2026-09-29', '2026-09-30']) {
+      await startDay(db, at(day), neverUrgent);
+      await completeDaily(db, day);
+    }
+    expect((await db.bosses.get(MONDAY))!.defeatedAt).not.toBeNull();
+    expect(await db.achievements.get('boss-mawgrath')).toBeTruthy();
+    const events = (await getMeta(db, 'pendingEvents')) ?? [];
+    expect(events.find((e) => e.type === 'bossDefeated')).toMatchObject({ bossId: 'mawgrath', title: 'Colossus Breaker' });
+
+    expect(await db.days.count()).toBeGreaterThanOrEqual(before.days);
+    expect(await db.questLog.count()).toBeGreaterThan(before.log);
+    for (const a of before.achievements) expect(await db.achievements.get(a.id)).toEqual(a);
+  });
 });

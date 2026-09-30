@@ -26,4 +26,23 @@ describe('BossCard', () => {
     render(<BossCard />);
     expect(await screen.findByText('Defeated')).toBeTruthy();
   });
+  it('shows the new boss art, dimmed once defeated', async () => {
+    const { container } = render(<BossCard />);
+    await screen.findByText(bossForWeek(MONDAY).name);
+    const img = container.querySelector('[data-testid="boss-art"]')!;
+    expect(img.getAttribute('src')).toBe(bossForWeek(MONDAY).art);
+    expect(img.className).not.toContain('grayscale');
+    await db.bosses.update(MONDAY, { hp: 0, defeatedAt: '2026-09-30T18:00:00.000Z' });
+    await screen.findByText('Defeated');
+    expect(container.querySelector('[data-testid="boss-art"]')!.className).toContain('grayscale');
+  });
+
+  it('v1.4.0 data: a retired boss week keeps working with its old look', async () => {
+    await db.bosses.update(MONDAY, { bossId: 'mawgrath', hp: 250 });
+    const { container } = render(<BossCard />);
+    expect(await screen.findByText('Mawgrath')).toBeTruthy();
+    expect(screen.getByText('250 / 360 HP')).toBeTruthy();
+    expect(container.querySelector('img')).toBeNull();
+    expect(container.querySelector('svg')).not.toBeNull();
+  });
 });

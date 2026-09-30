@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { getBoss } from '../../config/bosses';
 import { playSound } from '../../platform/audio';
-import { BossSilhouette } from '../components/BossSilhouette';
+import { BossArt } from '../components/BossArt';
 import { Button } from '../components/Button';
 import { SystemWindow } from '../components/SystemWindow';
 
@@ -39,7 +39,7 @@ export function BossDefeatedOverlay({ bossId, xp, title, onClose }: Props) {
       <div className="level-burst relative w-full max-w-sm">
         <SystemWindow title="System" className="text-center">
           <p className="text-sm uppercase tracking-[0.3em] text-gold">Boss defeated</p>
-          {def?.silhouette && <BossSilhouette silhouette={def.silhouette} className="mx-auto my-2 h-20 w-20 opacity-50" />}
+          {def && <BossArt def={def} className="mx-auto my-2 h-[154px] w-32 opacity-60" />}
           <p className="text-lg text-ink">{def ? `${def.name}, ${def.epithet}` : 'The Boss'}</p>
           <p className="mt-2 text-2xl font-bold text-ink drop-shadow-[0_0_12px_var(--color-glow)]">+{xp} XP</p>
           {title && <p className="mt-1 text-gold">Title unlocked: {title}</p>}

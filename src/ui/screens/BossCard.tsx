@@ -6,7 +6,7 @@ import { titleFor } from '../../domain/achievements';
 import { bossDaysLeft } from '../../domain/boss';
 import { weekStartOf } from '../../domain/day';
 import type { BossCategory } from '../../domain/types';
-import { BossSilhouette } from '../components/BossSilhouette';
+import { BossArt } from '../components/BossArt';
 import { ProgressBar } from '../components/ProgressBar';
 import { SystemWindow } from '../components/SystemWindow';
 import { useMeta } from '../hooks/data';
@@ -29,7 +29,7 @@ export function BossCard() {
   return (
     <SystemWindow title="Weekly Boss">
       <div className="flex items-center gap-3">
-        {def.silhouette && <BossSilhouette silhouette={def.silhouette} className={`h-24 w-24 shrink-0 ${boss.defeatedAt ? 'opacity-40' : ''}`} />}
+        <BossArt def={def} className={`h-[115px] w-24 shrink-0 ${boss.defeatedAt ? 'opacity-40 grayscale' : ''}`} />
         <div className="min-w-0">
           <p className="text-lg font-semibold text-ink">{def.name}</p>
           <p className="text-sm text-muted">{def.epithet}</p>
