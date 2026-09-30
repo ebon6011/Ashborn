@@ -4,7 +4,9 @@ import { bossForWeek, hitDamage, penaltyCategory, questItemCategory } from '../.
 import { xpToNext } from '../../domain/xp';
 import { completeDaily, neverUrgent, setupPlayer } from '../../test/dbFixtures';
 import { at } from '../../test/fixtures';
-import { getMeta } from '../meta';
+import { getMeta, setMeta } from '../meta';
+import { dropStaleBossAlerts } from './boss';
+import { pushEvents } from './player';
 import { setItemProgress, setPenaltyProgress, startDay } from './days';
 import { completeSideQuest, createSideQuest } from './sideQuests';
 import { logSet } from './training';
@@ -167,6 +169,30 @@ describe('weekly boss', () => {
     await startDay(db, at('2026-10-05', '13:00'), neverUrgent);
     await startDay(db, at('2026-10-06'), neverUrgent);
     expect(await appeared()).toEqual([{ type: 'bossAppeared', weekStart: '2026-10-05', bossId: bossForWeek('2026-10-05').id }]);
+  });
+
+  it('a new week drops last week’s un-accepted alert, and only that', async () => {
+    const db = await setupPlayer(MONDAY);
+    await startDay(db, at('2026-10-05'), neverUrgent); // alert for 10-05 queued, never accepted
+    await pushEvents(db, [{ type: 'achievement', id: 'first-quest', title: 'The Awakened' }]);
+    await startDay(db, at('2026-10-12'), neverUrgent);
+    await startDay(db, at('2026-10-12', '13:00'), neverUrgent);
+    const events = (await getMeta(db, 'pendingEvents')) ?? [];
+    expect(events.filter((e) => e.type === 'bossAppeared')).toEqual([{ type: 'bossAppeared', weekStart: '2026-10-12', bossId: bossForWeek('2026-10-12').id }]);
+    expect(events.filter((e) => e.type === 'achievement')).toEqual([{ type: 'achievement', id: 'first-quest', title: 'The Awakened' }]);
+  });
+
+  it('dropStaleBossAlerts only removes older weeks’ alerts, however often it runs', async () => {
+    const db = await setupPlayer(MONDAY);
+    const keep = [
+      { type: 'achievement' as const, id: 'first-quest', title: 'The Awakened' },
+      { type: 'bossAppeared' as const, weekStart: MONDAY, bossId: 'obrakh' },
+      { type: 'bossAppeared' as const, weekStart: '2026-10-05', bossId: 'morvaine' }, // phone clock set back: keep it
+    ];
+    await setMeta(db, 'pendingEvents', [{ type: 'bossAppeared', weekStart: '2026-09-21', bossId: 'grolmak' }, ...keep]);
+    await dropStaleBossAlerts(db, '2026-09-30');
+    await dropStaleBossAlerts(db, '2026-09-30');
+    expect(await getMeta(db, 'pendingEvents')).toEqual(keep);
   });
 
   it('shows yesterday’s level-up before the new week’s boss alert', async () => {

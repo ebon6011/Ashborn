@@ -3,6 +3,7 @@ import { progression } from '../../config/progression';
 import { applyDamage, bossForWeek, bossRewardXp, createBossRecord, hitDamage, plannedSetsPerDay, trainingSetBase } from '../../domain/boss';
 import { weekStartOf } from '../../domain/day';
 import type { BossCategory } from '../../domain/types';
+import { getMeta, setMeta } from '../meta';
 import { writeTx, type AshbornDB } from '../schema';
 import { awardXp, pushEvents } from './player';
 
@@ -50,6 +51,19 @@ export async function dealBossDamage(database: AshbornDB, hit: { base: number; c
     const hadTitle = Boolean(await database.achievements.get(titleId));
     if (!hadTitle) await database.achievements.put({ id: titleId, unlockedAt: now.toISOString() });
     await pushEvents(database, [{ type: 'bossDefeated', bossId: def.id, xp, title: hadTitle ? null : def.title }]);
+  });
+}
+
+/**
+ * Removes "A Boss has appeared" alerts for weeks before the one containing `today`
+ * (the app was closed before Accept). Filters by content, so running it twice is harmless.
+ */
+export async function dropStaleBossAlerts(database: AshbornDB, today: string): Promise<void> {
+  await writeTx(database, async () => {
+    const week = weekStartOf(today);
+    const current = (await getMeta(database, 'pendingEvents')) ?? [];
+    const kept = current.filter((e) => e.type !== 'bossAppeared' || e.weekStart >= week);
+    if (kept.length !== current.length) await setMeta(database, 'pendingEvents', kept);
   });
 }
 

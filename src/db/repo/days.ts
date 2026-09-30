@@ -10,7 +10,7 @@ import { awardXp } from './player';
 import { ensureWeekPlan } from './training';
 import { progression } from '../../config/progression';
 import { penaltyCategory, questItemCategory } from '../../domain/boss';
-import { CHIP, dealBossDamage, ensureWeekBoss } from './boss';
+import { CHIP, dealBossDamage, dropStaleBossAlerts, ensureWeekBoss } from './boss';
 
 const MAX_PROGRESS = 100_000;
 
@@ -64,6 +64,7 @@ export async function startDay(database: AshbornDB, now: Date, rng: () => number
       await awardXp(database, { amount: result.xpToAward, kind: 'daily', refId: 'partial', date: current, countsAsQuest: false }, now);
     }
     // After yesterday's partial XP, so a level-up it causes is shown before the new week's alert.
+    await dropStaleBossAlerts(database, current);
     await ensureWeekBoss(database, current, { announce: true });
   });
 }

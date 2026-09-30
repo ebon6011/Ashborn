@@ -3,15 +3,22 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getMeta, setMeta } from '../../db/meta';
 import { db } from '../../db/schema';
+import { at } from '../../test/fixtures';
 import { mockReducedMotion, seedApp } from '../../test/uiFixtures';
 import { EventHost } from './EventHost';
 
 // Counters roll up over time; with reduced motion they show the final numbers at once.
+// The phone's clock says Monday 2026-09-21 (the seeded day) unless a test moves it.
 beforeEach(async () => {
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(at('2026-09-21'));
   mockReducedMotion(true);
   await seedApp();
 });
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 
 describe('EventHost', () => {
   it('shows a level-up and removes it on Continue', async () => {
@@ -53,6 +60,18 @@ describe('EventHost', () => {
   it('silently drops a boss alert from a week that is already over', async () => {
     await setMeta(db, 'pendingEvents', [
       { type: 'bossAppeared', weekStart: '2026-09-14', bossId: 'thessrak' },
+      { type: 'achievement', id: 'first-quest', title: 'The Awakened' },
+    ]);
+    render(<EventHost />);
+    expect((await screen.findByRole('status')).textContent).toContain('The Awakened');
+    expect(screen.queryByRole('dialog', { name: 'A Boss has appeared' })).toBeNull();
+    expect(await getMeta(db, 'pendingEvents')).toEqual([{ type: 'achievement', id: 'first-quest', title: 'The Awakened' }]);
+  });
+
+  it('never flashes last week’s alert while the new day is still loading', async () => {
+    vi.setSystemTime(at('2026-09-29')); // a week later; lastOpenDate is still 2026-09-21
+    await setMeta(db, 'pendingEvents', [
+      { type: 'bossAppeared', weekStart: '2026-09-21', bossId: 'thessrak' },
       { type: 'achievement', id: 'first-quest', title: 'The Awakened' },
     ]);
     render(<EventHost />);
