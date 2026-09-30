@@ -8,7 +8,7 @@ All sound effects (quest complete, level up, rank up, achievement, penalty quest
 ## Art
 - App icon (`public/icon.svg` and the PNGs generated from it): original, drawn for Ashborn.
 - Background scene (`src/assets/backdrop.svg`, `src/assets/hex-tile.svg`): original, drawn for Ashborn.
-- Boss silhouettes (`src/ui/components/BossSilhouette.tsx`) and the eight Bosses' names and stories (`src/config/bosses.ts`): original, made for Ashborn.
+- Boss art (`src/assets/bosses/*.svg`) and the eight Bosses' names, stories and titles (`src/config/bosses.ts`): original, drawn for Ashborn. The retired v1.4.0 Bosses' silhouettes (`src/ui/components/BossSilhouette.tsx`) are original too.
 - All animations are original CSS.
 
 ## Fonts

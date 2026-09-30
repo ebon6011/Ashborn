@@ -16,6 +16,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: readonly ChangelogEntry[] = [
   {
+    version: '1.5.0',
+    date: '2026-09-30',
+    title: 'New Bosses',
+    notes: [
+      'Eight brand-new Bosses with fresh, scarier looks.',
+      'A warning now pops up when a new Boss arrives each Monday.',
+      'Titles you have already won are kept.',
+    ],
+  },
+  {
     version: '1.4.0',
     date: '2026-09-28',
     notes: [
