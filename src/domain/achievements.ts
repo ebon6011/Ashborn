@@ -1,4 +1,4 @@
-import { BOSSES } from '../config/bosses';
+import { ALL_BOSSES } from '../config/bosses';
 import { progression } from '../config/progression';
 
 export interface AchievementContext {
@@ -34,7 +34,7 @@ export function newlyUnlocked(ctx: AchievementContext, unlockedIds: readonly str
 /** Every title a player can earn: achievements, then one per Boss (`boss-<id>`). */
 export const ALL_TITLES: ReadonlyArray<{ id: string; title: string; description: string }> = [
   ...ACHIEVEMENTS.map(({ id, title, description }) => ({ id, title, description })),
-  ...BOSSES.map((b) => ({ id: `boss-${b.id}`, title: b.title, description: `Defeat ${b.name}, ${b.epithet}.` })),
+  ...ALL_BOSSES.map((b) => ({ id: `boss-${b.id}`, title: b.title, description: `Defeat ${b.name}, ${b.epithet}.` })),
 ];
 
 export function titleFor(titleId: string | null): string {

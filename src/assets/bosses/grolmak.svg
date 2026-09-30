@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360"><title>Grolmak, the Warbound Chieftain</title>
+<defs>
+<radialGradient id="fb-bg" cx="50%" cy="42%" r="65%"><stop offset="0" stop-color="#12345c"/><stop offset=".5" stop-color="#081628"/><stop offset="1" stop-color="#03050a"/></radialGradient>
+<linearGradient id="fb-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#132036"/><stop offset="1" stop-color="#04070c"/></linearGradient>
+<linearGradient id="fb-steel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a5878"/><stop offset=".5" stop-color="#0e1826"/><stop offset="1" stop-color="#05080e"/></linearGradient>
+<filter id="fb-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="fb-smoke"><feGaussianBlur stdDeviation="9"/></filter>
+</defs>
+<rect width="300" height="360" fill="url(#fb-bg)"/>
+<g filter="url(#fb-smoke)" fill="#0e2a4a"><ellipse cx="70" cy="335" rx="70" ry="24"/><ellipse cx="230" cy="338" rx="78" ry="22"/><ellipse cx="150" cy="352" rx="120" ry="18"/></g>
+<path d="M100 352 L106 268 L140 262 L142 352 Z M200 352 L194 268 L160 262 L158 352 Z" fill="url(#fb-body)" stroke="#3ab8ff" stroke-opacity=".7"/>
+<path d="M96 352 L100 336 L144 334 L146 352 Z M204 352 L200 336 L156 334 L154 352 Z" fill="url(#fb-steel)" stroke="#3ab8ff" stroke-opacity=".6"/>
+<path d="M40 196 L22 348 M260 196 L278 348" stroke="#1a2536" stroke-width="7" stroke-linecap="round"/>
+<path d="M28 290 C-6 292 -10 336 6 356 C14 340 26 334 40 338 L44 330 L36 322 L42 312 L34 304 L38 296 Z M272 290 C306 292 310 336 294 356 C286 340 274 334 260 338 L256 330 L264 322 L258 312 L266 304 L262 296 Z" fill="url(#fb-steel)" stroke="#3ab8ff" stroke-width="1.3"/>
+<path d="M12 336 C18 326 26 322 34 322 M288 336 C282 326 274 322 266 322" stroke="#9fe0ff" stroke-opacity=".6" fill="none"/>
+<path d="M78 122 C48 142 34 186 36 238 L66 244 C66 206 78 172 104 150 Z M222 122 C252 142 266 186 264 238 L234 244 C234 206 222 172 196 150 Z" fill="url(#fb-body)" stroke="#3ab8ff" stroke-width="1.3"/>
+<path d="M36 206 L66 210 L66 236 L36 234 Z M264 206 L234 210 L234 236 L264 234 Z" fill="url(#fb-steel)" stroke="#3ab8ff" stroke-opacity=".8"/>
+<path d="M36 214 L26 210 L36 222 L24 222 L36 230 M264 214 L274 210 L264 222 L276 222 L264 230" fill="#8fa8c8" stroke="#3ab8ff" stroke-width=".8"/>
+<circle cx="48" cy="250" r="14" fill="#0b1220" stroke="#3ab8ff"/><circle cx="252" cy="250" r="14" fill="#0b1220" stroke="#3ab8ff"/>
+<path d="M80 258 C66 206 70 150 96 118 L204 118 C230 150 234 206 220 258 C196 276 104 276 80 258 Z" fill="url(#fb-body)" stroke="#3ab8ff" stroke-width="1.5"/>
+<path d="M150 140 L150 250 M118 176 C132 184 168 184 182 176 M120 208 C134 214 166 214 180 208" stroke="#3ab8ff" stroke-opacity=".3" fill="none"/>
+<path d="M104 150 L122 190 M186 146 L172 170 L180 176" stroke="#9fe0ff" stroke-opacity=".7" stroke-width="1.4"/>
+<g fill="none" stroke="#5a7a9a" stroke-width="2"><ellipse cx="100" cy="140" rx="6" ry="4"/><ellipse cx="112" cy="152" rx="6" ry="4"/><ellipse cx="124" cy="164" rx="6" ry="4"/><ellipse cx="136" cy="176" rx="6" ry="4"/><ellipse cx="148" cy="188" rx="6" ry="4"/><ellipse cx="160" cy="200" rx="6" ry="4"/><ellipse cx="172" cy="212" rx="6" ry="4"/><ellipse cx="184" cy="224" rx="6" ry="4"/><ellipse cx="196" cy="236" rx="6" ry="4"/></g>
+<path d="M84 246 C110 258 190 258 216 246 L218 266 C190 278 110 278 82 266 Z" fill="url(#fb-steel)" stroke="#3ab8ff"/>
+<path d="M140 250 C140 242 160 242 160 250 L158 266 L142 266 Z" fill="#b8cde0"/><circle cx="146" cy="252" r="2.4" fill="#03050a"/><circle cx="154" cy="252" r="2.4" fill="#03050a"/>
+<path d="M62 136 C60 104 84 88 118 96 L120 134 C100 128 80 132 62 136 Z M238 136 C240 104 216 88 182 96 L180 134 C200 128 220 132 238 136 Z" fill="url(#fb-steel)" stroke="#3ab8ff" stroke-width="1.4"/>
+<path d="M70 110 L48 82 L82 102 Z M88 98 L78 64 L100 94 Z M106 94 L106 62 L116 96 Z M230 110 L252 82 L218 102 Z M212 98 L222 64 L200 94 Z M194 94 L194 62 L184 96 Z" fill="#b8cde0" stroke="#3ab8ff" stroke-width=".8"/>
+<path d="M124 92 C94 84 66 62 58 16 C76 44 98 60 132 72 Z M176 92 C206 84 234 62 242 16 C224 44 202 60 168 72 Z" fill="#cfe0ee" stroke="#3ab8ff" stroke-width="1"/>
+<path d="M80 50 L90 58 M72 36 L80 42 M220 50 L210 58 M228 36 L220 42" stroke="#1e3a5a" stroke-width="2"/>
+<path d="M118 128 C112 96 124 66 150 62 C176 66 188 96 182 128 L168 136 L132 136 Z" fill="url(#fb-steel)" stroke="#3ab8ff" stroke-width="1.5"/>
+<path d="M150 64 L150 88 M134 72 L140 88 M166 72 L160 88" stroke="#3ab8ff" stroke-opacity=".4"/>
+<path d="M128 94 L146 100 L144 106 L130 102 Z M172 94 L154 100 L156 106 L170 102 Z" fill="#02030a"/>
+<g filter="url(#fb-glow)"><path d="M132 98 L144 102 L142 104 Z M168 98 L156 102 L158 104 Z" fill="#3ab8ff"/><circle cx="139" cy="101" r="2" fill="#e6f6ff"/><circle cx="161" cy="101" r="2" fill="#e6f6ff"/></g>
+<path d="M130 114 L170 114 L164 136 L136 136 Z" fill="#06080e" stroke="#3ab8ff"/>
+<path d="M134 116 L138 124 L142 116 L146 124 L150 116 L154 124 L158 116 L162 124 L166 116" fill="none" stroke="#cfe0ee" stroke-width="1.4"/>
+<path d="M136 128 C122 122 116 108 118 90 C126 104 134 112 144 118 Z M164 128 C178 122 184 108 182 90 C174 104 166 112 156 118 Z" fill="#e6f0f8" stroke="#3ab8ff" stroke-width=".8"/>
+<g fill="#9fe0ff"><circle cx="40" cy="120" r="1.6"/><circle cx="262" cy="90" r="1.3"/><circle cx="230" cy="40" r="1.1"/><circle cx="250" cy="170" r="1.5"/></g>
+</svg>

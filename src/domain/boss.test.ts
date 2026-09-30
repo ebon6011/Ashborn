@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BOSSES } from '../config/bosses';
+import { ALL_BOSSES, BOSSES, getBoss, RETIRED_BOSSES } from '../config/bosses';
 import { progression } from '../config/progression';
 import {
   applyDamage,
@@ -24,11 +24,33 @@ const S = progression.boss.sessionDamage;
 const fullSession = (boss: BossRecord) => 4 * hitDamage(boss, S / 4, null);
 
 describe('roster and rotation', () => {
-  it('has 8 original bosses, 2 per weakness, each with its own title', () => {
-    expect(BOSSES).toHaveLength(8);
+  it('has 8 active original bosses, 2 per weakness, each with its own title and art', () => {
+    expect(BOSSES.map((b) => b.id)).toEqual(['vaelcrest', 'skarnyx', 'hrimgald', 'ashvyrn', 'grolmak', 'thessrak', 'obrakh', 'morvaine']);
     for (const w of ['legs', 'core', 'cardio', 'upper']) expect(BOSSES.filter((b) => b.weakness === w)).toHaveLength(2);
     expect(new Set(BOSSES.map((b) => b.title)).size).toBe(8);
-    expect(new Set(BOSSES.map((b) => b.id)).size).toBe(8);
+    for (const b of BOSSES) {
+      expect(typeof b.art).toBe('string');
+      expect(b.art).toMatch(new RegExp(`${b.id}\\.svg|^data:image/svg`));
+      expect(b.silhouette).toBeUndefined();
+    }
+  });
+
+  it('keeps the 8 retired v1.4.0 bosses for lookup only, unchanged', () => {
+    expect(RETIRED_BOSSES.map((b) => [b.id, b.title, b.silhouette])).toEqual([
+      ['mawgrath', 'Colossus Breaker', 'colossus'], ['ulgara', 'Tyrant’s Bane', 'serpent'], ['sylreth', 'Windchaser', 'wraith'],
+      ['grimhald', 'Armbreaker', 'brute'], ['vessik', 'Rootsplitter', 'treant'], ['brakmor', 'Titanfall', 'titan'],
+      ['korrun', 'Houndrunner', 'hound'], ['zereth', 'Chainbreaker', 'knight'],
+    ]);
+    for (const b of RETIRED_BOSSES) expect(b.art).toBeUndefined();
+    expect(new Set(ALL_BOSSES.map((b) => b.id)).size).toBe(16);
+    expect(new Set(ALL_BOSSES.map((b) => b.title)).size).toBe(16);
+    for (const b of ALL_BOSSES) expect(getBoss(b.id)).toBe(b);
+    expect(getBoss('nope')).toBeUndefined();
+  });
+
+  it('rotates only through the active roster, in table order', () => {
+    const ids = Array.from({ length: 8 }, (_, i) => bossForWeek(addDays('2026-01-05', 7 * i)).id);
+    expect(ids).toEqual(BOSSES.map((b) => b.id));
   });
 
   it('never repeats the same boss two weeks running, and cycles every 8 weeks', () => {

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360"><title>Skarnyx, the Carapace Sovereign</title>
+<defs>
+<radialGradient id="fb-bg" cx="50%" cy="42%" r="65%"><stop offset="0" stop-color="#12345c"/><stop offset=".5" stop-color="#081628"/><stop offset="1" stop-color="#03050a"/></radialGradient>
+<linearGradient id="fb-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#132036"/><stop offset="1" stop-color="#04070c"/></linearGradient>
+<linearGradient id="fb-steel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a5878"/><stop offset=".5" stop-color="#0e1826"/><stop offset="1" stop-color="#05080e"/></linearGradient>
+<filter id="fb-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="fb-smoke"><feGaussianBlur stdDeviation="9"/></filter>
+</defs>
+<rect width="300" height="360" fill="url(#fb-bg)"/>
+<g filter="url(#fb-smoke)" fill="#0e2a4a"><ellipse cx="70" cy="335" rx="70" ry="24"/><ellipse cx="230" cy="338" rx="78" ry="22"/><ellipse cx="150" cy="352" rx="120" ry="18"/></g>
+<path d="M150 160 C100 126 40 150 28 256 C70 222 112 200 150 178 Z M150 160 C200 126 260 150 272 256 C230 222 188 200 150 178 Z" fill="#0e2a4a" fill-opacity=".55" stroke="#3ab8ff" stroke-opacity=".7"/>
+<path d="M150 166 L48 236 M150 166 L80 150 M150 166 L64 196 M150 166 L252 236 M150 166 L220 150 M150 166 L236 196" stroke="#9fe0ff" stroke-opacity=".25"/>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M124 252 L72 222 L42 336 M128 272 L92 294 L70 350 M176 252 L228 222 L258 336 M172 272 L208 294 L230 350" stroke="#0b1220" stroke-width="7"/><path d="M124 252 L72 222 L42 336 M128 272 L92 294 L70 350 M176 252 L228 222 L258 336 M172 272 L208 294 L230 350" stroke="#3ab8ff" stroke-width="1.2"/></g>
+<path d="M42 336 L34 346 M258 336 L266 346" stroke="#9fe0ff" stroke-width="2"/>
+<ellipse cx="150" cy="286" rx="46" ry="60" fill="url(#fb-body)" stroke="#3ab8ff" stroke-width="1.4"/>
+<path d="M108 262 C130 272 170 272 192 262 M106 288 C130 298 170 298 194 288 M112 314 C132 322 168 322 188 314" stroke="#3ab8ff" stroke-opacity=".45" fill="none"/>
+<path d="M132 252 C128 206 136 168 150 138 C164 168 172 206 168 252 Z" fill="url(#fb-steel)" stroke="#3ab8ff" stroke-width="1.4"/>
+<path d="M150 142 L150 250 M136 190 L164 190 M134 220 L166 220" stroke="#3ab8ff" stroke-opacity=".4"/>
+<path d="M142 162 L98 104 L108 98 L152 152 Z M158 162 L202 104 L192 98 L148 152 Z" fill="url(#fb-steel)" stroke="#3ab8ff" stroke-width="1.2"/>
+<path d="M100 100 C78 130 76 172 92 204 C92 172 98 142 114 110 Z M200 100 C222 130 224 172 208 204 C208 172 202 142 186 110 Z" fill="#b8cde0" fill-opacity=".8" stroke="#3ab8ff"/>
+<path d="M96 128 L104 130 M92 146 L100 148 M90 164 L98 166 M90 182 L96 184 M204 128 L196 130 M208 146 L200 148 M210 164 L202 166 M210 182 L204 184" stroke="#03050a" stroke-width="2"/>
+<path d="M140 100 C130 70 116 44 104 26 M160 100 C170 70 184 44 196 26" stroke="#3ab8ff" stroke-width="1.6" fill="none"/>
+<path d="M118 104 C118 92 134 86 150 86 C166 86 182 92 182 104 L158 150 L142 150 Z" fill="url(#fb-steel)" stroke="#3ab8ff" stroke-width="1.5"/>
+<path d="M128 86 L124 70 L136 84 M150 84 L150 66 L156 84 M172 86 L176 70 L164 84" fill="#9fe0ff" stroke="#3ab8ff"/>
+<g filter="url(#fb-glow)"><ellipse cx="130" cy="106" rx="10" ry="13" fill="#3ab8ff" fill-opacity=".85"/><ellipse cx="170" cy="106" rx="10" ry="13" fill="#3ab8ff" fill-opacity=".85"/><circle cx="130" cy="104" r="3" fill="#e6f6ff"/><circle cx="170" cy="104" r="3" fill="#e6f6ff"/></g>
+<path d="M142 144 L134 160 L142 156 M158 144 L166 160 L158 156" fill="none" stroke="#cfe0ee" stroke-width="2"/>
+<g fill="#9fe0ff"><circle cx="60" cy="90" r="1.3"/><circle cx="244" cy="96" r="1.2"/><circle cx="150" cy="30" r="1"/></g>
+</svg>

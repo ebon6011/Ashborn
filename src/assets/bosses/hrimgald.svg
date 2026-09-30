@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360"><title>Hrimgald, the Glacier Warden</title>
+<defs>
+<radialGradient id="fb-bg" cx="50%" cy="42%" r="65%"><stop offset="0" stop-color="#12345c"/><stop offset=".5" stop-color="#081628"/><stop offset="1" stop-color="#03050a"/></radialGradient>
+<linearGradient id="fb-dark" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c304c"/><stop offset=".45" stop-color="#0a1322"/><stop offset="1" stop-color="#03050a"/></linearGradient>
+<linearGradient id="fb-ice" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe8ff" stop-opacity=".75"/><stop offset="1" stop-color="#1a3a5c" stop-opacity=".35"/></linearGradient>
+<filter id="fb-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="fb-smoke"><feGaussianBlur stdDeviation="9"/></filter>
+<path id="fh-torso" d="M72 252 C58 198 66 142 96 114 L204 114 C234 142 242 198 228 252 C204 274 96 274 72 252 Z"/>
+<path id="fh-legs" d="M94 352 L102 262 L142 258 L140 352 Z M206 352 L198 262 L158 258 L160 352 Z"/>
+<path id="fh-larm" d="M84 126 C56 152 46 192 48 236 L72 242 C72 204 82 172 104 152 Z"/>
+<path id="fh-rarm" d="M216 126 C246 152 258 194 254 236 L228 240 C226 202 216 172 196 152 Z"/>
+<path id="fh-head" d="M118 130 C112 100 126 74 150 70 C174 74 188 100 182 130 C172 144 128 144 118 130 Z"/>
+</defs>
+<rect width="300" height="360" fill="url(#fb-bg)"/>
+<g filter="url(#fb-smoke)" fill="#0e2a4a"><ellipse cx="70" cy="335" rx="70" ry="24"/><ellipse cx="230" cy="338" rx="78" ry="22"/><ellipse cx="150" cy="352" rx="120" ry="18"/></g>
+<g fill="url(#fb-ice)" stroke="#9fe0ff" stroke-opacity=".35" stroke-width=".8">
+<path d="M104 134 L70 46 L116 118 Z"/><path d="M122 118 L108 18 L138 110 Z"/><path d="M178 118 L196 12 L164 110 Z"/><path d="M198 134 L234 40 L186 118 Z"/><path d="M90 150 L50 94 L102 138 Z"/><path d="M212 150 L256 98 L200 138 Z"/>
+</g>
+<use href="#fh-legs" fill="#3ab8ff" opacity=".45" transform="translate(3 -2)"/>
+<use href="#fh-legs" fill="url(#fb-dark)"/>
+<path d="M104 300 L140 296 M198 300 L160 296" stroke="#3ab8ff" stroke-opacity=".2"/>
+<path d="M92 352 L98 328 L112 334 L122 322 L136 332 L142 352 Z M208 352 L202 328 L188 334 L178 322 L164 332 L158 352 Z" fill="url(#fb-ice)"/>
+<path d="M58 250 L50 286" stroke="#0a1322" stroke-width="9" stroke-linecap="round"/>
+<path d="M14 306 L30 272 L62 262 L84 288 L76 336 L32 346 Z" fill="url(#fb-ice)"/>
+<path d="M30 272 L48 300 L62 262 M48 300 L32 346 M48 300 L84 288 M48 300 L76 336" stroke="#e6f6ff" stroke-opacity=".35" stroke-width=".8"/>
+<path d="M62 262 L84 288 L76 336" fill="none" stroke="#e6f6ff" stroke-opacity=".7"/>
+<use href="#fh-larm" fill="#3ab8ff" opacity=".4" transform="translate(3 -2)"/>
+<use href="#fh-larm" fill="url(#fb-dark)"/>
+<ellipse cx="60" cy="244" rx="14" ry="12" fill="url(#fb-dark)"/>
+<use href="#fh-rarm" fill="#3ab8ff" opacity=".6" transform="translate(3 -2)"/>
+<use href="#fh-rarm" fill="url(#fb-dark)"/>
+<ellipse cx="242" cy="244" rx="17" ry="15" fill="url(#fb-dark)"/>
+<path d="M230 234 L226 222 L236 232 Z M242 230 L242 216 L248 230 Z M254 234 L260 222 L256 236 Z" fill="url(#fb-ice)"/>
+<use href="#fh-torso" fill="#3ab8ff" opacity=".5" transform="translate(3 -3)"/>
+<use href="#fh-torso" fill="url(#fb-dark)"/>
+<g filter="url(#fb-glow)" fill="none" stroke="#3ab8ff" stroke-width="1.3" stroke-opacity=".8"><path d="M176 150 L166 176 L176 188 L168 214"/><path d="M112 196 L124 214 L116 234"/></g>
+<path d="M150 150 L150 250 M110 184 C130 190 170 190 190 184" stroke="#3ab8ff" stroke-opacity=".12" fill="none"/>
+<path d="M62 142 L74 110 L96 100 L118 110 L120 132 L96 128 Z M238 142 L226 110 L204 100 L182 110 L180 132 L204 128 Z" fill="url(#fb-ice)"/>
+<path d="M74 110 L92 124 L96 100 M226 110 L208 124 L204 100" stroke="#e6f6ff" stroke-opacity=".4" stroke-width=".8" fill="none"/>
+<use href="#fh-head" fill="#3ab8ff" opacity=".45" transform="translate(2 -2)"/>
+<use href="#fh-head" fill="url(#fb-dark)"/>
+<path d="M114 124 C108 94 124 68 150 62 C176 68 192 94 186 124 L178 108 C172 92 162 84 150 84 C138 84 128 92 122 108 Z" fill="url(#fb-ice)"/>
+<path d="M150 62 L150 84 M132 70 L138 88 M168 70 L162 88" stroke="#e6f6ff" stroke-opacity=".35" stroke-width=".8"/>
+<ellipse cx="150" cy="116" rx="22" ry="17" fill="#02030a"/>
+<g filter="url(#fb-glow)"><path d="M136 112 L146 115 M164 112 L154 115" stroke="#e6f6ff" stroke-width="2.6" stroke-linecap="round"/></g>
+<g filter="url(#fb-smoke)" fill="#9fe0ff" opacity=".35"><ellipse cx="150" cy="146" rx="22" ry="10"/></g>
+<g fill="#e6f6ff" opacity=".8"><circle cx="40" cy="160" r="1.4"/><circle cx="272" cy="120" r="1.2"/><circle cx="224" cy="300" r="1.3"/><circle cx="96" cy="60" r="1"/></g>
+</svg>

@@ -29,7 +29,7 @@ export function BossCard() {
   return (
     <SystemWindow title="Weekly Boss">
       <div className="flex items-center gap-3">
-        <BossSilhouette silhouette={def.silhouette} className={`h-24 w-24 shrink-0 ${boss.defeatedAt ? 'opacity-40' : ''}`} />
+        {def.silhouette && <BossSilhouette silhouette={def.silhouette} className={`h-24 w-24 shrink-0 ${boss.defeatedAt ? 'opacity-40' : ''}`} />}
         <div className="min-w-0">
           <p className="text-lg font-semibold text-ink">{def.name}</p>
           <p className="text-sm text-muted">{def.epithet}</p>

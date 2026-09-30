@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360"><title>Obrakh, the Gate Sentinel</title>
+<defs>
+<radialGradient id="o2-bg" cx="50%" cy="42%" r="65%"><stop offset="0" stop-color="#12345c"/><stop offset=".5" stop-color="#081628"/><stop offset="1" stop-color="#03050a"/></radialGradient>
+<linearGradient id="o2-stone" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3c54"/><stop offset=".45" stop-color="#101a2a"/><stop offset="1" stop-color="#04070c"/></linearGradient>
+<linearGradient id="o2-rock" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a4e66"/><stop offset=".55" stop-color="#141e2e"/><stop offset="1" stop-color="#05080e"/></linearGradient>
+<filter id="o2-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="o2-smoke"><feGaussianBlur stdDeviation="9"/></filter>
+<path id="o2-legs" d="M106 352 L102 300 L140 292 L144 352 Z M194 352 L198 300 L160 292 L156 352 Z"/>
+<path id="o2-torso" d="M84 130 L118 104 L182 104 L216 130 L226 196 L208 262 L180 290 L120 290 L92 262 L74 196 Z"/>
+<path id="o2-larm" d="M84 140 C60 170 50 220 52 288 L80 290 C80 230 90 190 108 164 Z"/>
+<path id="o2-rarm" d="M216 140 C240 170 250 200 248 240 L224 246 C224 210 214 180 196 162 Z"/>
+<path id="o2-head" d="M126 118 L128 78 L140 64 L160 64 L172 78 L174 118 L160 126 L140 126 Z"/>
+<path id="o2-blade" d="M244 122 L284 96 L294 132 L286 152 L292 170 L270 184 L244 176 L250 160 L242 146 Z"/>
+</defs>
+<rect width="300" height="360" fill="url(#o2-bg)"/>
+<g filter="url(#o2-smoke)" fill="#0e2a4a"><ellipse cx="70" cy="335" rx="70" ry="24"/><ellipse cx="230" cy="338" rx="78" ry="22"/><ellipse cx="150" cy="352" rx="120" ry="18"/></g>
+<path d="M238 110 L238 352" stroke="#0a1322" stroke-width="9" stroke-linecap="round"/>
+<path d="M241 110 L241 330" stroke="#3ab8ff" stroke-opacity=".35"/>
+<use href="#o2-blade" fill="#3ab8ff" opacity=".45" transform="translate(2 -2)"/>
+<use href="#o2-blade" fill="url(#o2-rock)"/>
+<path d="M256 124 L266 150 L258 172 M274 112 L278 140" stroke="#02030a" stroke-width="1.4" fill="none"/>
+<g filter="url(#o2-glow)" stroke="#3ab8ff" stroke-width="1.6" fill="none"><path d="M262 132 L270 138 L264 146 L272 152"/><path d="M280 150 L274 160"/></g>
+<use href="#o2-legs" fill="#3ab8ff" opacity=".4" transform="translate(3 -2)"/>
+<use href="#o2-legs" fill="url(#o2-stone)"/>
+<path d="M104 322 L142 316 M196 322 L158 316" stroke="#02030a" stroke-width="1.2"/>
+<g filter="url(#o2-glow)" stroke="#3ab8ff" stroke-width="1.4" fill="none"><path d="M120 300 L126 316 L118 334"/><path d="M180 300 L174 318 L182 336"/></g>
+<use href="#o2-larm" fill="#3ab8ff" opacity=".4" transform="translate(3 -2)"/>
+<use href="#o2-larm" fill="url(#o2-stone)"/>
+<path d="M60 200 L82 196 M56 240 L80 238" stroke="#02030a" stroke-width="1.2"/>
+<g filter="url(#o2-glow)"><path d="M18 336 L40 326 L56 338 L74 326 L96 344 L116 334" stroke="#3ab8ff" stroke-width="2" fill="none"/><path d="M56 338 L52 354 M74 326 L82 312" stroke="#9fe0ff" stroke-width="1.2" fill="none"/></g>
+<path d="M36 302 L46 280 L84 278 L94 300 L86 322 L44 324 Z" fill="url(#o2-rock)"/>
+<path d="M46 280 L84 278 L94 300" stroke="#3ab8ff" stroke-opacity=".55" fill="none"/>
+<path d="M50 292 L84 290 M54 304 L88 304" stroke="#02030a" stroke-width="1.2"/>
+<g filter="url(#o2-glow)"><path d="M62 284 L70 296 L62 300" stroke="#3ab8ff" stroke-width="1.4" fill="none"/></g>
+<use href="#o2-rarm" fill="#3ab8ff" opacity=".55" transform="translate(3 -2)"/>
+<use href="#o2-rarm" fill="url(#o2-stone)"/>
+<path d="M226 238 L250 234 L254 258 L232 266 Z" fill="url(#o2-rock)" stroke="#3ab8ff" stroke-opacity=".45"/>
+<use href="#o2-torso" fill="#3ab8ff" opacity=".5" transform="translate(3 -3)"/>
+<use href="#o2-torso" fill="url(#o2-stone)"/>
+<path d="M92 160 L128 150 L172 152 L210 162 M80 214 L118 206 L184 208 L222 216 M118 104 L114 150 M182 104 L188 152 M110 208 L118 262 M190 208 L180 262 M120 262 L180 262" stroke="#02030a" stroke-width="1.2" fill="none"/>
+<g filter="url(#o2-glow)" stroke="#3ab8ff" stroke-width="1.6" fill="none"><path d="M150 118 L144 144"/><path d="M162 196 L156 214 L162 236 L154 258"/><path d="M100 176 L116 192 L108 218"/><path d="M204 172 L190 190 L198 212"/></g>
+<path d="M134 166 L146 152 L162 156 L170 174 L158 192 L140 188 Z" fill="#02030a"/>
+<g filter="url(#o2-glow)"><circle cx="152" cy="172" r="9" fill="#3ab8ff"/><circle cx="152" cy="172" r="3.6" fill="#e6f6ff"/></g>
+<path d="M68 112 L50 64 L86 104 Z M90 102 L84 50 L104 98 Z M232 112 L250 64 L214 104 Z M210 102 L216 50 L196 98 Z" fill="url(#o2-rock)"/>
+<path d="M50 64 L86 104 M84 50 L104 98 M250 64 L214 104 M216 50 L196 98" stroke="#3ab8ff" stroke-opacity=".45"/>
+<path d="M56 152 C48 118 70 96 104 94 L124 112 L114 150 Z M244 152 C252 118 230 96 196 94 L176 112 L186 150 Z" fill="url(#o2-rock)"/>
+<path d="M56 152 C48 118 70 96 104 94 M244 152 C252 118 230 96 196 94" stroke="#3ab8ff" stroke-opacity=".55" fill="none"/>
+<path d="M70 126 L100 118 M230 126 L200 118" stroke="#02030a" stroke-width="1.2"/>
+<path d="M132 74 L110 44 L118 36 L138 68 Z" fill="url(#o2-rock)"/>
+<path d="M168 74 L184 56 L182 70 Z" fill="url(#o2-rock)"/>
+<path d="M110 44 L118 36 M184 56 L182 70" stroke="#3ab8ff" stroke-opacity=".6"/>
+<use href="#o2-head" fill="#3ab8ff" opacity=".5" transform="translate(2 -2)"/>
+<use href="#o2-head" fill="url(#o2-rock)"/>
+<path d="M130 84 L146 90 L144 94 L130 90 Z M170 84 L154 90 L156 94 L170 90 Z" fill="#02030a"/>
+<g filter="url(#o2-glow)">
+<path d="M133 87 L144 91 M167 87 L156 91" stroke="#e6f6ff" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M150 66 L147 78 L152 88 L147 98" stroke="#3ab8ff" stroke-width="1.6" fill="none"/>
+<path d="M134 108 L140 102 L146 110 L150 104 L154 110 L160 102 L166 108 L160 116 L140 116 Z" fill="#3ab8ff"/>
+<path d="M140 108 L150 112 L160 108" stroke="#e6f6ff" stroke-width="1.4" fill="none"/>
+</g>
+<g fill="url(#o2-rock)" stroke="#3ab8ff" stroke-opacity=".4" stroke-width=".6"><path d="M30 120 L38 116 L40 124 L32 126 Z"/><path d="M270 214 L278 210 L280 220 L272 222 Z"/><path d="M110 30 L116 28 L118 34 L112 36 Z"/><path d="M200 300 L206 296 L208 304 L202 306 Z"/><path d="M22 262 L28 258 L30 266 Z"/></g>
+<g filter="url(#o2-smoke)" fill="#5a7a9a" opacity=".3"><ellipse cx="64" cy="330" rx="40" ry="12"/></g>
+<g fill="#9fe0ff" opacity=".7"><circle cx="40" cy="80" r="1.3"/><circle cx="170" cy="30" r="1"/><circle cx="130" cy="330" r="1.2"/></g>
+</svg>

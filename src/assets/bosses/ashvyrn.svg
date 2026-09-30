@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360"><title>Ashvyrn, the Cinder Wyrm</title>
+<defs>
+<radialGradient id="fb-bg" cx="50%" cy="42%" r="65%"><stop offset="0" stop-color="#12345c"/><stop offset=".5" stop-color="#081628"/><stop offset="1" stop-color="#03050a"/></radialGradient>
+<linearGradient id="fb-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#132036"/><stop offset="1" stop-color="#04070c"/></linearGradient>
+<linearGradient id="fb-steel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a5878"/><stop offset=".5" stop-color="#0e1826"/><stop offset="1" stop-color="#05080e"/></linearGradient>
+<filter id="fb-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="fb-smoke"><feGaussianBlur stdDeviation="9"/></filter>
+</defs>
+<rect width="300" height="360" fill="url(#fb-bg)"/>
+<g filter="url(#fb-smoke)" fill="#0e2a4a"><ellipse cx="70" cy="335" rx="70" ry="24"/><ellipse cx="230" cy="338" rx="78" ry="22"/><ellipse cx="150" cy="352" rx="120" ry="18"/></g>
+<path d="M132 160 L44 34 L60 108 L10 84 L46 158 L4 168 L70 206 L122 196 Z M168 160 L256 34 L240 108 L290 84 L254 158 L296 168 L230 206 L178 196 Z" fill="#0e2a4a" fill-opacity=".7" stroke="#3ab8ff" stroke-width="1.3"/>
+<path d="M132 160 L60 108 M132 160 L46 158 M132 160 L70 206 M168 160 L240 108 M168 160 L254 158 M168 160 L230 206" stroke="#9fe0ff" stroke-opacity=".5"/>
+<path d="M44 34 L38 22 M256 34 L262 22" stroke="#9fe0ff" stroke-width="2"/>
+<path d="M190 330 C240 332 272 302 264 250 C258 282 236 300 194 306 Z" fill="url(#fb-body)" stroke="#3ab8ff"/>
+<path d="M264 250 L256 232 L276 244 Z" fill="#9fe0ff"/>
+<path d="M110 350 C100 290 110 232 130 192 L170 192 C190 232 200 290 190 350 Z" fill="url(#fb-body)" stroke="#3ab8ff" stroke-width="1.5"/>
+<path d="M128 220 L172 220 M122 246 L178 246 M118 272 L182 272 M116 298 L184 298 M114 324 L186 324" stroke="#5a7a9a" stroke-opacity=".7"/>
+<path d="M92 352 L100 322 L124 316 L128 352 Z M208 352 L200 322 L176 316 L172 352 Z" fill="url(#fb-steel)" stroke="#3ab8ff"/>
+<path d="M92 352 L86 356 M100 352 L96 358 M208 352 L214 356 M200 352 L204 358" stroke="#cfe0ee" stroke-width="2" stroke-linecap="round"/>
+<path d="M132 204 C124 176 134 146 144 128 L158 128 C166 146 178 176 170 204 Z" fill="url(#fb-body)" stroke="#3ab8ff" stroke-width="1.4"/>
+<path d="M142 150 L132 146 L144 162 L132 162 L146 178" fill="none" stroke="#9fe0ff" stroke-opacity=".7"/>
+<path d="M134 66 L104 26 L142 58 M166 66 L196 26 L158 58 M128 86 L110 76 L130 94 M172 86 L190 76 L170 94" fill="#cfe0ee" stroke="#3ab8ff"/>
+<path d="M124 98 C122 74 134 56 150 54 C166 56 178 74 176 98 L168 124 L162 136 L138 136 L132 124 Z" fill="url(#fb-steel)" stroke="#3ab8ff" stroke-width="1.5"/>
+<path d="M150 58 L150 96 M138 64 L142 96 M162 64 L158 96" stroke="#3ab8ff" stroke-opacity=".25"/>
+<path d="M130 80 L146 88 L144 92 L132 88 Z M170 80 L154 88 L156 92 L168 88 Z" fill="#02030a"/>
+<g filter="url(#fb-glow)"><path d="M134 84 L144 89 M166 84 L156 89" stroke="#e6f6ff" stroke-width="2.4" stroke-linecap="round"/></g>
+<circle cx="144" cy="128" r="1.6" fill="#02030a"/><circle cx="156" cy="128" r="1.6" fill="#02030a"/>
+<path d="M136 134 C142 138 158 138 164 134 L166 156 C160 166 140 166 134 156 Z" fill="#02030a"/>
+<g filter="url(#fb-glow)"><ellipse cx="150" cy="150" rx="9" ry="6" fill="#3ab8ff" opacity=".85"/><ellipse cx="150" cy="150" rx="4" ry="2.6" fill="#e6f6ff"/></g>
+<path d="M136 134 C142 138 158 138 164 134 L162 138 L160 144 L157 139 L154 145 L151 139 L149 139 L146 145 L143 139 L140 144 L138 138 Z" fill="#cfe0ee"/>
+<path d="M136 135 L137 151 L140 139 Z M164 135 L163 151 L160 139 Z" fill="#e6f0f8"/>
+<path d="M134 156 C140 166 160 166 166 156 L164 170 C158 178 142 178 136 170 Z" fill="url(#fb-steel)" stroke="#3ab8ff" stroke-width="1.2"/>
+<path d="M137 159 L140 152 L143 160 L146 154 L149 161 L151 161 L154 154 L157 160 L160 152 L163 159 C158 165 142 165 137 159 Z" fill="#cfe0ee"/>
+<g filter="url(#fb-smoke)" fill="#3ab8ff" opacity=".3"><ellipse cx="150" cy="182" rx="18" ry="10"/></g>
+<g fill="#9fe0ff"><circle cx="60" cy="240" r="1.8"/><circle cx="246" cy="200" r="1.4"/><circle cx="120" cy="40" r="1.2"/><circle cx="200" cy="60" r="1.4"/><circle cx="80" cy="290" r="1.2"/></g>
+</svg>
