@@ -3,7 +3,7 @@ import { BossSilhouette } from './BossSilhouette';
 
 /** A Boss's picture: the drawn art, or the old silhouette for a retired v1.4.0 Boss. Decorative only. */
 export function BossArt({ def, className = '' }: { def: BossDef; className?: string }) {
-  if (def.art) {
+  if (def.art !== undefined) {
     return (
       <img
         src={def.art}
