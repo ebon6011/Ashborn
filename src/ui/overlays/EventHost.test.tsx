@@ -80,6 +80,18 @@ describe('EventHost', () => {
     expect(await getMeta(db, 'pendingEvents')).toEqual([{ type: 'achievement', id: 'first-quest', title: 'The Awakened' }]);
   });
 
+  it('shows the Shield note, then the item reward screen', async () => {
+    await setMeta(db, 'pendingEvents', [
+      { type: 'shieldUsed', count: 1, streak: 9 },
+      { type: 'itemObtained', source: 'boss', itemId: null, shield: true },
+    ]);
+    render(<EventHost />);
+    expect((await screen.findByRole('status')).textContent).toContain('Your 9-day streak is safe');
+    await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toHaveLength(1), { timeout: 5000 });
+    fireEvent.click(await screen.findByRole('button', { name: 'Later' }));
+    await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toEqual([]));
+  }, 10_000);
+
   it('celebrates a defeated boss and removes it on Continue', async () => {
     await setMeta(db, 'pendingEvents', [{ type: 'bossDefeated', bossId: 'mawgrath', xp: 110, title: 'Colossus Breaker' }]);
     render(<EventHost />);
