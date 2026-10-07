@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useState } from 'react';
 import { progression } from '../../config/progression';
 import { getMeta } from '../../db/meta';
-import { assignStats, setTitle } from '../../db/repo/player';
+import { assignStats, ownedTitleIds, setTitle } from '../../db/repo/player';
 import { db } from '../../db/schema';
 import { ALL_TITLES, titleFor } from '../../domain/achievements';
 import { needsBackupReminder } from '../../domain/backup';
@@ -24,7 +24,7 @@ import { BossCard } from './BossCard';
 export function StatusScreen({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
   const player = usePlayer();
   const profile = useProfile();
-  const unlockedIds = useLiveQuery(async () => (await db.achievements.toArray()).map((a) => a.id), [], [] as string[]);
+  const unlockedIds = useLiveQuery(() => ownedTitleIds(db), [], [] as string[]);
   const showReminder = useLiveQuery(
     async () => needsBackupReminder(new Date(), await getMeta(db, 'lastBackupAt'), await getMeta(db, 'installedAt')),
     [],
@@ -146,8 +146,8 @@ export function StatusScreen({ onNavigate }: { onNavigate: (tab: Tab) => void })
           </select>
         </label>
         <ul className="mt-3 space-y-1 text-sm">
-          {/* Achievements always; Boss titles once earned. */}
-          {ALL_TITLES.filter((t) => !t.id.startsWith('boss-') || unlockedIds.includes(t.id)).map((a) => {
+          {/* Achievements always; Boss and item titles once earned. */}
+          {ALL_TITLES.filter((t) => !(t.id.startsWith('boss-') || t.id.startsWith('title-')) || unlockedIds.includes(t.id)).map((a) => {
             const unlocked = unlockedIds.includes(a.id);
             return (
               <li key={a.id} className={unlocked ? 'text-ink' : 'text-muted'}>

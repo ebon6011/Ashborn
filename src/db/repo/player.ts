@@ -71,9 +71,16 @@ export async function assignStats(database: AshbornDB, allocation: Partial<Stats
   });
 }
 
+/** Every title the player may wear: unlocked achievements/Bosses plus item titles in the inventory. */
+export async function ownedTitleIds(database: AshbornDB): Promise<string[]> {
+  const achieved = (await database.achievements.toArray()).map((a) => a.id);
+  const items = (await database.inventory.toArray()).map((r) => r.itemId).filter((id) => id.startsWith('title-'));
+  return [...achieved, ...items];
+}
+
 export async function setTitle(database: AshbornDB, titleId: string | null): Promise<void> {
   await writeTx(database, async () => {
-    if (titleId !== null && !(await database.achievements.get(titleId))) throw new Error('That title is still locked.');
+    if (titleId !== null && !(await ownedTitleIds(database)).includes(titleId)) throw new Error('That title is still locked.');
     await database.player.update(1, { titleId });
   });
 }

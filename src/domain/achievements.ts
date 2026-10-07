@@ -1,4 +1,5 @@
 import { ALL_BOSSES } from '../config/bosses';
+import { TITLES } from '../config/items';
 import { progression } from '../config/progression';
 
 export interface AchievementContext {
@@ -31,10 +32,11 @@ export function newlyUnlocked(ctx: AchievementContext, unlockedIds: readonly str
   return ACHIEVEMENTS.filter((a) => !unlockedIds.includes(a.id) && a.isUnlocked(ctx));
 }
 
-/** Every title a player can earn: achievements, then one per Boss (`boss-<id>`). */
+/** Every title a player can earn: achievements, one per Boss (`boss-<id>`), then item titles (`title-<id>`). */
 export const ALL_TITLES: ReadonlyArray<{ id: string; title: string; description: string }> = [
   ...ACHIEVEMENTS.map(({ id, title, description }) => ({ id, title, description })),
   ...ALL_BOSSES.map((b) => ({ id: `boss-${b.id}`, title: b.title, description: `Defeat ${b.name}, ${b.epithet}.` })),
+  ...TITLES.map((t) => ({ id: t.id, title: t.name, description: 'Found as an item drop.' })),
 ];
 
 export function titleFor(titleId: string | null): string {

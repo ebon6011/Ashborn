@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_BOSSES } from '../config/bosses';
+import { TITLES } from '../config/items';
 import { ACHIEVEMENTS, ALL_TITLES, newlyUnlocked, titleFor, type AchievementContext } from './achievements';
 
 const zero: AchievementContext = { questsCompleted: 0, bestStreak: 0, level: 1, hasPR: false, hasSRank: false };
@@ -41,6 +42,11 @@ describe('titleFor', () => {
 
   it('knows the Boss titles too', () => {
     expect(titleFor('boss-mawgrath')).toBe('Colossus Breaker');
-    expect(ALL_TITLES.map((t) => t.id)).toEqual([...ACHIEVEMENTS.map((a) => a.id), ...ALL_BOSSES.map((b) => `boss-${b.id}`)]);
+    expect(ALL_TITLES.map((t) => t.id)).toEqual([...ACHIEVEMENTS.map((a) => a.id), ...ALL_BOSSES.map((b) => `boss-${b.id}`), ...TITLES.map((t) => t.id)]);
+  });
+
+  it('knows item titles too', () => {
+    expect(titleFor('title-warden-of-dawn')).toBe('Warden of Dawn');
+    expect(ALL_TITLES.filter((t) => t.id.startsWith('title-'))).toHaveLength(30);
   });
 });
