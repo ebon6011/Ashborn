@@ -7,7 +7,7 @@ import type { AshbornDB } from '../schema';
 import { dealBossDamage } from './boss';
 import { startDay } from './days';
 import { equipFrame, equipTheme, grantDrop, setDropRngForTests } from './inventory';
-import { logSet } from './training';
+import { deleteSet, logSet } from './training';
 
 afterEach(() => setDropRngForTests(null));
 const drops = async (db: AshbornDB) => ((await getMeta(db, 'pendingEvents')) ?? []).filter((e) => e.type === 'itemObtained');
@@ -86,5 +86,18 @@ describe('when drops happen', () => {
     await logSet(db, { exerciseId: 'pushup', reps: 12, weightKg: 0 }, at('2026-10-06')); // ratio 1.2 → D
     expect((await drops(db)).map((e) => e.type === 'itemObtained' && e.source)).toEqual(['rankUp']);
     expect(getItem((await db.inventory.toArray())[0]!.itemId)).toBeTruthy();
+  });
+
+  it('a rank-up drops once per exercise rank, even if the set is deleted and logged again', async () => {
+    setDropRngForTests(() => 0);
+    const db = await setupPlayer('2026-10-05');
+    await logSet(db, { exerciseId: 'pushup', reps: 10, weightKg: 0 }, at('2026-10-05')); // baseline
+    await logSet(db, { exerciseId: 'pushup', reps: 12, weightKg: 0 }, at('2026-10-06')); // E → D: drop
+    const extra = (await db.workoutSets.toArray()).find((s) => s.reps === 12)!;
+    await deleteSet(db, extra.id);
+    await logSet(db, { exerciseId: 'pushup', reps: 12, weightKg: 0 }, at('2026-10-06')); // D again: no new drop
+    expect((await drops(db)).map((e) => e.type === 'itemObtained' && e.source)).toEqual(['rankUp']);
+    await logSet(db, { exerciseId: 'pushup', reps: 13, weightKg: 0 }, at('2026-10-06')); // D → C: a new rank, a new drop
+    expect((await drops(db)).map((e) => e.type === 'itemObtained' && e.source)).toEqual(['rankUp', 'rankUp']);
   });
 });

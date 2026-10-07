@@ -102,4 +102,14 @@ describe('EventHost', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
     await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toEqual([]));
   });
+
+  it('two identical reward screens in a row can both be closed', async () => {
+    const complete = { type: 'itemObtained' as const, source: 'boss' as const, itemId: null, shield: false };
+    await setMeta(db, 'pendingEvents', [complete, complete]);
+    render(<EventHost />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Later' }));
+    await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toHaveLength(1));
+    fireEvent.click(await screen.findByRole('button', { name: 'Later' }));
+    await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toEqual([]));
+  });
 });

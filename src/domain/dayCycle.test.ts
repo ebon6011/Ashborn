@@ -132,4 +132,11 @@ describe('Streak Shields', () => {
     expect(r.streak).toBe(0);
     expect(r.shieldsUsed).toBe(0);
   });
+
+  it('never spends a Shield on a streak of 0 — there is nothing to save', () => {
+    const r = processDays({ lastOpenDate: '2026-10-05', today: '2026-10-06', days: {}, streak: 0, level: 1, shields: 1 });
+    expect(r.shieldsUsed).toBe(0);
+    expect(r.closed.some((d) => d.shielded)).toBe(false);
+    expect(r.needsPenalty).toBe(true);
+  });
 });

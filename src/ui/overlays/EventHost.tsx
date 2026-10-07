@@ -59,7 +59,8 @@ export function EventHost({ onAssignPoints }: { onAssignPoints?: () => void } = 
   if (event.type === 'itemObtained') {
     return (
       <ItemObtainedOverlay
-        key={`item-${event.itemId ?? (event.shield ? 'shield' : 'complete')}`}
+        // The queue length changes after every dismiss, so back-to-back identical rewards get fresh screens.
+        key={`item-${events.length}-${event.itemId ?? (event.shield ? 'shield' : 'complete')}`}
         event={event}
         playerName={playerName}
         onClose={() => void dismissEvent(db)}

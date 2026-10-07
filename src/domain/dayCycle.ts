@@ -51,8 +51,8 @@ export function processDays(input: ProcessDaysInput): ProcessDaysResult {
       return !(record && (record.status === 'done' || record.status === 'rest' || record.status === 'missed'));
     }),
   );
-  // Shields only spend when they can cover every breaking day; otherwise they are kept.
-  const shielded = breaking.size > 0 && breaking.size <= input.shields;
+  // Shields only spend when there is a streak to save and they can cover every breaking day.
+  const shielded = input.streak > 0 && breaking.size > 0 && breaking.size <= input.shields;
   const mark = shielded ? { shielded: true as const } : {};
 
   dates.forEach((date, index) => {

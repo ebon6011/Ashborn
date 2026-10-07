@@ -43,4 +43,12 @@ describe('ItemObtainedOverlay', () => {
     await waitFor(() => expect(onClose).toHaveBeenCalledOnce());
     expect((await db.player.get(1))!.frameId).toBeNull();
   });
+
+  it('still closes if equipping fails, so the player is never stuck', async () => {
+    await db.inventory.delete('frame-flame-halo'); // equip will throw "not found"
+    const onClose = vi.fn();
+    render(<ItemObtainedOverlay event={{ type: 'itemObtained', source: 'streak', itemId: 'frame-flame-halo', shield: false }} playerName="Kai" onClose={onClose} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Equip now' }));
+    await waitFor(() => expect(onClose).toHaveBeenCalledOnce());
+  });
 });

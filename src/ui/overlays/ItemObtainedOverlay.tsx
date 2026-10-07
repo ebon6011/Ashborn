@@ -26,10 +26,14 @@ export function ItemObtainedOverlay({ event, playerName, onClose }: Props) {
     if (done.current) return;
     done.current = true;
     playSound('achievement');
-    if (equip && item) {
-      if (item.kind === 'theme') await equipTheme(db, item.id);
-      else if (item.kind === 'frame') await equipFrame(db, item.id);
-      else await setTitle(db, item.id);
+    try {
+      if (equip && item) {
+        if (item.kind === 'theme') await equipTheme(db, item.id);
+        else if (item.kind === 'frame') await equipFrame(db, item.id);
+        else await setTitle(db, item.id);
+      }
+    } catch {
+      // Equipping failed (e.g. the item is gone). Still close: the backdrop is inert, so a stuck screen would trap the player.
     }
     onClose();
   };

@@ -17,6 +17,8 @@ export interface MetaMap {
   soundVolume: number;
   /** Soft click on every button tap */
   tapSounds: boolean;
+  /** Highest rank index already rewarded per exercise, so a rank-up drops once (deleting and re-logging can't farm it). */
+  rankDropMarks: Record<string, number>;
 }
 
 export async function getMeta<K extends keyof MetaMap>(database: AshbornDB, key: K): Promise<MetaMap[K] | undefined> {
