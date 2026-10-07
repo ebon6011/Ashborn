@@ -3,11 +3,11 @@ import { describe, expect, it } from 'vitest';
 import { BACKUP_TABLES } from '../domain/migrations';
 import { initialPlayer } from '../domain/stats';
 import { sampleBackupData } from '../test/fixtures';
-import { AshbornDB, STORES_V1, STORES_V2 } from './schema';
+import { AshbornDB, STORES_V1, STORES_V2, STORES_V3 } from './schema';
 
 describe('AshbornDB', () => {
   it('declares a store for every backup table', () => {
-    expect(Object.keys(STORES_V2).sort()).toEqual([...BACKUP_TABLES].sort());
+    expect(Object.keys(STORES_V3).sort()).toEqual([...BACKUP_TABLES].sort());
   });
 
   it('keeps data when the app is reopened', async () => {
@@ -38,7 +38,7 @@ describe('AshbornDB', () => {
     v2.close();
   });
 
-  it('upgrades a version 1 database to version 2 without losing anything', async () => {
+  it('upgrades a version 1 database to the latest version without losing anything', async () => {
     const name = `v1-${crypto.randomUUID()}`;
     const v1 = new Dexie(name);
     v1.version(1).stores(STORES_V1);
@@ -48,9 +48,34 @@ describe('AshbornDB', () => {
 
     const v2 = new AshbornDB(name);
     await v2.open();
-    expect(v2.verno).toBe(2);
+    expect(v2.verno).toBe(3);
     for (const table of Object.keys(STORES_V1)) expect(await v2.table(table).toArray()).toEqual(data[table]);
     expect(await v2.bosses.count()).toBe(0);
     v2.close();
+  });
+
+  it('upgrades a version 2 (v1.5.0) database to version 3 without losing anything', async () => {
+    const name = `v2-${crypto.randomUUID()}`;
+    const v2 = new Dexie(name);
+    v2.version(1).stores(STORES_V1);
+    v2.version(2).stores(STORES_V2);
+    const data = sampleBackupData() as unknown as Record<string, unknown[]>;
+    // A real v1.5.0 player row: no themeId / frameId / shields.
+    const oldPlayer = {
+      id: 1, level: 12, xp: 40, unspentStatPoints: 2,
+      stats: { strength: 14, agility: 11, vitality: 12, endurance: 10, discipline: 13 },
+      titleId: 'boss-mawgrath', streak: 9, bestStreak: 21, questsCompleted: 60,
+      sideQuestStatProgress: { strength: 0, agility: 1, vitality: 0, endurance: 0, discipline: 2 },
+    };
+    for (const table of Object.keys(STORES_V2)) await v2.table(table).bulkPut(table === 'player' ? [oldPlayer] : data[table]!);
+    v2.close();
+
+    const v3 = new AshbornDB(name);
+    await v3.open();
+    expect(v3.verno).toBe(3);
+    expect(await v3.player.get(1)).toEqual({ ...oldPlayer, themeId: null, frameId: null, shields: 0 });
+    for (const table of Object.keys(STORES_V2)) if (table !== 'player') expect(await v3.table(table).toArray()).toEqual(data[table]);
+    expect(await v3.inventory.count()).toBe(0);
+    v3.close();
   });
 });

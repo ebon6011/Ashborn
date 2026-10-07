@@ -110,3 +110,39 @@ describe('needsBackupReminder', () => {
     }
   });
 });
+
+describe('inventory in backups (v3)', () => {
+  it('imports a v2 (v1.5.0) backup with an empty inventory and default player fields', () => {
+    const { inventory: _none, ...v2data } = sampleBackupData() as unknown as Record<string, unknown[]>;
+    const p = (v2data.player as Record<string, unknown>[])[0]!;
+    const { themeId: _t, frameId: _f, shields: _s, ...oldPlayer } = p;
+    void [_none, _t, _f, _s];
+    const result = parseBackup(text({ app: 'ashborn', schemaVersion: 2, exportedAt: '', data: { ...v2data, player: [oldPlayer] } }));
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.backup.data.inventory).toEqual([]);
+      expect(result.backup.data.player[0]).toMatchObject({ themeId: null, frameId: null, shields: 0 });
+    }
+  });
+
+  it('rejects unowned equipped items, too many shields, unknown or duplicate items', () => {
+    const base = sampleBackupData();
+    const make = (patch: { player?: object; inventory?: unknown[] }) =>
+      parseBackup(text(buildBackup({ ...base, player: [{ ...base.player[0]!, ...patch.player }], inventory: (patch.inventory ?? []) as never }, NOW)));
+    const row = { itemId: 'theme-ember', obtainedAt: '2026-10-01T10:00:00.000Z', source: 'boss' };
+    expect(make({ player: { themeId: 'theme-ember' }, inventory: [row] }).ok).toBe(true);
+    expect(make({ player: { themeId: 'theme-ember' } }).ok).toBe(false);
+    expect(make({ player: { frameId: 'theme-ember' }, inventory: [row] }).ok).toBe(false);
+    expect(make({ player: { shields: 3 } }).ok).toBe(false);
+    expect(make({ inventory: [{ ...row, itemId: 'theme-nope' }] }).ok).toBe(false);
+    expect(make({ inventory: [row, row] }).ok).toBe(false);
+    expect(make({ inventory: [{ ...row, source: 'shop' }] }).ok).toBe(false);
+  });
+
+  it('accepts a shielded missed day, and nothing else in that field', () => {
+    const base = sampleBackupData();
+    const day = { ...base.days[0]!, status: 'missed' as const, shielded: true as const };
+    expect(parseBackup(text(buildBackup({ ...base, days: [day] }, NOW))).ok).toBe(true);
+    expect(parseBackup(text(buildBackup({ ...base, days: [{ ...day, shielded: 'yes' as never }] }, NOW))).ok).toBe(false);
+  });
+});

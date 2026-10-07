@@ -47,5 +47,6 @@ export function sampleBackupData(): BackupData {
       { key: 'lastOpenDate', value: '2026-09-24' },
     ],
     bosses: [],
+    inventory: [],
   };
 }

@@ -1,7 +1,8 @@
 import { ALL_ITEMS, type ItemKind } from '../config/items';
 import { progression } from '../config/progression';
+import type { ItemSource } from './types';
 
-export type ItemSource = 'boss' | 'streak' | 'rankUp';
+export type { ItemSource } from './types';
 export type DropResult = { kind: 'item'; itemId: string } | { kind: 'shield' } | { kind: 'complete' };
 
 const KINDS = ['theme', 'frame', 'title', 'shield'] as const;

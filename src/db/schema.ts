@@ -1,11 +1,11 @@
 import Dexie, { type EntityTable, type Table } from 'dexie';
 import type { BackupTable } from '../domain/migrations';
 import type {
-  AchievementRow, BossRecord, DayRecord, FoodEntry, MetaRow, Player, Profile, QuestLogEntry, SideQuest, WeekPlan, WorkoutSet,
+  AchievementRow, BossRecord, DayRecord, FoodEntry, InventoryRow, MetaRow, Player, Profile, QuestLogEntry, SideQuest, WeekPlan, WorkoutSet,
 } from '../domain/types';
 
 /** Version 1 tables (shipped in v1.0.0). Never change. */
-export const STORES_V1: Record<Exclude<BackupTable, 'bosses'>, string> = {
+export const STORES_V1: Record<Exclude<BackupTable, 'bosses' | 'inventory'>, string> = {
   profile: 'id',
   player: 'id',
   days: 'date',
@@ -19,7 +19,10 @@ export const STORES_V1: Record<Exclude<BackupTable, 'bosses'>, string> = {
 };
 
 /** Version 2 (v1.4.0): adds the weekly Boss history, keyed by the Monday of each week. */
-export const STORES_V2: Record<BackupTable, string> = { ...STORES_V1, bosses: 'weekStart' };
+export const STORES_V2: Record<Exclude<BackupTable, 'inventory'>, string> = { ...STORES_V1, bosses: 'weekStart' };
+
+/** Version 3 (v1.6.0): adds the earned-items inventory, keyed by item id. */
+export const STORES_V3: Record<BackupTable, string> = { ...STORES_V2, inventory: 'itemId' };
 
 export class AshbornDB extends Dexie {
   declare profile: Table<Profile, number>;
@@ -33,6 +36,7 @@ export class AshbornDB extends Dexie {
   declare achievements: Table<AchievementRow, string>;
   declare meta: Table<MetaRow, string>;
   declare bosses: Table<BossRecord, string>;
+  declare inventory: Table<InventoryRow, string>;
 
   constructor(name = 'ashborn') {
     super(name);
@@ -42,6 +46,16 @@ export class AshbornDB extends Dexie {
     this.version(1).stores(STORES_V1);
     // v2: new empty `bosses` table; existing tables are untouched (matches backupMigrations[2]).
     this.version(2).stores(STORES_V2);
+    // v3: new empty `inventory` table; the player gains default theme/frame and 0 Shields (matches backupMigrations[3]).
+    this.version(3)
+      .stores(STORES_V3)
+      .upgrade((tx) =>
+        tx.table('player').toCollection().modify((p: Record<string, unknown>) => {
+          p.themeId = p.themeId ?? null;
+          p.frameId = p.frameId ?? null;
+          p.shields = p.shields ?? 0;
+        }),
+      );
   }
 }
 

@@ -20,8 +20,19 @@ describe('migrateBackupData', () => {
   });
 
   it('step 2 adds an empty boss history to version 1 backups', () => {
-    expect(SCHEMA_VERSION).toBe(2);
     expect(backupMigrations[2]!({ player: [] })).toEqual({ player: [], bosses: [] });
     expect(backupMigrations[2]!({ bosses: [{ weekStart: '2026-09-28' }] })).toEqual({ bosses: [{ weekStart: '2026-09-28' }] });
+  });
+
+  it('step 3 adds an empty inventory and default equipped items / Shields, keeping existing values', () => {
+    expect(SCHEMA_VERSION).toBe(3);
+    expect(backupMigrations[3]!({ player: [{ id: 1, level: 4 }] })).toEqual({
+      player: [{ id: 1, level: 4, themeId: null, frameId: null, shields: 0 }],
+      inventory: [],
+    });
+    expect(backupMigrations[3]!({ player: [{ id: 1, shields: 2, themeId: 'theme-ember' }], inventory: [{ itemId: 'theme-ember' }] })).toEqual({
+      player: [{ id: 1, shields: 2, themeId: 'theme-ember', frameId: null }],
+      inventory: [{ itemId: 'theme-ember' }],
+    });
   });
 });

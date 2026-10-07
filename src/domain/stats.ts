@@ -25,6 +25,9 @@ export function initialPlayer(): Player {
     bestStreak: 0,
     questsCompleted: 0,
     sideQuestStatProgress: initialStats(0),
+    themeId: null,
+    frameId: null,
+    shields: 0,
   };
 }
 

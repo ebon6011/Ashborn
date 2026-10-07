@@ -1,9 +1,9 @@
 /** Bump when the Dexie schema changes, and add a matching entry to backupMigrations. */
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 export const BACKUP_TABLES = [
   'profile', 'player', 'days', 'sideQuests', 'questLog',
-  'workoutPlans', 'workoutSets', 'foodLog', 'achievements', 'meta', 'bosses',
+  'workoutPlans', 'workoutSets', 'foodLog', 'achievements', 'meta', 'bosses', 'inventory',
 ] as const;
 export type BackupTable = (typeof BACKUP_TABLES)[number];
 
@@ -17,6 +17,14 @@ export type BackupMigration = (data: TableData) => TableData;
 export const backupMigrations: Record<number, BackupMigration> = {
   // v2 adds the weekly Boss history (same as the Dexie version 2 block: a new, empty table).
   2: (data) => ({ ...data, bosses: Array.isArray(data.bosses) ? data.bosses : [] }),
+  // v3 adds the inventory and the player's equipped items / Shields (same as the Dexie version 3 block).
+  3: (data) => ({
+    ...data,
+    inventory: Array.isArray(data.inventory) ? data.inventory : [],
+    player: (Array.isArray(data.player) ? data.player : []).map((p) =>
+      typeof p === 'object' && p !== null ? { themeId: null, frameId: null, shields: 0, ...(p as Record<string, unknown>) } : p,
+    ),
+  }),
 };
 
 export function migrateBackupData(

@@ -37,6 +37,12 @@ export interface Player {
   bestStreak: number;
   questsCompleted: number;
   sideQuestStatProgress: Stats;
+  /** Equipped window theme; null = the default. */
+  themeId: string | null;
+  /** Equipped emblem frame; null = the default. */
+  frameId: string | null;
+  /** Streak Shields held (0 … progression.items.maxShields). */
+  shields: number;
 }
 
 export type QuestItemKind = 'pushups' | 'situps' | 'squats' | 'cardio';
@@ -72,6 +78,8 @@ export interface DayRecord {
   penalty: PenaltyQuest | null;
   urgent: UrgentQuest | null;
   xpAwarded: number;
+  /** A missed day covered by a Streak Shield. */
+  shielded?: true;
 }
 
 export interface SideQuest {
@@ -173,4 +181,14 @@ export interface BossRecord {
   defeatedAt: string | null;
   /** Base training damage already dealt per day (for the daily cap) */
   trainingBase: Record<string, number>;
+}
+
+export type ItemSource = 'boss' | 'streak' | 'rankUp';
+
+/** One earned item (theme, frame or title). Streak Shields are counted on the player instead. */
+export interface InventoryRow {
+  itemId: string;
+  /** ISO time it was earned */
+  obtainedAt: string;
+  source: ItemSource;
 }

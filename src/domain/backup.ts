@@ -1,8 +1,9 @@
+import { getItem } from '../config/items';
 import { todayKey } from './day';
 import { BACKUP_TABLES, SCHEMA_VERSION, backupMigrations, migrateBackupData, type BackupMigration, type TableData } from './migrations';
 import { rankForLevel } from './rank';
 import type {
-  AchievementRow, BossRecord, DayRecord, FoodEntry, MetaRow, Player, Profile, QuestLogEntry, Rank, SideQuest, WeekPlan, WorkoutSet,
+  AchievementRow, BossRecord, DayRecord, FoodEntry, InventoryRow, MetaRow, Player, Profile, QuestLogEntry, Rank, SideQuest, WeekPlan, WorkoutSet,
 } from './types';
 import { isRecord, rowValidators } from './validate';
 
@@ -18,6 +19,7 @@ export interface BackupData {
   achievements: AchievementRow[];
   meta: MetaRow[];
   bosses: BossRecord[];
+  inventory: InventoryRow[];
 }
 
 export interface BackupFile {
@@ -84,6 +86,15 @@ export function parseBackup(
 
   const typed = data as unknown as BackupData;
   if (typed.profile.length !== 1 || typed.player.length !== 1) return fail('This backup has no player data.');
+
+  const owned = new Set<string>();
+  for (const row of typed.inventory) {
+    if (owned.has(row.itemId)) return fail('This backup lists the same item twice.');
+    owned.add(row.itemId);
+  }
+  const equipped = typed.player[0]!;
+  const ownsKind = (id: string | null, kind: 'theme' | 'frame') => id === null || (owned.has(id) && getItem(id)?.kind === kind);
+  if (!ownsKind(equipped.themeId, 'theme') || !ownsKind(equipped.frameId, 'frame')) return fail('This backup equips an item it does not own.');
 
   const exportedAt = typeof raw.exportedAt === 'string' ? raw.exportedAt : '';
   const player = typed.player[0]!;

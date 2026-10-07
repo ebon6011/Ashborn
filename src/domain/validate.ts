@@ -1,3 +1,5 @@
+import { getItem } from '../config/items';
+import { progression } from '../config/progression';
 import { isDateKey } from './day';
 import type { BackupTable } from './migrations';
 import { STAT_KEYS } from './types';
@@ -33,11 +35,15 @@ export const rowValidators: Record<BackupTable, Check> = {
   player: shape({
     id: oneOf(1), level: intIn(1, Number.MAX_SAFE_INTEGER), xp: nonNeg, unspentStatPoints: count, stats,
     titleId: nullable(str), streak: count, bestStreak: count, questsCompleted: count, sideQuestStatProgress: stats,
+    themeId: nullable(str), frameId: nullable(str), shields: intIn(0, progression.items.maxShields),
   }),
-  days: shape({
-    date: isDateKey, items: arrayOf(questItem), status: oneOf('open', 'partial', 'done', 'missed', 'rest'),
-    penalty: nullable(penalty), urgent: nullable(urgent), xpAwarded: nonNeg,
-  }),
+  days: both(
+    shape({
+      date: isDateKey, items: arrayOf(questItem), status: oneOf('open', 'partial', 'done', 'missed', 'rest'),
+      penalty: nullable(penalty), urgent: nullable(urgent), xpAwarded: nonNeg,
+    }),
+    (v) => isRecord(v) && (v.shielded === undefined || v.shielded === true),
+  ),
   sideQuests: shape({ id: count, title: str, xp: nonNeg, stat: oneOf(...STAT_KEYS), archived: bool, completions: count }),
   questLog: shape({ id: count, date: isDateKey, kind: oneOf('daily', 'penalty', 'urgent', 'side', 'boss'), refId: str, xp: nonNeg, at: str }),
   workoutPlans: shape({
@@ -59,4 +65,9 @@ export const rowValidators: Record<BackupTable, Check> = {
     }),
     (v) => isRecord(v) && (v.hp as number) <= (v.maxHp as number),
   ),
+  inventory: shape({
+    itemId: (v) => typeof v === 'string' && getItem(v) !== undefined,
+    obtainedAt: str,
+    source: oneOf('boss', 'streak', 'rankUp'),
+  }),
 };
