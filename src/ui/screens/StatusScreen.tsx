@@ -21,6 +21,7 @@ import type { Tab } from '../components/TabBar';
 import { usePlayer, useProfile } from '../hooks/data';
 import { BackupReminder } from '../overlays/BackupReminder';
 import { BossCard } from './BossCard';
+import { InventoryScreen } from './InventoryScreen';
 
 export function StatusScreen({ onNavigate, onOpenInventory }: { onNavigate: (tab: Tab) => void; onOpenInventory?: () => void }) {
   const player = usePlayer();
@@ -34,6 +35,7 @@ export function StatusScreen({ onNavigate, onOpenInventory }: { onNavigate: (tab
   const [allocation, setAllocation] = useState<Partial<Stats>>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showInventory, setShowInventory] = useState(false);
 
   if (!player || !profile) {
     return (
@@ -63,6 +65,8 @@ export function StatusScreen({ onNavigate, onOpenInventory }: { onNavigate: (tab
       setBusy(false);
     }
   }
+
+  if (showInventory) return <InventoryScreen onBack={() => setShowInventory(false)} />;
 
   return (
     <Screen title="Status">
@@ -99,7 +103,13 @@ export function StatusScreen({ onNavigate, onOpenInventory }: { onNavigate: (tab
             {player.shields} {player.shields === 1 ? 'Shield' : 'Shields'}
           </p>
         )}
-        <Button className="mt-3 w-full" onClick={() => onOpenInventory?.()}>
+        <Button
+          className="mt-3 w-full"
+          onClick={() => {
+            setShowInventory(true);
+            onOpenInventory?.();
+          }}
+        >
           Inventory
         </Button>
       </SystemWindow>

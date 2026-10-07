@@ -60,6 +60,9 @@ describe('StatusScreen', () => {
     expect(screen.getByText(/2 Shields/)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Inventory' }));
     expect(onOpenInventory).toHaveBeenCalledOnce();
+    expect(await screen.findByRole('tab', { name: 'Themes' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }));
+    expect(await screen.findByTestId('emblem')).toBeTruthy();
   });
 
   it('hides the Shield count when none are held', async () => {
