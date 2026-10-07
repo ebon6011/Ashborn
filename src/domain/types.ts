@@ -167,7 +167,9 @@ export type GameEvent =
   | { type: 'achievement'; id: string; title: string }
   | { type: 'bossDefeated'; bossId: string; xp: number; title: string | null }
   | { type: 'bossAppeared'; weekStart: string; bossId: string }
-  | { type: 'shieldUsed'; count: number; streak: number };
+  | { type: 'shieldUsed'; count: number; streak: number }
+  /** itemId null = a Shield (shield: true) or "collection complete" (shield: false). */
+  | { type: 'itemObtained'; source: ItemSource; itemId: string | null; shield: boolean };
 
 export type BossCategory = 'legs' | 'core' | 'cardio' | 'upper';
 

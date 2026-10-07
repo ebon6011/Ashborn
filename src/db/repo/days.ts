@@ -11,6 +11,7 @@ import { ensureWeekPlan } from './training';
 import { progression } from '../../config/progression';
 import { penaltyCategory, questItemCategory } from '../../domain/boss';
 import { CHIP, dealBossDamage, dropStaleBossAlerts, ensureWeekBoss } from './boss';
+import { grantDrop } from './inventory';
 
 const MAX_PROGRESS = 100_000;
 
@@ -101,6 +102,7 @@ export async function setItemProgress(database: AshbornDB, date: string, itemId:
     const streak = player.streak + 1;
     await database.player.update(1, { streak, bestStreak: Math.max(player.bestStreak, streak) });
     await awardXp(database, { amount: xp, kind: 'daily', refId: date, date, countsAsQuest: true }, now);
+    if (streak % progression.items.streakDropEvery === 0) await grantDrop(database, 'streak', now);
     await bossHits();
   });
 }

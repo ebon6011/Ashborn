@@ -50,7 +50,7 @@ export function EventHost({ onAssignPoints }: { onAssignPoints?: () => void } = 
       />
     );
   }
-  if (event.type === 'shieldUsed') return null; // routed in Task 8
+  if (event.type === 'shieldUsed' || event.type === 'itemObtained') return null; // routed in Task 8
   return (
     <BossDefeatedOverlay key={`boss-${event.bossId}`} bossId={event.bossId} xp={event.xp} title={event.title} onClose={() => void dismissEvent(db)} />
   );

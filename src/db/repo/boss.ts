@@ -5,6 +5,7 @@ import { weekStartOf } from '../../domain/day';
 import type { BossCategory } from '../../domain/types';
 import { getMeta, setMeta } from '../meta';
 import { writeTx, type AshbornDB } from '../schema';
+import { grantDrop } from './inventory';
 import { awardXp, pushEvents } from './player';
 
 /** Achievement row id (and title id) for defeating a Boss. */
@@ -51,6 +52,7 @@ export async function dealBossDamage(database: AshbornDB, hit: { base: number; c
     const hadTitle = Boolean(await database.achievements.get(titleId));
     if (!hadTitle) await database.achievements.put({ id: titleId, unlockedAt: now.toISOString() });
     await pushEvents(database, [{ type: 'bossDefeated', bossId: def.id, xp, title: hadTitle ? null : def.title }]);
+    await grantDrop(database, 'boss', now);
   });
 }
 

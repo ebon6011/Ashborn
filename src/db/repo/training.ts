@@ -6,6 +6,9 @@ import { writeTx, type AshbornDB } from '../schema';
 import { unlockAchievements } from './player';
 import { exerciseBossCategory } from '../../domain/boss';
 import { dealTrainingDamage } from './boss';
+import { exerciseRank } from '../../domain/workout/exerciseRank';
+import { rankIndex } from '../../domain/rank';
+import { grantDrop } from './inventory';
 
 export async function ensureWeekPlan(database: AshbornDB, profile: PlanProfile, date: string): Promise<void> {
   const weekStart = weekStartOf(date);
@@ -32,6 +35,8 @@ export async function logSet(database: AshbornDB, input: SetInput, now: Date): P
 
   return writeTx(database, async () => {
     const previous = await database.workoutSets.where('exerciseId').equals(exercise.id).toArray();
+    // A first set only sets the baseline; any later rise in this exercise's rank earns a drop.
+    const rankBefore = exerciseRank(previous, exercise.weighted).rank;
     const set = {
       exerciseId: exercise.id,
       date: todayKey(now),
@@ -40,6 +45,8 @@ export async function logSet(database: AshbornDB, input: SetInput, now: Date): P
       at: now.toISOString(),
     };
     await database.workoutSets.add(set);
+    const rankAfter = exerciseRank([...previous, set], exercise.weighted).rank;
+    if (previous.length > 0 && rankIndex(rankAfter) > rankIndex(rankBefore)) await grantDrop(database, 'rankUp', now);
     await dealTrainingDamage(database, { category: exerciseBossCategory(exercise.category), date: set.date }, now);
     await unlockAchievements(database, now);
     return { isPR: isPersonalRecord(previous, set, exercise.weighted) };

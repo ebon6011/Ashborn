@@ -119,7 +119,8 @@ describe('weekly boss', () => {
     await setItemProgress(db, MONDAY, last.id, last.target, at(MONDAY));
     const types = ((await getMeta(db, 'pendingEvents')) ?? []).map((e) => e.type).filter((t) => t !== 'achievement');
     expect(types[0]).toBe('levelUp');
-    expect(types.at(-1)).toBe('bossDefeated');
+    // The Boss window, then its item drop, close the queue (spec v1.6.0 §6 event order).
+    expect(types.slice(-2)).toEqual(['bossDefeated', 'itemObtained']);
     expect(types.filter((t) => t === 'bossDefeated')).toHaveLength(1);
   });
 
