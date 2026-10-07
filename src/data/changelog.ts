@@ -16,6 +16,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: readonly ChangelogEntry[] = [
   {
+    version: '1.6.0',
+    date: '2026-10-07',
+    title: 'Inventory',
+    notes: [
+      'New Inventory: earn colour themes, emblem frames and titles. Nothing can be bought.',
+      'Rewards drop from Boss wins, every 7 days of streak, and new exercise ranks.',
+      'Streak Shields save your streak when you miss a day. You can hold two.',
+    ],
+  },
+  {
     version: '1.5.0',
     date: '2026-09-30',
     title: 'New Bosses',
