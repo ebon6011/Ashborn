@@ -12,6 +12,7 @@ import { STAT_KEYS, type StatKey, type Stats } from '../../domain/types';
 import { xpToNext } from '../../domain/xp';
 import { playSound } from '../../platform/audio';
 import { Button } from '../components/Button';
+import { Emblem } from '../components/Emblem';
 import { ProgressBar } from '../components/ProgressBar';
 import { RankBadge } from '../components/RankBadge';
 import { Screen } from '../components/Screen';
@@ -21,7 +22,7 @@ import { usePlayer, useProfile } from '../hooks/data';
 import { BackupReminder } from '../overlays/BackupReminder';
 import { BossCard } from './BossCard';
 
-export function StatusScreen({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
+export function StatusScreen({ onNavigate, onOpenInventory }: { onNavigate: (tab: Tab) => void; onOpenInventory?: () => void }) {
   const player = usePlayer();
   const profile = useProfile();
   const unlockedIds = useLiveQuery(() => ownedTitleIds(db), [], [] as string[]);
@@ -69,11 +70,14 @@ export function StatusScreen({ onNavigate }: { onNavigate: (tab: Tab) => void })
 
       <SystemWindow title="Status">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-xl font-semibold text-ink">{profile.name}</p>
-            <p className="text-sm text-muted">
-              Title: <span className="text-ink">{titleFor(player.titleId)}</span>
-            </p>
+          <div className="flex items-center gap-3">
+            <Emblem name={profile.name} frameId={player.frameId} />
+            <div>
+              <p className="text-xl font-semibold text-ink">{profile.name}</p>
+              <p className="text-sm text-muted">
+                Title: <span className="text-ink">{titleFor(player.titleId)}</span>
+              </p>
+            </div>
           </div>
           <RankBadge rank={rank} />
         </div>
@@ -89,6 +93,15 @@ export function StatusScreen({ onNavigate }: { onNavigate: (tab: Tab) => void })
         <p className="mt-3 text-sm text-muted">
           Streak: <span className="text-ink">{player.streak} {player.streak === 1 ? 'day' : 'days'}</span> · Best {player.bestStreak}
         </p>
+        {player.shields > 0 && (
+          <p className="mt-1 text-sm text-muted">
+            <span aria-hidden="true">🛡 </span>
+            {player.shields} {player.shields === 1 ? 'Shield' : 'Shields'}
+          </p>
+        )}
+        <Button className="mt-3 w-full" onClick={() => onOpenInventory?.()}>
+          Inventory
+        </Button>
       </SystemWindow>
 
       <BossCard />

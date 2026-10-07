@@ -50,4 +50,22 @@ describe('StatusScreen', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Go to backup' }));
     expect(onNavigate).toHaveBeenCalledWith('settings');
   });
+
+  it('shows the emblem, held Shields and an Inventory button', async () => {
+    await seedApp();
+    await db.player.update(1, { shields: 2 });
+    const onOpenInventory = vi.fn();
+    render(<StatusScreen onNavigate={() => {}} onOpenInventory={onOpenInventory} />);
+    expect(await screen.findByTestId('emblem')).toBeTruthy();
+    expect(screen.getByText(/2 Shields/)).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Inventory' }));
+    expect(onOpenInventory).toHaveBeenCalledOnce();
+  });
+
+  it('hides the Shield count when none are held', async () => {
+    await seedApp();
+    render(<StatusScreen onNavigate={() => {}} />);
+    await screen.findByTestId('emblem');
+    expect(screen.queryByText(/Shield/)).toBeNull();
+  });
 });

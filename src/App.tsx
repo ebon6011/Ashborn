@@ -5,6 +5,7 @@ import { db } from './db/schema';
 import { DEFAULT_VOLUME, installAudioUnlock, installTapSounds, setSoundEnabled, setSoundVolume, setTapSoundsEnabled } from './platform/audio';
 import { isStandalone } from './platform/standalone';
 import { Backdrop } from './ui/components/Backdrop';
+import { useEquippedTheme } from './ui/hooks/theme';
 import { TabBar, type Tab } from './ui/components/TabBar';
 import { useDayCycle } from './ui/hooks/useDayCycle';
 import { EventHost } from './ui/overlays/EventHost';
@@ -40,6 +41,7 @@ export default function App() {
     setTapSoundsEnabled(tapSounds);
   }, [tapSounds]);
   useDayCycle(registered);
+  useEquippedTheme(registered);
 
   if (profile === 'loading') return <div className="min-h-dvh bg-void" />;
 
