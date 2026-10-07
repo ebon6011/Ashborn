@@ -55,6 +55,14 @@ export interface ProgressionConfig {
     scale: { perLevel: number; byTier: Record<Experience, number> };
     xpReward: { base: number; perLevel: number };
   };
+  items: {
+    /** Streak Shields a player can hold at once. */
+    maxShields: number;
+    /** A drop every N days of streak (7, 14, 21 …). */
+    streakDropEvery: number;
+    /** Chance of each kind per drop, by source. Each row adds up to 1. */
+    dropRates: Record<'boss' | 'streak' | 'rankUp', { theme: number; frame: number; title: number; shield: number }>;
+  };
 }
 
 export const progression: ProgressionConfig = {
@@ -165,5 +173,15 @@ export const progression: ProgressionConfig = {
     scale: { perLevel: 0.05, byTier: { never: 1, beginner: 1.2, intermediate: 1.5, advanced: 1.8 } },
     /** Bonus XP for a victory: base + perLevel × level. */
     xpReward: { base: 100, perLevel: 10 },
+  },
+  items: {
+    maxShields: 2,
+    streakDropEvery: 7,
+    /** Earned only, never bought. Within a kind the item is a random one the player does not own yet. */
+    dropRates: {
+      boss: { theme: 0.35, frame: 0.35, title: 0.2, shield: 0.1 },
+      streak: { theme: 0.2, frame: 0.2, title: 0.3, shield: 0.3 },
+      rankUp: { theme: 0.3, frame: 0.3, title: 0.35, shield: 0.05 },
+    },
   },
 };
