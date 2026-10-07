@@ -166,7 +166,8 @@ export type GameEvent =
   | ({ type: 'levelUp' } & LevelUpEvent)
   | { type: 'achievement'; id: string; title: string }
   | { type: 'bossDefeated'; bossId: string; xp: number; title: string | null }
-  | { type: 'bossAppeared'; weekStart: string; bossId: string };
+  | { type: 'bossAppeared'; weekStart: string; bossId: string }
+  | { type: 'shieldUsed'; count: number; streak: number };
 
 export type BossCategory = 'legs' | 'core' | 'cardio' | 'upper';
 

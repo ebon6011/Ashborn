@@ -11,6 +11,8 @@ export interface ProcessDaysInput {
   days: Readonly<Record<string, DayRecord>>;
   streak: number;
   level: number;
+  /** Streak Shields held. */
+  shields: number;
 }
 
 export interface ProcessDaysResult {
@@ -19,6 +21,8 @@ export interface ProcessDaysResult {
   xpToAward: number;
   needsPenalty: boolean;
   currentDate: string;
+  /** Shields spent to keep the streak (0 when none could save it). */
+  shieldsUsed: number;
 }
 
 function missedPlaceholder(date: string): DayRecord {
@@ -31,7 +35,7 @@ export function processDays(input: ProcessDaysInput): ProcessDaysResult {
 
   if (lastOpenDate === null || today <= lastOpenDate) {
     const currentDate = lastOpenDate !== null && today < lastOpenDate ? lastOpenDate : today;
-    return { closed: [], streak, xpToAward: 0, needsPenalty: false, currentDate };
+    return { closed: [], streak, xpToAward: 0, needsPenalty: false, currentDate, shieldsUsed: 0 };
   }
 
   const dates = dateRange(lastOpenDate, today);
@@ -40,15 +44,26 @@ export function processDays(input: ProcessDaysInput): ProcessDaysResult {
   let xpToAward = 0;
   let needsPenalty = false;
 
+  // Days that would break the streak: not done, not rest, not already closed as missed.
+  const breaking = new Set(
+    dates.filter((date) => {
+      const record = input.days[date];
+      return !(record && (record.status === 'done' || record.status === 'rest' || record.status === 'missed'));
+    }),
+  );
+  // Shields only spend when they can cover every breaking day; otherwise they are kept.
+  const shielded = breaking.size > 0 && breaking.size <= input.shields;
+  const mark = shielded ? { shielded: true as const } : {};
+
   dates.forEach((date, index) => {
     const record = input.days[date];
-    if (record && (record.status === 'done' || record.status === 'rest' || record.status === 'missed')) return;
+    if (!breaking.has(date)) return;
 
     needsPenalty = true;
-    streak = 0;
+    if (!shielded) streak = 0;
 
     if (!record) {
-      if (index >= firstRecorded) closed.push(missedPlaceholder(date));
+      if (index >= firstRecorded) closed.push({ ...missedPlaceholder(date), ...mark });
       return;
     }
 
@@ -60,8 +75,8 @@ export function processDays(input: ProcessDaysInput): ProcessDaysResult {
         xpAwarded += earned;
       }
     }
-    closed.push({ ...record, status: 'missed', xpAwarded });
+    closed.push({ ...record, status: 'missed', xpAwarded, ...mark });
   });
 
-  return { closed, streak, xpToAward, needsPenalty, currentDate: today };
+  return { closed, streak, xpToAward, needsPenalty, currentDate: today, shieldsUsed: shielded ? breaking.size : 0 };
 }

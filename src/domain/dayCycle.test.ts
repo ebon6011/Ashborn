@@ -5,12 +5,12 @@ import { createDayRecord, partialXp } from './quests/daily';
 import type { DayRecord } from './types';
 
 const open = (date: string): DayRecord => createDayRecord(date, 'beginner', 1, null);
-const base = { streak: 5, level: 1 };
+const base = { streak: 5, level: 1, shields: 0 };
 
 describe('processDays', () => {
   it('does nothing on the very first run', () => {
     const r = processDays({ ...base, lastOpenDate: null, today: '2026-09-25', days: {} });
-    expect(r).toEqual({ closed: [], streak: 5, xpToAward: 0, needsPenalty: false, currentDate: '2026-09-25' });
+    expect(r).toEqual({ closed: [], streak: 5, xpToAward: 0, needsPenalty: false, currentDate: '2026-09-25', shieldsUsed: 0 });
   });
 
   it('does nothing when reopened on the same day', () => {
@@ -96,6 +96,40 @@ describe('processDays', () => {
 
   it('ignores a clock that moved backwards', () => {
     const r = processDays({ ...base, lastOpenDate: '2026-09-25', today: '2026-09-24', days: { '2026-09-25': open('2026-09-25') } });
-    expect(r).toEqual({ closed: [], streak: 5, xpToAward: 0, needsPenalty: false, currentDate: '2026-09-25' });
+    expect(r).toEqual({ closed: [], streak: 5, xpToAward: 0, needsPenalty: false, currentDate: '2026-09-25', shieldsUsed: 0 });
+  });
+});
+
+describe('Streak Shields', () => {
+  const run = (shields: number, lastOpenDate: string, today: string) =>
+    processDays({ lastOpenDate, today, days: {}, streak: 9, level: 1, shields });
+
+  it('one missed day with one Shield keeps the streak, still needs the penalty', () => {
+    const r = run(1, '2026-10-05', '2026-10-06');
+    expect(r.streak).toBe(9);
+    expect(r.shieldsUsed).toBe(1);
+    expect(r.needsPenalty).toBe(true);
+    expect(r.closed).toEqual([{ date: '2026-10-05', items: [], status: 'missed', penalty: null, urgent: null, xpAwarded: 0, shielded: true }]);
+  });
+
+  it('two missed days with two Shields uses both', () => {
+    const r = run(2, '2026-10-04', '2026-10-06');
+    expect(r.streak).toBe(9);
+    expect(r.shieldsUsed).toBe(2);
+    expect(r.closed).toHaveLength(2);
+    expect(r.closed.every((d) => d.shielded)).toBe(true);
+  });
+
+  it('three missed days with two Shields uses none and resets the streak', () => {
+    const r = run(2, '2026-10-03', '2026-10-06');
+    expect(r.streak).toBe(0);
+    expect(r.shieldsUsed).toBe(0);
+    expect(r.closed.some((d) => d.shielded)).toBe(false);
+  });
+
+  it('no Shields behaves exactly as before', () => {
+    const r = run(0, '2026-10-05', '2026-10-06');
+    expect(r.streak).toBe(0);
+    expect(r.shieldsUsed).toBe(0);
   });
 });

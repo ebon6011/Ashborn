@@ -131,3 +131,18 @@ describe('startDay', () => {
     expect(await db.workoutPlans.get('2026-09-28')).toBeTruthy();
   });
 });
+
+describe('Streak Shields in the daily reset', () => {
+  it('a Shield covers a missed day: streak kept, Shield spent, day marked, note queued, penalty still comes', async () => {
+    const db = await setupPlayer('2026-10-05');
+    await db.player.update(1, { streak: 9, shields: 2 });
+    await startDay(db, at('2026-10-06'), neverUrgent); // 10-05 was left open
+    const player = (await db.player.get(1))!;
+    expect(player.streak).toBe(9);
+    expect(player.shields).toBe(1);
+    expect(await db.days.get('2026-10-05')).toMatchObject({ status: 'missed', shielded: true });
+    expect((await db.days.get('2026-10-06'))!.penalty).not.toBeNull();
+    const events = (await getMeta(db, 'pendingEvents')) ?? [];
+    expect(events.filter((e) => e.type === 'shieldUsed')).toEqual([{ type: 'shieldUsed', count: 1, streak: 9 }]);
+  });
+});

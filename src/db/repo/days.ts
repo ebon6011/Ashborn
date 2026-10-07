@@ -6,7 +6,7 @@ import { rollUrgent } from '../../domain/quests/urgent';
 import type { DayRecord, QuestItem } from '../../domain/types';
 import { getMeta, setMeta } from '../meta';
 import { writeTx, type AshbornDB } from '../schema';
-import { awardXp } from './player';
+import { awardXp, pushEvents } from './player';
 import { ensureWeekPlan } from './training';
 import { progression } from '../../config/progression';
 import { penaltyCategory, questItemCategory } from '../../domain/boss';
@@ -40,9 +40,13 @@ export async function startDay(database: AshbornDB, now: Date, rng: () => number
     const existing: Record<string, DayRecord> = {};
     for (const record of await database.days.bulkGet(dates)) if (record) existing[record.date] = record;
 
-    const result = processDays({ lastOpenDate: last, today, days: existing, streak: player.streak, level: player.level });
+    const result = processDays({ lastOpenDate: last, today, days: existing, streak: player.streak, level: player.level, shields: player.shields });
     if (result.closed.length > 0) await database.days.bulkPut(result.closed);
     if (result.streak !== player.streak) await database.player.update(1, { streak: result.streak });
+    if (result.shieldsUsed > 0) {
+      await database.player.update(1, { shields: player.shields - result.shieldsUsed });
+      await pushEvents(database, [{ type: 'shieldUsed', count: result.shieldsUsed, streak: result.streak }]);
+    }
 
     const current = result.currentDate;
     let record = (await database.days.get(current)) ??
