@@ -22,7 +22,8 @@ type ClassState = { trialDone: boolean; classId: ClassId | null; classChosenAt: 
 /** 0 when a class may be chosen now. */
 export function daysUntilClassChange(p: ClassState, today: string): number {
   if (p.classId === null || p.classChosenAt === null) return 0;
-  return Math.max(0, cfg.changeCooldownDays - daysBetween(p.classChosenAt, today));
+  // A choice date in the future (wrong phone clock) never makes the wait longer than the cooldown.
+  return Math.min(cfg.changeCooldownDays, Math.max(0, cfg.changeCooldownDays - daysBetween(p.classChosenAt, today)));
 }
 
 export function canChangeClass(p: ClassState, today: string): boolean {

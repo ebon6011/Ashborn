@@ -14,6 +14,8 @@ export async function ensureTrial(database: AshbornDB, date: string): Promise<vo
   await writeTx(database, async () => {
     const player = await database.player.get(1);
     const profile = await database.profile.get(1);
+    // A class date in the future came from a wrong phone clock: count the cooldown from today instead.
+    if (player?.classChosenAt && player.classChosenAt > date) await database.player.update(1, { classChosenAt: date });
     if (!player || !profile || !trialAvailable(player)) return;
     if (await getMeta(database, 'classTrial')) return;
     await setMeta(database, 'classTrial', { items: trialItems(profile.experience, player.level), createdAt: date });

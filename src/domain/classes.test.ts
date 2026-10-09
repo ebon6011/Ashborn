@@ -54,4 +54,10 @@ describe('classes', () => {
     trial.forEach((t, i) => expect(t.target).toBe(Math.max(1, Math.round(daily[i]!.target * 1.5))));
     expect(trial.every((t) => t.progress === 0)).toBe(true);
   });
+
+  it('a wrong phone clock never stretches the wait past 30 days', () => {
+    // Chosen while the clock was a year fast; the clock is now correct.
+    expect(daysUntilClassChange(chosen('2027-10-01'), '2026-10-09')).toBe(30);
+    expect(canChangeClass(chosen('2027-10-01'), '2026-10-09')).toBe(false);
+  });
 });

@@ -105,4 +105,13 @@ describe('choosing a class', () => {
     const side = (await db.questLog.toArray()).filter((e) => e.kind === 'side').map((e) => e.xp);
     expect(side).toEqual([22, 20]);
   });
+
+  it('a class date from a wrong (fast) phone clock is pulled back to today, so the 30 days count normally', async () => {
+    const db = await setupPlayer('2026-10-05');
+    await db.player.update(1, { trialDone: true, classId: 'bulwark', classChosenAt: '2027-10-01' });
+    await startDay(db, at('2026-10-06'), neverUrgent);
+    expect((await db.player.get(1))!.classChosenAt).toBe('2026-10-06');
+    await chooseClass(db, 'ironclad', at('2026-11-05'));
+    expect((await db.player.get(1))!.classId).toBe('ironclad');
+  });
 });
