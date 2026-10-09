@@ -4,6 +4,7 @@ import { assignStatPoints } from '../../domain/stats';
 import type { GameEvent, QuestKind, Stats } from '../../domain/types';
 import { summarizeProgress } from '../../domain/workout/exerciseRank';
 import { applyXp } from '../../domain/xp';
+import { ensureTrial } from './classes';
 import { getMeta, setMeta } from '../meta';
 import { writeTx, type AshbornDB } from '../schema';
 
@@ -59,6 +60,8 @@ export async function awardXp(database: AshbornDB, award: XpAward, now: Date): P
       at: now.toISOString(),
     });
     if (levelUp) await pushEvents(database, [{ type: 'levelUp', ...levelUp }]);
+    // Reaching the unlock level opens the Class Change Trial straight away.
+    if (levelUp) await ensureTrial(database, award.date);
     await unlockAchievements(database, now);
   });
 }

@@ -11,6 +11,7 @@ import { ensureWeekPlan } from './training';
 import { progression } from '../../config/progression';
 import { penaltyCategory, questItemCategory } from '../../domain/boss';
 import { CHIP, dealBossDamage, dropStaleBossAlerts, ensureWeekBoss } from './boss';
+import { ensureTrial } from './classes';
 import { grantDrop } from './inventory';
 
 const MAX_PROGRESS = 100_000;
@@ -51,7 +52,7 @@ export async function startDay(database: AshbornDB, now: Date, rng: () => number
 
     const current = result.currentDate;
     let record = (await database.days.get(current)) ??
-      createDayRecord(current, profile.experience, player.level, await referenceItems(database, current));
+      createDayRecord(current, profile.experience, player.level, await referenceItems(database, current), player.classId);
     if (result.needsPenalty && !record.penalty) record = { ...record, penalty: generatePenalty(profile.experience) };
 
     const lastUrgent = (await getMeta(database, 'lastUrgentDate')) ?? null;
@@ -71,6 +72,7 @@ export async function startDay(database: AshbornDB, now: Date, rng: () => number
     // After yesterday's partial XP, so a level-up it causes is shown before the new week's alert.
     await dropStaleBossAlerts(database, current);
     await ensureWeekBoss(database, current, { announce: true });
+    await ensureTrial(database, current);
   });
 }
 
