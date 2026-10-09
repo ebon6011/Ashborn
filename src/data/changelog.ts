@@ -16,6 +16,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: readonly ChangelogEntry[] = [
   {
+    version: '1.7.0',
+    date: '2026-10-09',
+    title: 'Class Change',
+    notes: [
+      'At level 10, take the Class Change Trial and choose your class: Ironclad, Galestrider, Bulwark or Wayfarer.',
+      'Your class shapes your daily quest and gives extra XP for one stat.',
+      'You can switch class every 30 days.',
+    ],
+  },
+  {
     version: '1.6.0',
     date: '2026-10-07',
     title: 'Inventory',
