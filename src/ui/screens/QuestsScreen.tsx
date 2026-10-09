@@ -1,5 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect, useState, type FormEvent } from 'react';
+import { getMeta } from '../../db/meta';
+import { setTrialProgress } from '../../db/repo/classes';
 import { completeUrgent, finishDay, setItemProgress, setPenaltyProgress, setRest } from '../../db/repo/days';
 import { archiveSideQuest, completeSideQuest, createSideQuest, updateSideQuest } from '../../db/repo/sideQuests';
 import { db } from '../../db/schema';
@@ -21,6 +23,7 @@ export function QuestsScreen() {
   const today = useMeta('lastOpenDate');
   const day = useLiveQuery(() => (today ? db.days.get(today) : undefined), [today]);
   const player = usePlayer();
+  const trial = useLiveQuery(async () => (await getMeta(db, 'classTrial')) ?? null, [], null);
 
   if (!today || !day || !player) {
     return (
@@ -34,6 +37,7 @@ export function QuestsScreen() {
     <Screen title="Quests">
       {day.urgent && <UrgentCard date={today} quest={day.urgent} />}
       {day.penalty && <PenaltyCard date={today} quest={day.penalty} />}
+      {trial && <TrialCard items={trial.items} level={player.level} />}
       <DailyQuestCard key={day.date} day={day} level={player.level} />
       <SideQuests date={today} />
     </Screen>
@@ -117,19 +121,26 @@ function QuestItemRow({
   item,
   disabled,
   completesQuest,
+  onSave,
+  labelPrefix = '',
 }: {
   date: string;
   item: QuestItem;
   disabled: boolean;
   /** Finishing this item finishes the whole daily quest (the stamp plays its own sound instead). */
   completesQuest: boolean;
+  /** Saves progress somewhere other than the daily quest (the Trial). */
+  onSave?: (value: number) => Promise<void>;
+  /** Prefix for accessible labels, so Trial buttons differ from the daily ones. */
+  labelPrefix?: string;
 }) {
   const [text, setText] = useState('');
   const [error, setError] = useState<string | null>(null);
   const done = item.progress >= item.target;
 
   async function save(value: number) {
-    await setItemProgress(db, date, item.id, value, new Date());
+    if (onSave) await onSave(value);
+    else await setItemProgress(db, date, item.id, value, new Date());
     if (value >= item.target && !completesQuest) playSound('complete');
     setText('');
     setError(null);
@@ -149,7 +160,7 @@ function QuestItemRow({
       {!done && !disabled && (
         <div className="mt-2 flex gap-2">
           <input
-            aria-label={`${item.label} done so far`}
+            aria-label={`${labelPrefix}${item.label} done so far`}
             inputMode="numeric"
             placeholder={unitLabel(item.unit)}
             value={text}
@@ -166,7 +177,7 @@ function QuestItemRow({
           >
             Save
           </Button>
-          <Button className="flex-1" aria-label={`Complete ${item.label}`} onClick={() => void save(item.target)}>
+          <Button className="flex-1" aria-label={`Complete ${labelPrefix}${item.label}`} onClick={() => void save(item.target)}>
             Complete
           </Button>
         </div>
@@ -177,6 +188,29 @@ function QuestItemRow({
         </p>
       )}
     </li>
+  );
+}
+
+/** The one-time Class Change Trial: same rows as the daily quest, saved to the Trial instead. */
+function TrialCard({ items, level }: { items: QuestItem[]; level: number }) {
+  return (
+    <SystemWindow title="Class Change · Trial" className="border-gold/70">
+      <p className="mb-3 text-sm text-muted">Prove yourself to choose a class. No time limit.</p>
+      <ul className="space-y-3">
+        {items.map((item) => (
+          <QuestItemRow
+            key={item.id}
+            date=""
+            item={item}
+            disabled={false}
+            completesQuest={items.every((other) => other.id === item.id || other.progress >= other.target)}
+            labelPrefix="Trial: "
+            onSave={(value) => setTrialProgress(db, item.id, value, new Date())}
+          />
+        ))}
+      </ul>
+      <p className="mt-3 text-sm text-gold">{`Reward: ${dailyQuestXp(level)} XP · then choose your class`}</p>
+    </SystemWindow>
   );
 }
 

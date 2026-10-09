@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { getMeta } from '../../db/meta';
+import { ensureTrial } from '../../db/repo/classes';
 import { startDay } from '../../db/repo/days';
 import { db } from '../../db/schema';
 import { playSound } from '../../platform/audio';
@@ -134,5 +136,22 @@ describe('QuestsScreen', () => {
     }
     expect((await screen.findByText('QUEST CLEARED')).className).toContain('quest-stamp-animate');
     await waitFor(() => expect(vi.mocked(playSound).mock.calls.filter(([n]) => n === 'questComplete')).toHaveLength(1));
+  });
+
+  it('shows the Class Change Trial above the daily quest and logs it separately', async () => {
+    await db.player.update(1, { level: 10 });
+    await ensureTrial(db, '2026-09-21');
+    render(<QuestsScreen />);
+    const trial = await screen.findByRole('region', { name: 'Class Change · Trial' });
+    expect(trial.textContent).toContain('choose your class');
+    fireEvent.click(within(trial).getByRole('button', { name: 'Complete Trial: Push-ups' }));
+    await waitFor(async () => expect((await getMeta(db, 'classTrial'))!.items.find((i) => i.id === 'pushups')!.progress).toBeGreaterThan(0));
+    expect((await db.days.get('2026-09-21'))!.items.find((i) => i.id === 'pushups')!.progress).toBe(0);
+  });
+
+  it('has no Trial card without a Trial', async () => {
+    render(<QuestsScreen />);
+    await screen.findByRole('region', { name: 'Daily Quest' });
+    expect(screen.queryByRole('region', { name: 'Class Change · Trial' })).toBeNull();
   });
 });

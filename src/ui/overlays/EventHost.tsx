@@ -9,6 +9,7 @@ import type { GameEvent } from '../../domain/types';
 import { AchievementToast } from './AchievementToast';
 import { BossAppearedOverlay } from './BossAppearedOverlay';
 import { BossDefeatedOverlay } from './BossDefeatedOverlay';
+import { ClassChoiceOverlay } from './ClassChoiceOverlay';
 import { ItemObtainedOverlay } from './ItemObtainedOverlay';
 import { LevelUpOverlay } from './LevelUpOverlay';
 import { ShieldToast } from './ShieldToast';
@@ -67,7 +68,7 @@ export function EventHost({ onAssignPoints }: { onAssignPoints?: () => void } = 
       />
     );
   }
-  if (event.type === 'classChoice') return null; // routed in Task 5
+  if (event.type === 'classChoice') return <ClassChoiceOverlay key={`class-${events.length}`} onClose={() => void dismissEvent(db)} />;
   return (
     <BossDefeatedOverlay key={`boss-${event.bossId}`} bossId={event.bossId} xp={event.xp} title={event.title} onClose={() => void dismissEvent(db)} />
   );

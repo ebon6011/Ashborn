@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getMeta, setMeta } from '../../db/meta';
 import { db } from '../../db/schema';
@@ -110,6 +110,16 @@ describe('EventHost', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Later' }));
     await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toHaveLength(1));
     fireEvent.click(await screen.findByRole('button', { name: 'Later' }));
+    await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toEqual([]));
+  });
+
+  it('after the Trial it offers the class choice, and Later closes it', async () => {
+    await db.player.update(1, { level: 10, trialDone: true });
+    await setMeta(db, 'pendingEvents', [{ type: 'classChoice' }]);
+    render(<EventHost />);
+    const dialog = await screen.findByRole('dialog', { name: 'Choose your class' });
+    expect(await within(dialog).findByRole('radio', { name: /Ironclad/ })).toBeTruthy();
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Later' }));
     await waitFor(async () => expect(await getMeta(db, 'pendingEvents')).toEqual([]));
   });
 });
