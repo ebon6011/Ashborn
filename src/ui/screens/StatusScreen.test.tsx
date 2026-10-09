@@ -71,4 +71,24 @@ describe('StatusScreen', () => {
     await screen.findByTestId('emblem');
     expect(screen.queryByText(/Shield/)).toBeNull();
   });
+
+  it('shows the chosen class with its icon, and the Class button opens the Class screen', async () => {
+    await seedApp();
+    await db.player.update(1, { level: 12, trialDone: true, classId: 'galestrider', classChosenAt: '2026-09-21' });
+    render(<StatusScreen onNavigate={() => {}} />);
+    expect(await screen.findByText('Galestrider')).toBeTruthy();
+    expect(screen.getByTestId('class-icon')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Class' }));
+    expect(await screen.findByRole('radio', { name: /Ironclad/ })).toBeTruthy();
+  });
+
+  it('labels the Class button before level 10 and before choosing', async () => {
+    await seedApp();
+    const { unmount } = render(<StatusScreen onNavigate={() => {}} />);
+    expect(await screen.findByRole('button', { name: 'Class unlocks at level 10' })).toBeTruthy();
+    unmount();
+    await db.player.update(1, { level: 10 });
+    render(<StatusScreen onNavigate={() => {}} />);
+    expect(await screen.findByRole('button', { name: 'Class: not chosen' })).toBeTruthy();
+  });
 });

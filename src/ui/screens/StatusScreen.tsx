@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useState } from 'react';
+import { getClass } from '../../config/classes';
 import { progression } from '../../config/progression';
 import { getMeta } from '../../db/meta';
 import { assignStats, ownedTitleIds, setTitle } from '../../db/repo/player';
@@ -12,6 +13,7 @@ import { STAT_KEYS, type StatKey, type Stats } from '../../domain/types';
 import { xpToNext } from '../../domain/xp';
 import { playSound } from '../../platform/audio';
 import { Button } from '../components/Button';
+import { ClassIcon } from '../components/ClassIcon';
 import { Emblem } from '../components/Emblem';
 import { ProgressBar } from '../components/ProgressBar';
 import { RankBadge } from '../components/RankBadge';
@@ -21,6 +23,7 @@ import type { Tab } from '../components/TabBar';
 import { usePlayer, useProfile } from '../hooks/data';
 import { BackupReminder } from '../overlays/BackupReminder';
 import { BossCard } from './BossCard';
+import { ClassScreen } from './ClassScreen';
 import { InventoryScreen } from './InventoryScreen';
 
 export function StatusScreen({ onNavigate, onOpenInventory }: { onNavigate: (tab: Tab) => void; onOpenInventory?: () => void }) {
@@ -36,6 +39,7 @@ export function StatusScreen({ onNavigate, onOpenInventory }: { onNavigate: (tab
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showInventory, setShowInventory] = useState(false);
+  const [showClass, setShowClass] = useState(false);
 
   if (!player || !profile) {
     return (
@@ -67,6 +71,8 @@ export function StatusScreen({ onNavigate, onOpenInventory }: { onNavigate: (tab
   }
 
   if (showInventory) return <InventoryScreen onBack={() => setShowInventory(false)} />;
+  if (showClass) return <ClassScreen onBack={() => setShowClass(false)} />;
+  const playerClass = getClass(player.classId);
 
   return (
     <Screen title="Status">
@@ -81,6 +87,12 @@ export function StatusScreen({ onNavigate, onOpenInventory }: { onNavigate: (tab
               <p className="text-sm text-muted">
                 Title: <span className="text-ink">{titleFor(player.titleId)}</span>
               </p>
+              {playerClass && (
+                <p className="mt-0.5 flex items-center gap-1 text-sm text-glow">
+                  <ClassIcon classId={playerClass.id} />
+                  {playerClass.name}
+                </p>
+              )}
             </div>
           </div>
           <RankBadge rank={rank} />
@@ -103,15 +115,23 @@ export function StatusScreen({ onNavigate, onOpenInventory }: { onNavigate: (tab
             {player.shields} {player.shields === 1 ? 'Shield' : 'Shields'}
           </p>
         )}
-        <Button
-          className="mt-3 w-full"
-          onClick={() => {
-            setShowInventory(true);
-            onOpenInventory?.();
-          }}
-        >
-          Inventory
-        </Button>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <Button
+            onClick={() => {
+              setShowInventory(true);
+              onOpenInventory?.();
+            }}
+          >
+            Inventory
+          </Button>
+          <Button onClick={() => setShowClass(true)}>
+            {player.level < progression.classes.unlockLevel
+              ? `Class unlocks at level ${progression.classes.unlockLevel}`
+              : playerClass
+                ? 'Class'
+                : 'Class: not chosen'}
+          </Button>
+        </div>
       </SystemWindow>
 
       <BossCard />
