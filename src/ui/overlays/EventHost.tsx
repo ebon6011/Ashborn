@@ -67,6 +67,7 @@ export function EventHost({ onAssignPoints }: { onAssignPoints?: () => void } = 
       />
     );
   }
+  if (event.type === 'classChoice') return null; // routed in Task 5
   return (
     <BossDefeatedOverlay key={`boss-${event.bossId}`} bossId={event.bossId} xp={event.xp} title={event.title} onClose={() => void dismissEvent(db)} />
   );

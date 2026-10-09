@@ -1,4 +1,4 @@
-import type { GameEvent, PersistResult } from '../domain/types';
+import type { GameEvent, PersistResult, QuestItem } from '../domain/types';
 import type { AshbornDB } from './schema';
 
 export interface MetaMap {
@@ -17,6 +17,8 @@ export interface MetaMap {
   soundVolume: number;
   /** Soft click on every button tap */
   tapSounds: boolean;
+  /** The Class Change Trial in progress (removed when finished). */
+  classTrial: { items: QuestItem[]; createdAt: string };
   /** Highest rank index already rewarded per exercise, so a rank-up drops once (deleting and re-logging can't farm it). */
   rankDropMarks: Record<string, number>;
 }

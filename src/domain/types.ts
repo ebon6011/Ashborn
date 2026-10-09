@@ -43,6 +43,12 @@ export interface Player {
   frameId: string | null;
   /** Streak Shields held (0 … progression.items.maxShields). */
   shields: number;
+  /** Chosen class; null until the player picks one. */
+  classId: ClassId | null;
+  /** Date key of the last class choice (starts the change cooldown). */
+  classChosenAt: string | null;
+  /** The one-time Class Change Trial is finished. */
+  trialDone: boolean;
 }
 
 export type QuestItemKind = 'pushups' | 'situps' | 'squats' | 'cardio';
@@ -92,7 +98,7 @@ export interface SideQuest {
   completions: number;
 }
 
-export type QuestKind = 'daily' | 'penalty' | 'urgent' | 'side' | 'boss';
+export type QuestKind = 'daily' | 'penalty' | 'urgent' | 'side' | 'boss' | 'trial';
 
 export interface QuestLogEntry {
   id: number;
@@ -170,7 +176,9 @@ export type GameEvent =
   | { type: 'bossAppeared'; weekStart: string; bossId: string }
   | { type: 'shieldUsed'; count: number; streak: number }
   /** itemId null = a Shield (shield: true) or "collection complete" (shield: false). */
-  | { type: 'itemObtained'; source: ItemSource; itemId: string | null; shield: boolean };
+  | { type: 'itemObtained'; source: ItemSource; itemId: string | null; shield: boolean }
+  /** The Class Change Trial is finished: offer the class choice. */
+  | { type: 'classChoice' };
 
 export type BossCategory = 'legs' | 'core' | 'cardio' | 'upper';
 

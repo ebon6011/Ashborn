@@ -25,7 +25,6 @@ describe('migrateBackupData', () => {
   });
 
   it('step 3 adds an empty inventory and default equipped items / Shields, keeping existing values', () => {
-    expect(SCHEMA_VERSION).toBe(3);
     expect(backupMigrations[3]!({ player: [{ id: 1, level: 4 }] })).toEqual({
       player: [{ id: 1, level: 4, themeId: null, frameId: null, shields: 0 }],
       inventory: [],
@@ -33,6 +32,16 @@ describe('migrateBackupData', () => {
     expect(backupMigrations[3]!({ player: [{ id: 1, shields: 2, themeId: 'theme-ember' }], inventory: [{ itemId: 'theme-ember' }] })).toEqual({
       player: [{ id: 1, shields: 2, themeId: 'theme-ember', frameId: null }],
       inventory: [{ itemId: 'theme-ember' }],
+    });
+  });
+
+  it('step 4 adds the class fields with safe defaults, keeping existing values', () => {
+    expect(SCHEMA_VERSION).toBe(4);
+    expect(backupMigrations[4]!({ player: [{ id: 1, level: 12 }] })).toEqual({
+      player: [{ id: 1, level: 12, classId: null, classChosenAt: null, trialDone: false }],
+    });
+    expect(backupMigrations[4]!({ player: [{ id: 1, classId: 'bulwark', classChosenAt: '2026-10-01', trialDone: true }] })).toEqual({
+      player: [{ id: 1, classId: 'bulwark', classChosenAt: '2026-10-01', trialDone: true }],
     });
   });
 });

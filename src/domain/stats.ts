@@ -28,6 +28,9 @@ export function initialPlayer(): Player {
     themeId: null,
     frameId: null,
     shields: 0,
+    classId: null,
+    classChosenAt: null,
+    trialDone: false,
   };
 }
 

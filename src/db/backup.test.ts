@@ -59,4 +59,18 @@ describe('database backup', () => {
     await importData(other, parsed.backup.data);
     expect(await exportData(other)).toEqual(first);
   });
+
+  it('round trip keeps the class, its date, the Trial flag, Trial progress and a trial XP entry', async () => {
+    const database = await setupPlayer('2026-10-05');
+    await database.player.update(1, { level: 12, classId: 'galestrider', classChosenAt: '2026-10-01', trialDone: true });
+    await setMeta(database, 'classTrial', { items: [{ id: 'pushups', label: 'Push-ups', easier: 'Knee push-ups', target: 30, unit: 'reps', progress: 12 }], createdAt: '2026-10-05' });
+    await database.questLog.add({ date: '2026-10-05', kind: 'trial', refId: 'class-trial', xp: 120, at: '2026-10-05T18:00:00.000Z' });
+    const first = await exportData(database);
+    const parsed = parseBackup(JSON.stringify(buildBackup(first, new Date('2026-10-06T08:00:00Z'))));
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    const other = freshDb();
+    await importData(other, parsed.backup.data);
+    expect(await exportData(other)).toEqual(first);
+  });
 });

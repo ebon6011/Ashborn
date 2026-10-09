@@ -146,3 +146,23 @@ describe('inventory in backups (v3)', () => {
     expect(parseBackup(text(buildBackup({ ...base, days: [{ ...day, shielded: 'yes' as never }] }, NOW))).ok).toBe(false);
   });
 });
+
+describe('class in backups (v4)', () => {
+  it('accepts a chosen class; rejects unknown classes, a class without a date, and a non-boolean trialDone', () => {
+    const base = sampleBackupData();
+    const make = (player: object) => parseBackup(text(buildBackup({ ...base, player: [{ ...base.player[0]!, ...player }] }, NOW)));
+    expect(make({ classId: 'bulwark', classChosenAt: '2026-10-01', trialDone: true }).ok).toBe(true);
+    expect(make({ classId: 'samurai', classChosenAt: '2026-10-01', trialDone: true }).ok).toBe(false);
+    expect(make({ classId: 'bulwark', classChosenAt: null, trialDone: true }).ok).toBe(false);
+    expect(make({ trialDone: 'yes' }).ok).toBe(false);
+  });
+
+  it('imports a v3 (v1.6.0) backup with no class yet', () => {
+    const data = sampleBackupData() as unknown as Record<string, unknown[]>;
+    const { classId: _c, classChosenAt: _a, trialDone: _d, ...oldPlayer } = data.player![0] as Record<string, unknown>;
+    void [_c, _a, _d];
+    const result = parseBackup(text({ app: 'ashborn', schemaVersion: 3, exportedAt: '', data: { ...data, player: [oldPlayer] } }));
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.backup.data.player[0]).toMatchObject({ classId: null, classChosenAt: null, trialDone: false });
+  });
+});

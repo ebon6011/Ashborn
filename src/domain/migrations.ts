@@ -1,5 +1,5 @@
 /** Bump when the Dexie schema changes, and add a matching entry to backupMigrations. */
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 export const BACKUP_TABLES = [
   'profile', 'player', 'days', 'sideQuests', 'questLog',
@@ -23,6 +23,13 @@ export const backupMigrations: Record<number, BackupMigration> = {
     inventory: Array.isArray(data.inventory) ? data.inventory : [],
     player: (Array.isArray(data.player) ? data.player : []).map((p) =>
       typeof p === 'object' && p !== null ? { themeId: null, frameId: null, shields: 0, ...(p as Record<string, unknown>) } : p,
+    ),
+  }),
+  // v4 adds the player's class, its choice date and the Trial flag (same as the Dexie version 4 block).
+  4: (data) => ({
+    ...data,
+    player: (Array.isArray(data.player) ? data.player : []).map((p) =>
+      typeof p === 'object' && p !== null ? { classId: null, classChosenAt: null, trialDone: false, ...(p as Record<string, unknown>) } : p,
     ),
   }),
 };

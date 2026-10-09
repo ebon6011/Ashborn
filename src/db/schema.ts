@@ -56,6 +56,16 @@ export class AshbornDB extends Dexie {
           p.shields = p.shields ?? 0;
         }),
       );
+    // v4: the player gains a class (none yet), its choice date and the Trial flag (matches backupMigrations[4]).
+    this.version(4)
+      .stores(STORES_V3)
+      .upgrade((tx) =>
+        tx.table('player').toCollection().modify((p: Record<string, unknown>) => {
+          p.classId = p.classId ?? null;
+          p.classChosenAt = p.classChosenAt ?? null;
+          p.trialDone = p.trialDone ?? false;
+        }),
+      );
   }
 }
 

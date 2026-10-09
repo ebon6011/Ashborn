@@ -48,7 +48,7 @@ describe('AshbornDB', () => {
 
     const v2 = new AshbornDB(name);
     await v2.open();
-    expect(v2.verno).toBe(3);
+    expect(v2.verno).toBe(4);
     for (const table of Object.keys(STORES_V1)) expect(await v2.table(table).toArray()).toEqual(data[table]);
     expect(await v2.bosses.count()).toBe(0);
     v2.close();
@@ -72,10 +72,35 @@ describe('AshbornDB', () => {
 
     const v3 = new AshbornDB(name);
     await v3.open();
-    expect(v3.verno).toBe(3);
-    expect(await v3.player.get(1)).toEqual({ ...oldPlayer, themeId: null, frameId: null, shields: 0 });
+    expect(v3.verno).toBe(4);
+    expect(await v3.player.get(1)).toEqual({ ...oldPlayer, themeId: null, frameId: null, shields: 0, classId: null, classChosenAt: null, trialDone: false });
     for (const table of Object.keys(STORES_V2)) if (table !== 'player') expect(await v3.table(table).toArray()).toEqual(data[table]);
     expect(await v3.inventory.count()).toBe(0);
     v3.close();
+  });
+
+  it('upgrades a version 3 (v1.6.0) database to version 4 without losing anything', async () => {
+    const name = `v3-${crypto.randomUUID()}`;
+    const v3 = new Dexie(name);
+    v3.version(1).stores(STORES_V1);
+    v3.version(2).stores(STORES_V2);
+    v3.version(3).stores(STORES_V3);
+    const data = sampleBackupData() as unknown as Record<string, unknown[]>;
+    const v3Row: Record<string, unknown> = { ...(data.player![0] as Record<string, unknown>), level: 14, streak: 9, themeId: 'theme-ember', shields: 1 };
+    const { classId: _c, classChosenAt: _a, trialDone: _d, ...oldPlayer } = v3Row;
+    void [_c, _a, _d];
+    const inventory = [{ itemId: 'theme-ember', obtainedAt: '2026-10-05T10:00:00.000Z', source: 'boss' }];
+    for (const table of Object.keys(STORES_V3)) {
+      await v3.table(table).bulkPut(table === 'player' ? [oldPlayer] : table === 'inventory' ? inventory : data[table]!);
+    }
+    v3.close();
+
+    const v4 = new AshbornDB(name);
+    await v4.open();
+    expect(v4.verno).toBe(4);
+    expect(await v4.player.get(1)).toEqual({ ...oldPlayer, classId: null, classChosenAt: null, trialDone: false });
+    expect(await v4.inventory.toArray()).toEqual(inventory);
+    for (const table of Object.keys(STORES_V3)) if (table !== 'player' && table !== 'inventory') expect(await v4.table(table).toArray()).toEqual(data[table]);
+    v4.close();
   });
 });

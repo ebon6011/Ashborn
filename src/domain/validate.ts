@@ -1,3 +1,4 @@
+import { CLASS_IDS } from '../config/classes';
 import { getItem } from '../config/items';
 import { progression } from '../config/progression';
 import { isDateKey } from './day';
@@ -32,11 +33,16 @@ export const rowValidators: Record<BackupTable, Check> = {
     goal: oneOf('lose_fat', 'build_muscle', 'get_fit'), experience: oneOf('never', 'beginner', 'intermediate', 'advanced'),
     daysPerWeek: intIn(1, 7), minutesPerSession: count, equipment: oneOf('none', 'dumbbells', 'gym'), createdAt: str,
   }),
-  player: shape({
-    id: oneOf(1), level: intIn(1, Number.MAX_SAFE_INTEGER), xp: nonNeg, unspentStatPoints: count, stats,
-    titleId: nullable(str), streak: count, bestStreak: count, questsCompleted: count, sideQuestStatProgress: stats,
-    themeId: nullable(str), frameId: nullable(str), shields: intIn(0, progression.items.maxShields),
-  }),
+  player: both(
+    shape({
+      id: oneOf(1), level: intIn(1, Number.MAX_SAFE_INTEGER), xp: nonNeg, unspentStatPoints: count, stats,
+      titleId: nullable(str), streak: count, bestStreak: count, questsCompleted: count, sideQuestStatProgress: stats,
+      themeId: nullable(str), frameId: nullable(str), shields: intIn(0, progression.items.maxShields),
+      classId: nullable(oneOf(...CLASS_IDS)), classChosenAt: nullable(isDateKey), trialDone: bool,
+    }),
+    // A chosen class always has a choice date (it starts the change cooldown).
+    (v) => isRecord(v) && (v.classId === null || v.classChosenAt !== null),
+  ),
   days: both(
     shape({
       date: isDateKey, items: arrayOf(questItem), status: oneOf('open', 'partial', 'done', 'missed', 'rest'),
@@ -45,7 +51,7 @@ export const rowValidators: Record<BackupTable, Check> = {
     (v) => isRecord(v) && (v.shielded === undefined || v.shielded === true),
   ),
   sideQuests: shape({ id: count, title: str, xp: nonNeg, stat: oneOf(...STAT_KEYS), archived: bool, completions: count }),
-  questLog: shape({ id: count, date: isDateKey, kind: oneOf('daily', 'penalty', 'urgent', 'side', 'boss'), refId: str, xp: nonNeg, at: str }),
+  questLog: shape({ id: count, date: isDateKey, kind: oneOf('daily', 'penalty', 'urgent', 'side', 'boss', 'trial'), refId: str, xp: nonNeg, at: str }),
   workoutPlans: shape({
     weekStart: isDateKey,
     days: arrayOf(shape({
