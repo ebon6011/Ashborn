@@ -63,6 +63,19 @@ export interface ProgressionConfig {
     /** Chance of each kind per drop, by source. Each row adds up to 1. */
     dropRates: Record<'boss' | 'streak' | 'rankUp', { theme: number; frame: number; title: number; shield: number }>;
   };
+  classes: {
+    /** Level at which the Class Change Trial unlocks. */
+    unlockLevel: number;
+    /** Days between class choices. */
+    changeCooldownDays: number;
+    /** Trial targets = daily targets × this. */
+    trialScale: number;
+    /** Daily target change for the class's focus item (+) and the other items (−). */
+    focusBoost: number;
+    otherCut: number;
+    /** Extra XP share on side quests for the class's stat. */
+    sideQuestXpBonus: number;
+  };
 }
 
 export const progression: ProgressionConfig = {
@@ -183,5 +196,13 @@ export const progression: ProgressionConfig = {
       streak: { theme: 0.2, frame: 0.2, title: 0.3, shield: 0.3 },
       rankUp: { theme: 0.3, frame: 0.3, title: 0.35, shield: 0.05 },
     },
+  },
+  classes: {
+    unlockLevel: 10,
+    changeCooldownDays: 30,
+    trialScale: 1.5,
+    focusBoost: 0.3,
+    otherCut: 0.1,
+    sideQuestXpBonus: 0.1,
   },
 };

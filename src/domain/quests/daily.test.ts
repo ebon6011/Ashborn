@@ -74,3 +74,32 @@ describe('completion and XP', () => {
     expect(record.items).toHaveLength(4);
   });
 });
+
+describe('class quest mix', () => {
+  it('no class and Wayfarer are identical to the v1.6.0 quest', () => {
+    const base = generateDailyItems('beginner', 12, null);
+    expect(generateDailyItems('beginner', 12, null, null)).toEqual(base);
+    expect(generateDailyItems('beginner', 12, null, 'wayfarer')).toEqual(base);
+  });
+
+  it.each([
+    ['ironclad', 'pushups'],
+    ['galestrider', 'cardio'],
+    ['bulwark', 'squats'],
+  ] as const)('%s raises %s and trims the rest', (classId, focus) => {
+    const base = generateDailyItems('intermediate', 12, null);
+    const mixed = generateDailyItems('intermediate', 12, null, classId);
+    mixed.forEach((item, i) => {
+      const expected = Math.max(1, Math.round(base[i]!.target * (item.id === focus ? 1.3 : 0.9)));
+      expect(item.target).toBe(expected);
+    });
+  });
+
+  it('the weekly growth cap still limits a boosted item', () => {
+    const reference = generateDailyItems('beginner', 12, null);
+    const mixed = generateDailyItems('beginner', 12, reference, 'ironclad');
+    const push = mixed.find((i) => i.id === 'pushups')!;
+    const before = reference.find((i) => i.id === 'pushups')!;
+    expect(push.target).toBe(before.target + Math.max(1, Math.floor(before.target * 0.1)));
+  });
+});

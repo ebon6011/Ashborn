@@ -46,6 +46,7 @@ export interface Player {
 }
 
 export type QuestItemKind = 'pushups' | 'situps' | 'squats' | 'cardio';
+export type ClassId = 'ironclad' | 'galestrider' | 'bulwark' | 'wayfarer';
 export type QuestUnit = 'reps' | 'min';
 
 export interface QuestItem {

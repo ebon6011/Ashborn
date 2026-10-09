@@ -1,5 +1,6 @@
 import { progression } from '../../config/progression';
-import type { DayRecord, Experience, QuestItem } from '../types';
+import { classMultiplier } from '../classes';
+import type { ClassId, DayRecord, Experience, QuestItem } from '../types';
 
 export function dailyQuestXp(level: number): number {
   const { baseXp, xpPerLevel } = progression.dailyQuest;
@@ -11,10 +12,12 @@ export function targetScale(level: number): number {
   return Math.min(maxScale, 1 + scalePerLevel * (level - 1));
 }
 
-export function generateDailyItems(experience: Experience, level: number, reference: QuestItem[] | null): QuestItem[] {
+/** A class reshapes the mix (focus item up, others down) before the weekly growth cap is applied. */
+export function generateDailyItems(experience: Experience, level: number, reference: QuestItem[] | null, classId: ClassId | null = null): QuestItem[] {
   const scale = targetScale(level);
   return progression.tiers[experience].map((tier) => {
-    let target = Math.max(1, Math.round(tier.target * scale));
+    const base = Math.max(1, Math.round(tier.target * scale));
+    let target = Math.max(1, Math.round(base * classMultiplier(classId, tier.kind)));
     const previous = reference?.find((r) => r.id === tier.kind);
     if (previous) {
       const cap = previous.target + Math.max(1, Math.floor(previous.target * progression.dailyQuest.weeklyGrowthCap));
@@ -24,10 +27,16 @@ export function generateDailyItems(experience: Experience, level: number, refere
   });
 }
 
-export function createDayRecord(date: string, experience: Experience, level: number, reference: QuestItem[] | null): DayRecord {
+export function createDayRecord(
+  date: string,
+  experience: Experience,
+  level: number,
+  reference: QuestItem[] | null,
+  classId: ClassId | null = null,
+): DayRecord {
   return {
     date,
-    items: generateDailyItems(experience, level, reference),
+    items: generateDailyItems(experience, level, reference, classId),
     status: 'open',
     penalty: null,
     urgent: null,
